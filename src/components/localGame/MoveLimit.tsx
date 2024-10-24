@@ -1,7 +1,6 @@
 export default function applyMoveLimit(
 	squares: (string | null)[],
-	moveIndices: number[],
-	symbol: 'X' | 'O'
+	moveIndices: number[]
 ): (string | null)[] {
 	// Если ходов больше 3, удаляем самый старый
 	if (moveIndices.length > 3) {
