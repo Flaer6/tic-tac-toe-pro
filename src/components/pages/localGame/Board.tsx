@@ -1,4 +1,4 @@
-import { BoardProps } from '../../types/types'
+import { BoardProps } from '../../../types/types'
 import Square from './Square'
 import calculateWinner from './Winner'
 

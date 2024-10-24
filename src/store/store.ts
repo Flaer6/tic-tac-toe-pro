@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import applyMoveLimit from '../components/localGame/MoveLimit'
+import applyMoveLimit from '../components/pages/localGame/MoveLimit'
 import { GameState } from '../types/types'
 
 export const useGameStore = create<GameState>((set, get) => ({

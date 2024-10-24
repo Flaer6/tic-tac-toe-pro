@@ -1,4 +1,4 @@
-import { SquareProps } from '../../types/types'
+import { SquareProps } from '../../../types/types'
 
 export default function Square({ value, onSquareClick }: SquareProps) {
 	return (

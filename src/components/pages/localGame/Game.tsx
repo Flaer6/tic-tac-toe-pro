@@ -1,4 +1,4 @@
-import { useGameStore } from '../../store/store'
+import { useGameStore } from '../../../store/store'
 import Board from './Board'
 
 export default function Game() {
@@ -13,7 +13,7 @@ export default function Game() {
 			</div>
 			<button
 				className='mt-4 px-4 py-2 bg-red-500 text-white font-bold hover:bg-red-600'
-				onClick={resetGame} // Обрабатываем нажатие кнопки сброса
+				onClick={resetGame}
 			>
 				Новая игра
 			</button>
