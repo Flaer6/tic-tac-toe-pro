@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import applyMoveLimit from '../components/pages/localGame/MoveLimit'
-import { GameState } from '../types/types'
+import type { GameState } from '../types/types'
 
 export const useGameStore = create<GameState>((set, get) => ({
 	history: [Array(9).fill(null)],

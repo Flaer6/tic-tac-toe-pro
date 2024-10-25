@@ -1,0 +1,15 @@
+.button {
+	@apply bg-gradient-to-t from-fuchsia-600 to-fuchsia-500 py-4 px-6 rounded-lg text-fuchsia-950 shadow-md text-6xl hover:shadow-inner hover:from-fuchsia-700 hover:to-fuchsia-600 flex justify-center items-center gap-2 relative max-sm:text-4xl;
+}
+.soon {
+	&::after {
+		@apply content-['Soon'] absolute top-0 bottom-0 right-0 left-0 text-5xl flex items-center justify-center;
+		/* From https://css.glass */
+		background: rgba(255, 255, 255, 0.31);
+		border-radius: inherit;
+		box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+		backdrop-filter: blur(3.9px);
+		-webkit-backdrop-filter: blur(3.9px);
+		border: 1px solid rgba(255, 255, 255, 0.12);
+	}
+}

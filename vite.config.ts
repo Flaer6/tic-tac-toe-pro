@@ -20,8 +20,8 @@ export default defineConfig({
 				name: 'tic_tac_toe',
 				short_name: 'TT3',
 				description: 'Tic Tac Toe Pro Version',
-				theme_color: '#ffffff',
-				background_color: '#ffffff',
+				theme_color: '#166b9f',
+				background_color: '#166b9f',
 				display: 'standalone',
 				orientation: 'portrait',
 				icons: [
@@ -65,4 +65,11 @@ export default defineConfig({
 			},
 		}),
 	],
+	css: {
+		preprocessorOptions: {
+			scss: {
+				api: 'modern-compiler',
+			},
+		},
+	},
 })

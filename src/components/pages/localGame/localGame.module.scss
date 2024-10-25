@@ -1,0 +1,6 @@
+.square {
+	@apply w-52 h-52 bg-blue-500 text-9xl font-bold flex items-center justify-center hover:bg-blue-600 border border-blue-700 max-md:w-48 max-md:h-48 max-sm:w-36 max-sm:h-36 max-[475px]:w-28 max-[475px]:h-28 max-[475px]:text-8xl;
+}
+.winner {
+	@apply absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] text-5xl bg-white p-6 rounded-md flex flex-col max-[860px]:text-4xl max-[675px]:text-3xl max-[565px]:text-2xl max-[565px]:p-4 max-[440px]:text-xl;
+}

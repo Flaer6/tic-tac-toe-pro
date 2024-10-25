@@ -1,9 +1,14 @@
-import { SquareProps } from '../../../types/types'
+import cn from 'clsx'
+import type { SquareProps } from '../../../types/types'
+import styles from './localGame.module.scss'
 
 export default function Square({ value, onSquareClick }: SquareProps) {
 	return (
 		<button
-			className='w-16 h-16 bg-blue-500 text-white text-2xl font-bold flex items-center justify-center hover:bg-blue-600 border border-blue-700'
+			className={cn(
+				styles.square,
+				value == 'X' ? 'text-neutral-900' : 'text-rose-800'
+			)}
 			onClick={onSquareClick}
 		>
 			{value}

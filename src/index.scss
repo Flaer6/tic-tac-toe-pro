@@ -8,5 +8,5 @@ html {
 }
 
 body {
-	@apply min-h-screen bg-gradient-to-r from-blue-400 to-purple-500 font-RubikWetPaint font-normal text-base;
+	@apply min-h-screen bg-gradient-to-r from-blue-400 to-purple-500 font-RubikWetPaint font-normal text-base overflow-hidden;
 }
