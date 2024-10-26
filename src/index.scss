@@ -8,5 +8,22 @@ html {
 }
 
 body {
-	@apply min-h-screen bg-gradient-to-r from-blue-400 to-purple-500 font-RubikWetPaint font-normal text-base overflow-hidden;
+	@apply h-dvh bg-gradient-to-r from-blue-400 to-purple-500 font-RubikWetPaint font-normal text-base overflow-hidden p-12;
+}
+
+.X {
+	@apply text-sky-300;
+	text-shadow: 0 0 7px rgb(14 165 233);
+}
+.X-off {
+	@apply text-sky-800;
+	text-shadow: none;
+}
+.O {
+	@apply text-rose-600;
+	text-shadow: 0 0 7px rgb(244 63 94);
+}
+.O-off {
+	@apply text-rose-900;
+	text-shadow: none;
 }
