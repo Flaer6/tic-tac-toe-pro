@@ -17,7 +17,7 @@ export default defineConfig({
 			},
 
 			manifest: {
-				name: 'tic_tac_toe',
+				name: 'Tic Tac Toe',
 				short_name: 'TT3',
 				description: 'Tic Tac Toe Pro Version',
 				theme_color: '#166b9f',
