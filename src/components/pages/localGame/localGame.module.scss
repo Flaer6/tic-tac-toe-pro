@@ -1,8 +1,14 @@
 .square {
 	@apply w-52 h-52 bg-transparent text-9xl font-bold flex items-center justify-center border border-neutral-900 max-md:w-48 max-md:h-48 max-sm:w-36 max-sm:h-36 max-[475px]:w-28 max-[475px]:h-28 max-[475px]:text-8xl outline-none;
 	box-shadow: inset 0 0 1px rgba(255, 255, 255, 0.6);
-
-	&:hover {
+}
+@media (hover: hover) {
+	.square:hover {
+		box-shadow: inset 0 0 5px rgba(23, 23, 23, 1);
+	}
+}
+@media (hover: none) {
+	.square:active {
 		box-shadow: inset 0 0 5px rgba(23, 23, 23, 1);
 	}
 }
