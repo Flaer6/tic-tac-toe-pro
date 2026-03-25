@@ -3,7 +3,7 @@ import { useGameStore } from '../../../store/store'
 import type { BoardProps } from '../../../types/types'
 import Square from './Square'
 import calculateWinner from './Winner'
-import styles from './localGame.module.scss'
+import styles from './localGame.module.css'
 
 export default function Board({ squares, onPlay, xIsNext }: BoardProps) {
 	const { resetGame } = useGameStore()
@@ -34,10 +34,7 @@ export default function Board({ squares, onPlay, xIsNext }: BoardProps) {
 								{winner}
 							</span>
 						</span>
-						<button
-							className='mt-4 px-4 py-2 bg-red-500 text-white font-bold hover:bg-red-600'
-							onClick={resetGame}
-						>
+						<button className='mt-4 px-4 py-2 bg-red-500 text-white font-bold hover:bg-red-600' onClick={resetGame}>
 							Новая игра
 						</button>
 					</div>
@@ -52,11 +49,7 @@ export default function Board({ squares, onPlay, xIsNext }: BoardProps) {
 			</div>
 			<div className={styles.board}>
 				{squares.map((square, index) => (
-					<Square
-						key={index}
-						value={square}
-						onSquareClick={() => handleClick(index)}
-					/>
+					<Square key={index} value={square} onSquareClick={() => handleClick(index)} />
 				))}
 			</div>
 		</>

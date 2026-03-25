@@ -1,3 +1,5 @@
+@reference '../../../index.css';
+
 .button {
 	@apply bg-gradient-to-t from-fuchsia-600 to-fuchsia-500 py-4 px-6 rounded-lg text-fuchsia-950 text-6xl hover:from-fuchsia-700 hover:to-fuchsia-600 flex justify-center items-center gap-2 relative max-sm:text-4xl;
 	box-shadow: 3px 2px 1px 2px rgb(74, 4, 78);

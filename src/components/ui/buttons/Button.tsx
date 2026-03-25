@@ -1,7 +1,7 @@
 import cn from 'clsx'
 import type { HTMLAttributes, ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import styles from './Button.module.scss'
+import styles from './Button.module.css'
 
 interface IProps extends HTMLAttributes<HTMLElement> {
 	children: ReactNode

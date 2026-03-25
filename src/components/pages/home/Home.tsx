@@ -5,7 +5,7 @@ export default function Home() {
 	return (
 		<div className='text-center min-h-screen relative'>
 			<div className=''>
-				<h1 className='text-9xl pt-9 max-md:text-8xl max-sm:text-7xl'>
+				<h1 className='text-9xl pt-9 max-md:text-8xl max-sm:text-7xl font-rubik'>
 					Tic Tac Toe
 				</h1>
 			</div>
@@ -13,6 +13,7 @@ export default function Home() {
 				<Button to='/game'>
 					<FaUser /> VS <FaUser />
 				</Button>
+				<Button to='/online'>Online</Button>
 				<Button to='/' soon>
 					<FaRobot /> VS <FaRobot />
 				</Button>
