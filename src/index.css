@@ -10,6 +10,8 @@
 }
 @theme {
 	--color-default: #1f1d2b;
+	--color-primary: #a9a7b5;
+	--color-btn-blue: #7c5cff;
 	--font-rubik: Rubik Wet Paint;
 }
 
@@ -19,7 +21,7 @@ html {
 
 body {
 	@apply h-dvh bg-default font-normal overflow-hidden p-12;
-	color: #a9a7b5;
+	color: white;
 }
 
 .X {
@@ -37,4 +39,8 @@ body {
 .O-off {
 	@apply text-rose-900;
 	text-shadow: none;
+}
+
+input {
+	outline: none;
 }

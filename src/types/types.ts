@@ -1,3 +1,5 @@
+import type { HTMLAttributes, ReactNode } from 'react'
+
 export interface GameState {
 	history: (string | null)[][]
 	currentMove: number
@@ -18,4 +20,20 @@ export interface BoardProps {
 	squares: (string | null)[]
 	onPlay: (nextSquares: (string | null)[], index: number) => void
 	xIsNext: boolean
+}
+
+export interface IProps extends HTMLAttributes<HTMLElement> {
+	children: ReactNode
+	to: string
+	soon?: boolean
+}
+
+export interface IInputAuth {
+	email: string
+	password: string
+	username: string
+}
+
+export interface IAuthResponse {
+	accessToken: string
 }

@@ -1,13 +1,7 @@
 import cn from 'clsx'
-import type { HTMLAttributes, ReactNode } from 'react'
 import { Link } from 'react-router-dom'
+import type { IProps } from '../../../types/types'
 import styles from './Button.module.css'
-
-interface IProps extends HTMLAttributes<HTMLElement> {
-	children: ReactNode
-	to: string
-	soon?: boolean
-}
 
 export default function Button({ children, to, soon, ...rest }: IProps) {
 	return (

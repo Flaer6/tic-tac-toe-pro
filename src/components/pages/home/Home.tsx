@@ -5,7 +5,7 @@ export default function Home() {
 	return (
 		<div className='text-center min-h-screen relative'>
 			<div className=''>
-				<h1 className='text-9xl pt-9 max-md:text-8xl max-sm:text-7xl font-rubik'>
+				<h1 className='text-9xl pt-9 max-md:text-8xl max-sm:text-7xl font-rubik text-primary'>
 					Tic Tac Toe
 				</h1>
 			</div>
