@@ -5,7 +5,13 @@ import Router from './components/router/Router.tsx'
 import './index.css'
 import PWABadge from './PWABadge.tsx'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			retry: false,
+		},
+	},
+})
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>
 		<QueryClientProvider client={queryClient}>

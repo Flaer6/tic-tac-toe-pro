@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { PublicRoute } from '../../utils/guards/routeGuard'
 import { Login } from '../pages/auth/Login'
 import { Register } from '../pages/auth/Register'
 import Home from '../pages/home/Home'
@@ -13,8 +14,22 @@ export default function Router() {
 					<Route index element={<Home />} />
 					<Route path='/game' element={<Game />} />
 				</Route>
-				<Route path='/register' element={<Register />} />
-				<Route path='/login' element={<Login />} />
+				<Route
+					path='/register'
+					element={
+						<PublicRoute>
+							<Register />
+						</PublicRoute>
+					}
+				/>
+				<Route
+					path='/login'
+					element={
+						<PublicRoute>
+							<Login />
+						</PublicRoute>
+					}
+				/>
 			</Routes>
 		</BrowserRouter>
 	)

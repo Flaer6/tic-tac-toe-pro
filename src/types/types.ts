@@ -29,11 +29,18 @@ export interface IProps extends HTMLAttributes<HTMLElement> {
 }
 
 export interface IInputAuth {
+	identifier: string
 	email: string
 	password: string
 	username: string
 }
 
 export interface IAuthResponse {
+	message?: string
 	accessToken: string
+	success: boolean
+}
+
+export interface IErrorResponse {
+	message: string[]
 }
