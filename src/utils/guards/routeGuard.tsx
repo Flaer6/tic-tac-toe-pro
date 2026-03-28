@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react'
-import { Navigate } from 'react-router-dom'
-import { useMe } from '../../hooks/useMe'
+import { Navigate, Outlet } from 'react-router-dom'
+import { useCheckAuth } from '../../hooks/useCheckAuth'
 
 export const PrivateRoute = ({ children }: { children: ReactNode }) => {
-	const { isLoading, isError, data } = useMe()
+	const { isLoading, isError, data } = useCheckAuth()
 
 	if (isLoading) return <div>Loading...</div>
 
@@ -12,12 +12,12 @@ export const PrivateRoute = ({ children }: { children: ReactNode }) => {
 	return children
 }
 
-export const PublicRoute = ({ children }: { children: ReactNode }) => {
-	const { data, isLoading } = useMe()
+export const PublicRoute = () => {
+	const { data, isLoading } = useCheckAuth()
 
-	if (isLoading) return null
+	if (isLoading) return <Outlet />
 
 	if (data) return <Navigate to='/' />
 
-	return <>{children}</>
+	return <Outlet />
 }

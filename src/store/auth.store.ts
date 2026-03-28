@@ -2,14 +2,15 @@ import { create } from 'zustand'
 
 type Store = {
 	messages: string[]
-	accessToken?: string | null
+	isAuth: boolean
 	setMessages: (msg: string[]) => void
-	setAccessToken: (token: string | null) => void
+	setAuth: (isAuth: boolean) => void
 }
 
 export const useAuthStore = create<Store>(set => ({
 	messages: [],
-	accessToken: null,
-	setAccessToken: token => set({ accessToken: token }),
+	isAuth: false,
+
 	setMessages: msg => set({ messages: msg || [] }),
+	setAuth: isAuth => set({ isAuth }),
 }))

@@ -1,13 +1,14 @@
 import { useMutation } from '@tanstack/react-query'
 import type { AxiosError } from 'axios'
 import { useNavigate } from 'react-router-dom'
-import { api } from '../shared/api/api'
+import { authService } from '../shared/services/authService'
 import { useAuthStore } from '../store/auth.store'
 import type { IAuthResponse, IErrorResponse, IInputAuth } from '../types/types'
 
 export const useAuthQuery = () => {
 	const navigate = useNavigate()
-	const { setAccessToken, setMessages, messages } = useAuthStore()
+
+	const { setMessages, messages } = useAuthStore()
 
 	const { mutate: registerMutate, isError: isRegisterError } = useMutation<
 		IAuthResponse,
@@ -15,14 +16,9 @@ export const useAuthQuery = () => {
 		IInputAuth
 	>({
 		mutationKey: ['register'],
-		mutationFn: async data => {
-			setMessages([])
-			const response = await api.post('/auth/register', data)
-			return response.data
-		},
+		mutationFn: authService.register,
 		onSuccess: data => {
-			setAccessToken(data.accessToken)
-			console.log({ success: true })
+			localStorage.setItem('accessToken', data.accessToken)
 			navigate('/')
 		},
 		onError: error => {
@@ -41,14 +37,9 @@ export const useAuthQuery = () => {
 		IInputAuth
 	>({
 		mutationKey: ['login'],
-		mutationFn: async data => {
-			setMessages([])
-			const response = await api.post('/auth/login', data)
-			return response.data
-		},
+		mutationFn: authService.login,
 		onSuccess: data => {
-			setAccessToken(data.accessToken)
-			console.log({ success: true })
+			localStorage.setItem('accessToken', data.accessToken)
 			navigate('/')
 		},
 		onError: error => {
