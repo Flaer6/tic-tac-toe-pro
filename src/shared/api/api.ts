@@ -1,34 +1,84 @@
 import axios from 'axios'
+import { useAuthStore } from '../../store/auth.store'
 
 export const api = axios.create({
 	baseURL: import.meta.env.VITE_API_URL,
 	withCredentials: true,
 })
 
+let isRefreshing = false
+let refreshQueue: ((token: string) => void)[] = []
+
 api.interceptors.request.use(config => {
-	config.headers.Authorization = `Bearer ${localStorage.getItem('accessToken')}`
+	const token = useAuthStore.getState().accessToken
+
+	if (token) {
+		config.headers.Authorization = `Bearer ${token}`
+	}
+
 	return config
 })
 
 api.interceptors.response.use(
-	config => {
-		return config
-	},
+	res => res,
 	async error => {
 		const originalRequest = error.config
-		if (error.response?.status === 401) {
+
+		const isAuthRoute =
+			originalRequest?.url?.includes('/auth/refresh') ||
+			originalRequest?.url?.includes('/auth/login') ||
+			originalRequest?.url?.includes('/auth/register') ||
+			originalRequest?.url?.includes('/auth/logout')
+
+		if (
+			error.response?.status === 401 &&
+			originalRequest &&
+			!originalRequest._retry &&
+			!isAuthRoute
+		) {
+			originalRequest._retry = true
+
+			if (isRefreshing) {
+				return new Promise(resolve => {
+					refreshQueue.push((token: string) => {
+						originalRequest.headers.Authorization = `Bearer ${token}`
+						resolve(api(originalRequest))
+					})
+				})
+			}
+
+			isRefreshing = true
+
 			try {
-				const response = await axios.post(
+				const res = await axios.post(
 					`${import.meta.env.VITE_API_URL}/auth/refresh`,
-					{
-						withCredentials: true,
-					},
+					{},
+					{ withCredentials: true },
 				)
-				localStorage.setItem('accessToken', response.data.accessToken)
+
+				const newToken = res.data.accessToken
+
+				const { setAccessToken, setAuth } = useAuthStore.getState()
+				setAccessToken(newToken)
+				setAuth(true)
+
+				useAuthStore.getState().setAccessToken(newToken)
+
+				refreshQueue.forEach(cb => cb(newToken))
+				refreshQueue = []
+
+				originalRequest.headers.Authorization = `Bearer ${newToken}`
+
 				return api(originalRequest)
-			} catch (error) {
-				console.log('НЕ АВТОРИЗОВАН', error)
+			} catch (err) {
+				const { logout } = useAuthStore.getState()
+				logout()
+				return Promise.reject(err)
+			} finally {
+				isRefreshing = false
 			}
 		}
+
+		return Promise.reject(error)
 	},
 )

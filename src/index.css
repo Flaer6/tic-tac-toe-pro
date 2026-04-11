@@ -20,7 +20,7 @@ html {
 }
 
 body {
-	@apply h-dvh bg-default font-normal overflow-hidden p-12;
+	@apply h-dvh bg-default font-normal overflow-hidden;
 	color: white;
 }
 
@@ -43,4 +43,11 @@ body {
 
 input {
 	outline: none;
+}
+
+button {
+	cursor: pointer;
+}
+img {
+	width: 100%;
 }

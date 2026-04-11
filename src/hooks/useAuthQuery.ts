@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { AxiosError } from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { authService } from '../shared/services/authService'
@@ -7,9 +7,10 @@ import type { IAuthResponse, IErrorResponse, IInputAuth } from '../types/types'
 
 export const useAuthQuery = () => {
 	const navigate = useNavigate()
+	const queryClient = useQueryClient()
 
-	const { setMessages, messages } = useAuthStore()
-
+	const { setMessages, messages, setAccessToken } = useAuthStore()
+	const { setAuth } = useAuthStore()
 	const { mutate: registerMutate, isError: isRegisterError } = useMutation<
 		IAuthResponse,
 		AxiosError<IErrorResponse>,
@@ -18,7 +19,9 @@ export const useAuthQuery = () => {
 		mutationKey: ['register'],
 		mutationFn: authService.register,
 		onSuccess: data => {
-			localStorage.setItem('accessToken', data.accessToken)
+			setAccessToken(data.accessToken)
+			queryClient.invalidateQueries({ queryKey: ['profile'] })
+
 			navigate('/')
 		},
 		onError: error => {
@@ -38,12 +41,14 @@ export const useAuthQuery = () => {
 	>({
 		mutationKey: ['login'],
 		mutationFn: authService.login,
-		onSuccess: data => {
-			localStorage.setItem('accessToken', data.accessToken)
+		onSuccess: async data => {
+			setAccessToken(data.accessToken)
+			setAuth(true)
+			queryClient.invalidateQueries({ queryKey: ['profile'] })
 			navigate('/')
 		},
 		onError: error => {
-			console.log(error.response?.data)
+			console.log(error)
 			setMessages(
 				error.response?.data.message || [
 					'Произошла ошибка при регистрации. Попробуйте еще раз.',
@@ -52,11 +57,18 @@ export const useAuthQuery = () => {
 		},
 	})
 
+	const handleLogout = async () => {
+		await authService.logout()
+		queryClient.clear()
+		navigate('/')
+	}
+
 	return {
 		registerMutate,
 		isRegisterError,
 		messages,
 		loginMutate,
 		isLoginError,
+		handleLogout,
 	}
 }

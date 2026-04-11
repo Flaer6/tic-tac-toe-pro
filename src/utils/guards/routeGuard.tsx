@@ -1,23 +1,14 @@
-import type { ReactNode } from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
-import { useCheckAuth } from '../../hooks/useCheckAuth'
+import { useAuthStore } from '../../store/auth.store'
 
-export const PrivateRoute = ({ children }: { children: ReactNode }) => {
-	const { isLoading, isError, data } = useCheckAuth()
+export const PrivateRoute = () => {
+	const { isAuth } = useAuthStore()
 
-	if (isLoading) return <div>Loading...</div>
-
-	if (isError || !data) return <Navigate to='/login' />
-
-	return children
+	return isAuth ? <Outlet /> : <Navigate to='/login' replace />
 }
 
 export const PublicRoute = () => {
-	const { data, isLoading } = useCheckAuth()
+	const { isAuth } = useAuthStore()
 
-	if (isLoading) return <Outlet />
-
-	if (data) return <Navigate to='/' />
-
-	return <Outlet />
+	return isAuth ? <Navigate to='/' replace /> : <Outlet />
 }

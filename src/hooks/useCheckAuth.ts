@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useAuthStore } from '../store/auth.store'
 
 export const useCheckAuth = () => {
-	const { setAuth } = useAuthStore()
+	const { setAuth, setAccessToken } = useAuthStore()
 
 	return useQuery({
 		queryKey: ['checkAuth'],
@@ -16,7 +16,7 @@ export const useCheckAuth = () => {
 				},
 			)
 			setAuth(true)
-			localStorage.setItem('accessToken', res.data.accessToken)
+			setAccessToken(res.data.accessToken)
 			return res.data
 		},
 

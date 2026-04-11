@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form'
-import { useAuthQuery } from '../../../hooks/AuthQuery'
+import { useAuthQuery } from '../../../hooks/useAuthQuery'
 import type { IInputAuth } from '../../../types/types'
 import { SubmitButton } from '../../ui/buttons/Submit.btn'
 import { AuthForm } from '../../ui/forms/AuthForm'
@@ -37,9 +37,7 @@ export const Register = () => {
 						{...register('username')}
 					/>
 				</div>
-				<SubmitButton onClick={handleSubmit(onRegister)}>
-					Зарегистрироваться
-				</SubmitButton>
+				<SubmitButton>Зарегистрироваться</SubmitButton>
 			</AuthForm>
 		</div>
 	)

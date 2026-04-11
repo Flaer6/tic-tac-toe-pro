@@ -7,7 +7,7 @@ export const SubmitButton = ({
 	return (
 		<button
 			className='bg-btn-blue py-3 px-7 font-semibold text-lg rounded-xl'
-			type='button'
+			type='submit'
 			{...rest}
 		>
 			{children}

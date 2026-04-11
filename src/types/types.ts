@@ -14,6 +14,7 @@ export interface GameState {
 export interface SquareProps {
 	value: string | null
 	onSquareClick: () => void
+	removing?: boolean
 }
 
 export interface BoardProps {
@@ -43,4 +44,35 @@ export interface IAuthResponse {
 
 export interface IErrorResponse {
 	message: string[]
+}
+
+export interface IProfileResponse {
+	id: string
+	publicId: number
+	username: string
+	email?: string
+	avatar: string | null
+}
+export interface IInputSearchUser {
+	identifier: string
+}
+
+export interface IFriendRequest {
+	id: string
+	fromId: string
+	toId: string
+	status: FriendStatus
+	from?: IProfileResponse
+}
+
+export enum FriendStatus {
+	PENDING = 'PENDING',
+	ACCEPTED = 'ACCEPTED',
+	REJECTED = 'REJECTED',
+}
+
+export interface IDataGameRequest {
+	board: (string | null)[]
+	turn: string
+	removingIndex: number | null
 }

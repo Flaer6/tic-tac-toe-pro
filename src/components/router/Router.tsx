@@ -1,12 +1,14 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { useCheckAuth } from '../../hooks/useCheckAuth'
-import { PublicRoute } from '../../utils/guards/routeGuard'
+import { PrivateRoute, PublicRoute } from '../../utils/guards/routeGuard'
 import { Login } from '../pages/auth/Login'
 import { Register } from '../pages/auth/Register'
 import Home from '../pages/home/Home'
 import { Layout } from '../pages/layout/Layout'
 import Game from '../pages/localGame/Game'
+import { OnlineGame } from '../pages/onlineGame/OnlineGame'
+import { Profile } from '../pages/profile/Profile'
 
 export default function Router() {
 	const checkAuth = useCheckAuth()
@@ -19,8 +21,11 @@ export default function Router() {
 				<Route element={<Layout />}>
 					<Route index element={<Home />} />
 					<Route path='/game' element={<Game />} />
+					<Route element={<PrivateRoute />}>
+						<Route path='/profile' element={<Profile />} />
+						<Route path='/online' element={<OnlineGame />} />
+					</Route>
 				</Route>
-
 				<Route element={<PublicRoute />}>
 					<Route path='/register' element={<Register />} />
 					<Route path='/login' element={<Login />} />

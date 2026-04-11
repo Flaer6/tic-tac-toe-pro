@@ -5,7 +5,7 @@ export const AuthBtn = ({ to, children, ...rest }: IProps) => {
 	return (
 		<Link
 			to={to}
-			className={`py-2.5 px-11 rounded-md text-lg font-semibold ${rest.className} `}
+			className={`py-2 px-3 rounded-md text-md font-semibold w-full ${rest.className} `}
 		>
 			{children}
 		</Link>

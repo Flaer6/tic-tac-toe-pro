@@ -3,7 +3,11 @@ import { useRef } from 'react'
 import type { SquareProps } from '../../../types/types'
 import styles from './localGame.module.css'
 
-export default function Square({ value, onSquareClick }: SquareProps) {
+export default function Square({
+	value,
+	onSquareClick,
+	removing,
+}: SquareProps) {
 	const audioRef = useRef<HTMLAudioElement | null>(null)
 
 	const playSound = () => {
@@ -15,7 +19,14 @@ export default function Square({ value, onSquareClick }: SquareProps) {
 	return (
 		<>
 			<button
-				className={cn(styles.square, value == 'X' ? 'X' : 'O')}
+				className={cn(
+					styles.square,
+
+					value == 'X' ? 'X' : 'O',
+					{
+						'opacity-0 scale-75 transition-all duration-500': removing,
+					},
+				)}
 				onClick={() => {
 					onSquareClick()
 					playSound()

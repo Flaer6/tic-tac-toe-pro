@@ -7,7 +7,8 @@ import Board from './Board'
 import styles from './localGame.module.css'
 
 export default function Game() {
-	const { history, currentMove, handlePlay, xIsNext, resetGame } = useGameStore()
+	const { history, currentMove, handlePlay, xIsNext, resetGame } =
+		useGameStore()
 	const currentSquares = history[currentMove]
 	const [isActive, setIsActive] = useState(false)
 
@@ -18,7 +19,10 @@ export default function Game() {
 					<IoMenu />
 				</button>
 				<div
-					className={cn('absolute top-0 left-0 right-0 bottom-0 z-30 backdrop-blur-sm', { ['hidden']: !isActive })}
+					className={cn(
+						'absolute top-0 left-0 right-0 bottom-0 z-30 backdrop-blur-sm',
+						{ ['hidden']: !isActive },
+					)}
 					onClick={() => setIsActive(false)}
 				>
 					<div className='flex flex-col gap-3 items-center z-30 absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2'>

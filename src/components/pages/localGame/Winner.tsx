@@ -1,5 +1,5 @@
 export default function calculateWinner(
-	squares: (string | null)[]
+	squares: (string | null)[],
 ): string | null {
 	const lines = [
 		[0, 1, 2],

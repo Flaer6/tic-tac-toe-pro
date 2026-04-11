@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form'
-import { useAuthQuery } from '../../../hooks/AuthQuery'
+import { useAuthQuery } from '../../../hooks/useAuthQuery'
 import type { IInputAuth } from '../../../types/types'
 import { SubmitButton } from '../../ui/buttons/Submit.btn'
 import { AuthForm } from '../../ui/forms/AuthForm'
@@ -11,6 +11,7 @@ export const Login = () => {
 	const { register, handleSubmit } = useForm<IInputAuth>()
 
 	const onLogin = (data: IInputAuth) => {
+		console.log('CLICK WORKS')
 		loginMutate(data)
 	}
 	return (
@@ -18,7 +19,7 @@ export const Login = () => {
 			<AuthForm onSubmit={handleSubmit(onLogin)}>
 				{isLoginError && <span className='text-red-500'>*{messages}</span>}
 				<InputAuth
-					type='email'
+					type='text'
 					autoComplete='email'
 					placeholder='Почта или имя пользователя'
 					{...register('identifier')}
@@ -29,7 +30,7 @@ export const Login = () => {
 					placeholder='Пароль'
 					{...register('password')}
 				/>
-				<SubmitButton onClick={handleSubmit(onLogin)}>Войти</SubmitButton>
+				<SubmitButton>Войти</SubmitButton>
 			</AuthForm>
 		</div>
 	)

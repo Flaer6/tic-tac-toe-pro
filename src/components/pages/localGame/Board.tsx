@@ -34,7 +34,10 @@ export default function Board({ squares, onPlay, xIsNext }: BoardProps) {
 								{winner}
 							</span>
 						</span>
-						<button className='mt-4 px-4 py-2 bg-red-500 text-white font-bold hover:bg-red-600' onClick={resetGame}>
+						<button
+							className='mt-4 px-4 py-2 bg-red-500 text-white font-bold hover:bg-red-600'
+							onClick={resetGame}
+						>
 							Новая игра
 						</button>
 					</div>
@@ -49,7 +52,11 @@ export default function Board({ squares, onPlay, xIsNext }: BoardProps) {
 			</div>
 			<div className={styles.board}>
 				{squares.map((square, index) => (
-					<Square key={index} value={square} onSquareClick={() => handleClick(index)} />
+					<Square
+						key={index}
+						value={square}
+						onSquareClick={() => handleClick(index)}
+					/>
 				))}
 			</div>
 		</>

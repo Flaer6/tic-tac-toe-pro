@@ -12,9 +12,13 @@ class AuthService {
 		return response.data
 	}
 	async logout(): Promise<void> {
-		await api.post('/auth/logout')
-		localStorage.removeItem('accessToken')
-		useAuthStore.setState({ isAuth: false })
+		try {
+			await api.post('/auth/logout')
+		} catch (error) {
+			console.error('Logout error:', error)
+		} finally {
+			useAuthStore.getState().logout()
+		}
 	}
 }
 
