@@ -1,3 +1,4 @@
+import type { LucideIcon } from 'lucide-react'
 import type { HTMLAttributes, ReactNode } from 'react'
 
 export interface GameState {
@@ -75,4 +76,21 @@ export interface IDataGameRequest {
 	board: (string | null)[]
 	turn: string
 	removingIndex: number | null
+	opponent: string
+	roomId: string
+	players: {
+		userId: string
+		symbol: 'X' | 'O'
+		username: string
+		publicId: string
+	}[]
+
+	moves: Record<string, number[]>
+	winner: string
+}
+
+export interface IMenu {
+	icon?: LucideIcon
+	name: string
+	href: string
 }

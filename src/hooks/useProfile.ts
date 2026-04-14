@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import type { AxiosError } from 'axios'
-import { useForm } from 'react-hook-form'
 import { userService } from '../shared/services/userService'
 import { useAuthStore } from '../store/auth.store'
 import type {
@@ -22,9 +21,9 @@ export const useProfile = () => {
 	} = useMutation<IProfileResponse, AxiosError, IInputSearchUser>({
 		mutationKey: ['searchUser'],
 		mutationFn: userService.searchUser,
+		onSuccess: () => setMessages([]),
 	})
 
-	const { register, handleSubmit } = useForm<IInputSearchUser>()
 	const onSearch = (formData: IInputSearchUser) => {
 		searchUser(formData)
 	}
@@ -36,8 +35,10 @@ export const useProfile = () => {
 	} = useMutation<IFriendRequest, AxiosError<IErrorResponse>, string>({
 		mutationKey: ['friendRequest'],
 		mutationFn: userService.friendRequest,
-		onSuccess: () =>
-			queryClient.invalidateQueries({ queryKey: ['friend-requests'] }),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['friend-requests'] })
+			queryClient.invalidateQueries({ queryKey: ['friends'] })
+		},
 		onError: error => {
 			console.log(error.response?.data)
 			setMessages(
@@ -52,7 +53,6 @@ export const useProfile = () => {
 		queryKey: ['friend-requests'],
 		queryFn: userService.getFriendRequests,
 	})
-	console.log(requests)
 
 	const { mutate: acceptFriend } = useMutation<
 		IFriendRequest,
@@ -61,30 +61,37 @@ export const useProfile = () => {
 	>({
 		mutationKey: ['friend-accept'],
 		mutationFn: userService.acceptRequest,
-		onSuccess: () =>
-			queryClient.invalidateQueries({
-				queryKey: ['friend-requests', 'friends'],
-			}),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['friend-requests'] })
+			queryClient.invalidateQueries({ queryKey: ['friends'] })
+		},
 	})
 
 	const { mutate: rejectFriend } = useMutation({
 		mutationKey: ['friend-reject'],
 		mutationFn: userService.rejectRequest,
-		onSuccess: () =>
-			queryClient.invalidateQueries({ queryKey: ['friend-requests'] }),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['friend-requests'] })
+			queryClient.invalidateQueries({ queryKey: ['friends'] })
+		},
 	})
 
 	const { data: getFriends } = useQuery<IProfileResponse[], AxiosError>({
 		queryKey: ['friends'],
 		queryFn: userService.getFriends,
 	})
+
+	const { mutate: friendRemove } = useMutation({
+		mutationKey: ['friend-remove'],
+		mutationFn: userService.removeFriend,
+		onSuccess: () => queryClient.invalidateQueries({ queryKey: ['friends'] }),
+	})
 	return {
 		messages,
 		user,
 		userError,
 		userSuccess,
-		register,
-		handleSubmit,
+		friendRemove,
 		onSearch,
 		addFriend,
 		isAddFriend,

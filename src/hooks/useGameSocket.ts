@@ -8,19 +8,42 @@ import { useGetProfile } from './useGetUser'
 type Status = 'idle' | 'searching' | 'found'
 
 export const useGameSocket = () => {
-	const { setGame, updateBoard, setWinner } = useOnlineGameStore()
+	const { setGame, updateBoard, setWinner, setReconnecting } =
+		useOnlineGameStore()
 	const [status, setStatus] = useState<Status>('idle')
 	const { data: user } = useGetProfile()
 
 	useEffect(() => {
-		if (!user || !socket.connected) return
+		const handleDisconnect = () => {
+			console.log('disconnect')
+			setReconnecting(true)
+		}
 
+		const handleConnect = () => {
+			console.log('reconnect')
+			setReconnecting(false)
+			socket.emit('restore_game')
+		}
+
+		socket.on('disconnect', handleDisconnect)
+		socket.on('connect', handleConnect)
+
+		return () => {
+			socket.off('disconnect', handleDisconnect)
+			socket.off('connect', handleConnect)
+		}
+	}, [])
+
+	useEffect(() => {
+		if (!user) return
+		socket.emit('restore_game')
 		const handleSearching = () => {
 			setStatus('searching')
 		}
 
 		const handleGameFound = (data: IDataGameRequest) => {
-			setGame(data, user.id)
+			console.log('GAME FOUND DATA:', data)
+			setGame(data, String(user.id))
 			setStatus('found')
 		}
 

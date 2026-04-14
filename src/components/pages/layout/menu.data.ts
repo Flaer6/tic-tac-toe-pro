@@ -1,16 +1,5 @@
-import {
-	CircleUser,
-	Gamepad2,
-	Globe,
-	Users,
-	type LucideIcon,
-} from 'lucide-react'
-
-interface IMenu {
-	icon: LucideIcon
-	name: string
-	href: string
-}
+import { CircleUser, Gamepad2, Globe, Users } from 'lucide-react'
+import type { IMenu } from '../../../types/types'
 
 export const menuData: IMenu[] = [
 	{
@@ -26,7 +15,7 @@ export const menuData: IMenu[] = [
 	{
 		icon: Users,
 		name: 'Друзья',
-		href: '#',
+		href: '/profile/friends',
 	},
 	{
 		icon: CircleUser,

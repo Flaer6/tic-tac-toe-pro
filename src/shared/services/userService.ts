@@ -37,5 +37,8 @@ class UserService {
 		const { data } = await api.get<IProfileResponse[]>('/user/friends')
 		return data
 	}
+	async removeFriend(friendId: string) {
+		return await api.post('/user/friends/remove', { friendId })
+	}
 }
 export const userService = new UserService()
