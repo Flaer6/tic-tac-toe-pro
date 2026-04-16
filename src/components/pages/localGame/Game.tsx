@@ -1,10 +1,8 @@
 import cn from 'clsx'
 import { useState } from 'react'
-import { IoMenu } from 'react-icons/io5'
 import { Link } from 'react-router-dom'
 import { useGameStore } from '../../../store/store'
 import Board from './Board'
-import styles from './localGame.module.css'
 
 export default function Game() {
 	const { history, currentMove, handlePlay, xIsNext, resetGame } =
@@ -13,11 +11,8 @@ export default function Game() {
 	const [isActive, setIsActive] = useState(false)
 
 	return (
-		<div className='flex items-center justify-center px-2'>
+		<div className='flex items-center justify-center px-2  h-screen'>
 			<div className=''>
-				<button className={styles.menu} onClick={() => setIsActive(!isActive)}>
-					<IoMenu />
-				</button>
 				<div
 					className={cn(
 						'absolute top-0 left-0 right-0 bottom-0 z-30 backdrop-blur-sm',
@@ -39,7 +34,7 @@ export default function Game() {
 				</div>
 			</div>
 
-			<div className='flex flex-col items-center absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] w-full h-auto'>
+			<div className='flex flex-col items-center justify-center w-full h-auto'>
 				<Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
 			</div>
 		</div>

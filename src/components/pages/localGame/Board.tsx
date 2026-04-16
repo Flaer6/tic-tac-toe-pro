@@ -24,8 +24,8 @@ export default function Board({ squares, onPlay, xIsNext }: BoardProps) {
 			{winner ? (
 				<div className='absolute top-0 left-0 right-0 bottom-0 z-30 backdrop-blur-sm'>
 					<div className={styles.winner}>
-						<span>
-							Победитель:{' '}
+						<span className='text-black'>
+							Победитель:
 							<span
 								className={cn('X', {
 									['O']: winner == 'O',
@@ -46,7 +46,7 @@ export default function Board({ squares, onPlay, xIsNext }: BoardProps) {
 				''
 			)}
 
-			<div className='mb-3 p-2 text-7xl font-semibold flex justify-between gap-4 items-center bg-neutral-900 bg-opacity-60 border-[5px] border-neutral-900 border-opacity-50 rounded-xl'>
+			<div className='mb-3 p-2 text-7xl font-semibold flex justify-between gap-4 items-center bg-neutral-900 bg-opacity-60 border-[5px] border-neutral-900 border-opacity-50 rounded-xl '>
 				<div className={cn(status == 'X' ? 'X' : 'X-off')}>X</div>
 				<div className={cn(status == 'O' ? 'O' : 'O-off')}>O</div>
 			</div>

@@ -28,7 +28,7 @@ export default function Router() {
 					<Route path='/game' element={<Game />} />
 					<Route element={<PrivateRoute />}>
 						<Route path='/profile' element={<Profile />}>
-							<Route index path='statistic' element={<Statistic />} />
+							<Route index element={<Statistic />} />
 							<Route path='history' element={<History />} />
 							<Route path='friends' element={<Friends />} />
 							<Route path='friendRequests' element={<FriendRequests />} />

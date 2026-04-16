@@ -1,17 +1,17 @@
 import { create } from 'zustand'
 
 type Store = {
-	messages: string[]
+	messages: string[] | null
 	isAuth: boolean
 	accessToken: string | null
-	setMessages: (msg: string[]) => void
+	setMessages: (msg: string[] | null) => void
 	setAuth: (isAuth: boolean) => void
 	setAccessToken: (token: string | null) => void
 	logout: () => void
 }
 
 export const useAuthStore = create<Store>(set => ({
-	messages: [],
+	messages: null,
 	accessToken: localStorage.getItem('accessToken'),
 	isAuth: !!localStorage.getItem('accessToken'),
 

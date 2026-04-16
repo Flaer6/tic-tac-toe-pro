@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { useGetProfile } from '../../../hooks/useGetUser'
 
 export const ProfileStatus = ({ className }: { className?: string }) => {
-	const { data } = useGetProfile()
+	const { user } = useGetProfile()
 
 	return (
 		<div className=''>
@@ -18,8 +18,8 @@ export const ProfileStatus = ({ className }: { className?: string }) => {
 					/>
 				</div>
 				<div className={className}>
-					<div className='text-xl'>{data?.username}</div>
-					<div className='text-primary text-xs'>{data?.publicId}</div>
+					<div className='text-xl'>{user?.username}</div>
+					<div className='text-primary text-xs'>{user?.publicId}</div>
 				</div>
 			</Link>
 		</div>

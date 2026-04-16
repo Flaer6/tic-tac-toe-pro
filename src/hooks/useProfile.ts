@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import type { AxiosError } from 'axios'
+import toast from 'react-hot-toast'
 import { userService } from '../shared/services/userService'
 import { useAuthStore } from '../store/auth.store'
 import type {
@@ -21,10 +22,13 @@ export const useProfile = () => {
 	} = useMutation<IProfileResponse, AxiosError, IInputSearchUser>({
 		mutationKey: ['searchUser'],
 		mutationFn: userService.searchUser,
-		onSuccess: () => setMessages([]),
+		onSuccess: () => {
+			setMessages(null)
+		},
 	})
 
 	const onSearch = (formData: IInputSearchUser) => {
+		resetFriendState()
 		searchUser(formData)
 	}
 
@@ -32,10 +36,12 @@ export const useProfile = () => {
 		mutate: addFriend,
 		isSuccess: isAddFriend,
 		isError: friendError,
+		reset: resetFriendState,
 	} = useMutation<IFriendRequest, AxiosError<IErrorResponse>, string>({
 		mutationKey: ['friendRequest'],
 		mutationFn: userService.friendRequest,
 		onSuccess: () => {
+			setMessages(null)
 			queryClient.invalidateQueries({ queryKey: ['friend-requests'] })
 			queryClient.invalidateQueries({ queryKey: ['friends'] })
 		},
@@ -54,7 +60,7 @@ export const useProfile = () => {
 		queryFn: userService.getFriendRequests,
 	})
 
-	const { mutate: acceptFriend } = useMutation<
+	const { mutate: acceptFriend, isPending: isAccepting } = useMutation<
 		IFriendRequest,
 		AxiosError,
 		string
@@ -62,15 +68,17 @@ export const useProfile = () => {
 		mutationKey: ['friend-accept'],
 		mutationFn: userService.acceptRequest,
 		onSuccess: () => {
+			toast.success('Друг добавлен 🎉')
 			queryClient.invalidateQueries({ queryKey: ['friend-requests'] })
 			queryClient.invalidateQueries({ queryKey: ['friends'] })
 		},
 	})
 
-	const { mutate: rejectFriend } = useMutation({
+	const { mutate: rejectFriend, isPending: isRejecting } = useMutation({
 		mutationKey: ['friend-reject'],
 		mutationFn: userService.rejectRequest,
 		onSuccess: () => {
+			toast('Заявка отклонена', { icon: '❌' })
 			queryClient.invalidateQueries({ queryKey: ['friend-requests'] })
 			queryClient.invalidateQueries({ queryKey: ['friends'] })
 		},
@@ -100,5 +108,8 @@ export const useProfile = () => {
 		rejectFriend,
 		getFriends,
 		requests,
+		resetFriendState,
+		isAccepting,
+		isRejecting,
 	}
 }

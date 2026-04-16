@@ -9,10 +9,12 @@ import { menuData } from './menu.data'
 export const AsideMenu = () => {
 	const [isActive, setIsActive] = useState<boolean>(false)
 	return (
-		<aside className='relative h-screen bg-white/10 p-2 max-w-56 w-fit flex flex-col justify-between max-[970px]:items-center max-[790px]:hidden'>
+		<aside
+			className={`relative h-screen bg-white/10 p-2 max-w-56 w-full flex flex-col justify-between max-[970px]:items-center max-[790px]:hidden max-[970px]:w-fit ${isActive && 'w-fit!'} `}
+		>
 			<button
 				type='button'
-				className='absolute top-0 -right-5.5 z-10 text-primary max-[970px]:hidden'
+				className='absolute top-0 right-0 z-10 text-primary max-[970px]:hidden'
 				onClick={() => setIsActive(!isActive)}
 			>
 				{!isActive ? <PanelLeftClose /> : <PanelRightClose />}

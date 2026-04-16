@@ -42,7 +42,6 @@ body {
 
 .X {
 	@apply text-sky-300;
-	text-shadow: 0 0 7px rgb(14 165 233);
 }
 .X-off {
 	@apply text-sky-800;
@@ -50,7 +49,6 @@ body {
 }
 .O {
 	@apply text-rose-600;
-	text-shadow: 0 0 7px rgb(244 63 94);
 }
 .O-off {
 	@apply text-rose-900;

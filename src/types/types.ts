@@ -53,6 +53,7 @@ export interface IProfileResponse {
 	username: string
 	email?: string
 	avatar: string | null
+	createdAt: string | number
 }
 export interface IInputSearchUser {
 	identifier: string
@@ -90,7 +91,7 @@ export interface IDataGameRequest {
 }
 
 export interface IMenu {
-	icon?: LucideIcon
+	icon: LucideIcon
 	name: string
 	href: string
 }

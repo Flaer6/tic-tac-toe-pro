@@ -1,15 +1,20 @@
-import { CircleUser, Gamepad2, Globe, Users } from 'lucide-react'
+import { CircleUser, Gamepad2, Globe, Home, Users } from 'lucide-react'
 import type { IMenu } from '../../../types/types'
 
 export const menuData: IMenu[] = [
 	{
+		icon: Home,
+		name: 'На Главную',
+		href: '/',
+	},
+	{
 		icon: Gamepad2,
-		name: 'Играть локально',
+		name: 'Играть Локально',
 		href: '/game',
 	},
 	{
 		icon: Globe,
-		name: 'Играть онлайн',
+		name: 'Играть Онлайн',
 		href: '/online',
 	},
 	{

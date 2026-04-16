@@ -1,9 +1,12 @@
-import type { IMenu } from '../../../types/types'
+interface ITab {
+	name: string
+	href: string
+}
 
-export const tabsProfile: IMenu[] = [
+export const tabsProfile: ITab[] = [
 	{
 		name: 'Статистика',
-		href: 'statistic',
+		href: '',
 	},
 	{
 		name: 'История',
