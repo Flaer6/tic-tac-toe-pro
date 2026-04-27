@@ -14,6 +14,8 @@ export const MobileMenu = () => {
 				className='absolute top-2 left-2 w-8 z-20'
 				type='button'
 				onClick={() => setIsActive(!isActive)}
+				aria-label={isActive ? 'Закрыть меню' : 'Открыть меню'}
+				aria-expanded={isActive}
 			>
 				{!isActive ? (
 					<Menu className='w-full h-full' />

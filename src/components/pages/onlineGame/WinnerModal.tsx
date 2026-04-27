@@ -5,7 +5,7 @@ import { useOnlineGameStore } from '../../../store/onlineGame.store'
 
 export const WinnerModal = () => {
 	const { winner, opponentName, reset, reconnecting } = useOnlineGameStore()
-	const { data: user } = useGetProfile()
+	const { user } = useGetProfile()
 
 	const handleNewGame = () => {
 		reset()

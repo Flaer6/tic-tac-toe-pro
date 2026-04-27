@@ -10,19 +10,24 @@ import Game from '../pages/localGame/Game'
 import NotFound from '../pages/notFound/NotFound'
 import { OnlineGame } from '../pages/onlineGame/OnlineGame'
 import { Profile } from '../pages/profile/Profile'
-import { FriendRequests } from '../pages/profile/tabs/FriendRequests'
-import { Friends } from '../pages/profile/tabs/Friends'
+import { FriendRequests } from '../pages/profile/tabs/friendRequests/FriendRequests'
+import { Friends } from '../pages/profile/tabs/friends/Friends'
 import { History } from '../pages/profile/tabs/History'
 import { Statistic } from '../pages/profile/tabs/Statistic'
+import { ResetPassword } from '../pages/ResetPassword'
+import { VerifyEmail } from '../test'
 
 export default function Router() {
 	const checkAuth = useCheckAuth()
 	useEffect(() => {
 		if (localStorage.getItem('accessToken')) checkAuth
 	}, [])
+
 	return (
 		<BrowserRouter>
 			<Routes>
+				<Route path='/verify-email' element={<VerifyEmail />} />
+				<Route path='/reset-password' element={<ResetPassword />} />
 				<Route element={<Layout />}>
 					<Route index element={<Home />} />
 					<Route path='/game' element={<Game />} />

@@ -4,16 +4,22 @@ import { Link } from 'react-router-dom'
 import { useGetProfile } from '../../../hooks/useGetUser'
 import { useProfile } from '../../../hooks/useProfile'
 import { authService } from '../../../shared/services/authService'
+import { useOnlineGameStore } from '../../../store/onlineGame.store'
 import { ConfirmModal } from '../../ui/modals/ConfirmModal'
 
 export const HeaderProfile = () => {
 	const { getFriends } = useProfile()
 	const { user, createAtUser } = useGetProfile()
+	const { onlineUsers } = useOnlineGameStore()
+
 	const [isOpen, setIsOpen] = useState(false)
+
+	const isOnline = user?.id && onlineUsers.includes(String(user.id))
+
 	return (
 		<div className='flex flex-col gap-6 p-4 md:p-6 xl:flex-row xl:items-center xl:justify-between'>
 			<div className='flex min-w-0 items-center gap-4 md:gap-5'>
-				<div className='shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-1 shadow-	s[0_0_30px_rgba(0,0,0,0.15)]'>
+				<div className='shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-1 shadow-[0_0_30px_rgba(0,0,0,0.15)]'>
 					<img
 						className='h-20 w-20 rounded-xl object-cover md:h-24 md:w-24'
 						src='/assets/favicons/512x512.jpg'
@@ -22,6 +28,7 @@ export const HeaderProfile = () => {
 				</div>
 
 				<div className='min-w-0'>
+					{/* HEADER */}
 					<div className='flex flex-wrap items-center gap-3'>
 						<h1 className='truncate text-2xl font-semibold text-white md:text-3xl'>
 							{user?.username}
@@ -30,8 +37,29 @@ export const HeaderProfile = () => {
 						<span className='rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-300'>
 							ID: {user?.publicId}
 						</span>
+
+						{/* ONLINE STATUS */}
+						<div
+							className={`flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium border
+								${
+									isOnline
+										? 'border-emerald-400/20 bg-emerald-400/10 text-emerald-300'
+										: 'border-gray-400/20 bg-gray-400/10 text-gray-300'
+								}
+							`}
+						>
+							<span
+								className={`h-2.5 w-2.5 rounded-full ${
+									isOnline
+										? 'bg-emerald-400 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.9)]'
+										: 'bg-gray-400'
+								}`}
+							/>
+							{isOnline ? 'В сети' : 'Не в сети'}
+						</div>
 					</div>
 
+					{/* INFO */}
 					<div className='mt-3 flex flex-wrap items-center gap-3 text-sm text-white/60'>
 						<div className='rounded-xl border border-white/10 bg-white/5 px-3 py-2'>
 							<span className='text-white/50'>Дата создания: </span>
@@ -49,6 +77,7 @@ export const HeaderProfile = () => {
 				</div>
 			</div>
 
+			{/* ACTIONS */}
 			<div className='flex w-full flex-col gap-3 sm:flex-row xl:w-auto'>
 				<Link
 					to='/Editor'
@@ -66,6 +95,7 @@ export const HeaderProfile = () => {
 					<LogOut className='h-5 w-5' />
 					<span>Выйти</span>
 				</button>
+
 				<ConfirmModal
 					isOpen={isOpen}
 					onClose={() => setIsOpen(false)}

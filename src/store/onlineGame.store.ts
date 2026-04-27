@@ -25,8 +25,12 @@ interface OnlineGameState {
 	opponentId: string | null
 	opponentName: string | null
 	reconnecting: boolean
-	setReconnecting: (value: boolean) => void
+	onlineUsers: string[]
+	setOnlineUsers: (users: string[]) => void
+	addOnlineUser: (userId: string) => void
+	removeOnlineUser: (userId: string) => void
 
+	setReconnecting: (value: boolean) => void
 	setGame: (data: IGame, userId: string) => void
 	setWinner: (winner: string) => void
 	updateBoard: (
@@ -47,10 +51,27 @@ export const useOnlineGameStore = create<OnlineGameState>(set => ({
 	opponentId: null,
 	opponentName: null,
 	reconnecting: false,
+	onlineUsers: [],
 
+	setOnlineUsers: users =>
+		set({
+			onlineUsers: [...users],
+		}),
+
+	addOnlineUser: userId =>
+		set(state => ({
+			onlineUsers: [...new Set([...state.onlineUsers, userId])],
+		})),
+
+	removeOnlineUser: userId =>
+		set(state => ({
+			onlineUsers: state.onlineUsers.filter(id => id !== userId),
+		})),
 	setReconnecting: value => set({ reconnecting: value }),
 
 	setGame: (data, userId) => {
+		if (data.winner) return
+
 		const player = data.players.find(p => p.userId === userId)
 		const opponent = data.players.find(p => p.userId !== userId)
 
@@ -61,6 +82,8 @@ export const useOnlineGameStore = create<OnlineGameState>(set => ({
 			symbol: player?.symbol ?? null,
 			opponentId: opponent?.userId ?? null,
 			opponentName: opponent?.username ?? null,
+			winner: null,
+			removingIndex: null,
 		})
 	},
 

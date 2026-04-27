@@ -8,12 +8,24 @@ import styles from '../localGame/localGame.module.css'
 import { WinnerModal } from './WinnerModal'
 
 export function OnlineBoard() {
-	const { board, turn, symbol, removingIndex, opponentName, reconnecting } =
-		useOnlineGameStore()
+	const {
+		board,
+		turn,
+		symbol,
+		removingIndex,
+		opponentName,
+		reconnecting,
+		roomId,
+	} = useOnlineGameStore()
 
 	const { user } = useGetProfile()
 
+	if (!roomId) {
+		return <div>Игра не активна</div>
+	}
+
 	const opponentSymbol = symbol === 'X' ? 'O' : symbol === 'O' ? 'X' : null
+
 	const isMyTurn = turn === user?.id
 
 	const handleClick = (index: number) => {

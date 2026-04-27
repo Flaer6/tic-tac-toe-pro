@@ -1,4 +1,11 @@
-import { CircleUser, Gamepad2, Globe, Home, Users } from 'lucide-react'
+import {
+	CircleUser,
+	Gamepad2,
+	Globe,
+	Home,
+	Settings,
+	Users,
+} from 'lucide-react'
 import type { IMenu } from '../../../types/types'
 
 export const menuData: IMenu[] = [
@@ -26,5 +33,10 @@ export const menuData: IMenu[] = [
 		icon: CircleUser,
 		name: 'Профиль',
 		href: '/profile',
+	},
+	{
+		icon: Settings,
+		name: 'Настройки',
+		href: '/settings',
 	},
 ]

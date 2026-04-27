@@ -6,11 +6,12 @@ export const AppInit = () => {
 	const { accessToken } = useAuthStore()
 
 	useEffect(() => {
-		if (accessToken) {
-			connectSocket(accessToken)
-		} else {
+		if (!accessToken) {
 			disconnectSocket()
+			return
 		}
+
+		connectSocket(accessToken)
 	}, [accessToken])
 
 	return null

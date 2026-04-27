@@ -3,11 +3,12 @@ import type { AxiosError } from 'axios'
 import toast from 'react-hot-toast'
 import { userService } from '../shared/services/userService'
 import { useAuthStore } from '../store/auth.store'
-import type {
-	IErrorResponse,
-	IFriendRequest,
-	IInputSearchUser,
-	IProfileResponse,
+import {
+	FriendStatus,
+	type IErrorResponse,
+	type IFriendRequest,
+	type IInputSearchUser,
+	type IProfileResponse,
 } from '../types/types'
 
 export const useProfile = () => {
@@ -94,6 +95,8 @@ export const useProfile = () => {
 		mutationFn: userService.removeFriend,
 		onSuccess: () => queryClient.invalidateQueries({ queryKey: ['friends'] }),
 	})
+	const pendingRequests =
+		requests?.filter(r => r.status === FriendStatus.PENDING) ?? []
 	return {
 		messages,
 		user,
@@ -111,5 +114,6 @@ export const useProfile = () => {
 		resetFriendState,
 		isAccepting,
 		isRejecting,
+		pendingRequests,
 	}
 }
