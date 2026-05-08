@@ -2,6 +2,7 @@ import type {
 	IFriendRequest,
 	IInputSearchUser,
 	IProfileResponse,
+	IUpdateProfileResponse,
 } from '../../types/types'
 import { api } from '../api/api'
 
@@ -39,6 +40,9 @@ class UserService {
 	}
 	async removeFriend(friendId: string) {
 		return await api.post('/user/friends/remove', { friendId })
+	}
+	async updateProfile(data: IUpdateProfileResponse) {
+		return await api.patch('/update-profile', data)
 	}
 }
 export const userService = new UserService()

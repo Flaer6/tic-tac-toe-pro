@@ -15,6 +15,15 @@
 	--font-rubik: Rubik Wet Paint;
 }
 
+@layer components {
+	.bg-card {
+		@apply rounded-3xl border border-white/10 bg-white/3 backdrop-blur-xl;
+	}
+	.bg-inner {
+		@apply border-white/10 bg-black/10;
+	}
+}
+
 ::-webkit-scrollbar {
 	width: 6px;
 }

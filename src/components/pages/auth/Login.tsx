@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import { useAuthQuery } from '../../../hooks/useAuthQuery'
 import type { IInputAuth } from '../../../types/types'
+import { AuthGoogleBtn } from '../../ui/buttons/AuthGoole.btn'
 import { SubmitButton } from '../../ui/buttons/Submit.btn'
 import { InputAuth } from '../../ui/inputs/InputAuth'
 
@@ -51,10 +52,15 @@ export const Login = () => {
 							className='w-full'
 							{...register('password')}
 						/>
-
+						<a
+							href='/forgotPassword'
+							className='text-primary text-right hover:text-white -mt-3'
+						>
+							Забыли пароль?
+						</a>
 						<SubmitButton className='py-3 mt-2'>Войти</SubmitButton>
 					</form>
-
+					<AuthGoogleBtn />
 					<div className='mt-6 text-center text-sm text-white/50'>
 						Нет аккаунта?{' '}
 						<Link

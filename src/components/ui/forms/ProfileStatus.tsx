@@ -13,7 +13,7 @@ export const ProfileStatus = ({ className }: { className?: string }) => {
 				<div className=''>
 					<img
 						className='max-w-11 rounded-xl'
-						src='/assets/favicons/512x512.jpg'
+						src={user?.avatar || '/assets/favicons/512x512.jpg'}
 						alt=''
 					/>
 				</div>

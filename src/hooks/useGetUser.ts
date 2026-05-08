@@ -7,7 +7,10 @@ import type { IProfileResponse } from '../types/types'
 export const useGetProfile = () => {
 	const isAuth = useAuthStore(state => state.isAuth)
 
-	const { data: user } = useQuery<IProfileResponse, AxiosError>({
+	const { data: user, refetch: userRefetch } = useQuery<
+		IProfileResponse,
+		AxiosError
+	>({
 		queryKey: ['profile'],
 		enabled: isAuth,
 		queryFn: userService.getUser,
@@ -23,5 +26,6 @@ export const useGetProfile = () => {
 	return {
 		user,
 		createAtUser,
+		userRefetch,
 	}
 }

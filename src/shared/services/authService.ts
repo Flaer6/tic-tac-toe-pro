@@ -11,6 +11,18 @@ class AuthService {
 		const response = await api.post('/auth/login', data)
 		return response.data
 	}
+
+	async forgotPassword(email: string): Promise<void> {
+		return await api.post('/auth/forgot-password', { email })
+	}
+
+	async resetPassword(token: string, password: string): Promise<void> {
+		return await api.post('/auth/reset-password', {
+			token,
+			password,
+		})
+	}
+
 	async logout(): Promise<void> {
 		try {
 			await api.post('/auth/logout')

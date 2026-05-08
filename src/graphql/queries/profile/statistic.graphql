@@ -1,0 +1,9 @@
+query getUserStats {
+	getUserStats {
+		losses
+		totalGames
+		winRate
+		winStreak
+		wins
+	}
+}

@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import { useAuthQuery } from '../../../hooks/useAuthQuery'
 import type { IInputAuth } from '../../../types/types'
+import { AuthGoogleBtn } from '../../ui/buttons/AuthGoole.btn'
 import { SubmitButton } from '../../ui/buttons/Submit.btn'
 import { InputAuth } from '../../ui/inputs/InputAuth'
 
@@ -65,7 +66,7 @@ export const Register = () => {
 							Зарегистрироваться
 						</SubmitButton>
 					</form>
-
+					<AuthGoogleBtn />
 					{/* FOOTER */}
 					<div className='mt-6 text-center text-sm text-white/50'>
 						Уже есть аккаунт?

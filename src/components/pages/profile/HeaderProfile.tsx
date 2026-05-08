@@ -15,6 +15,7 @@ export const HeaderProfile = () => {
 	const [isOpen, setIsOpen] = useState(false)
 
 	const isOnline = user?.id && onlineUsers.includes(String(user.id))
+	console.log(user)
 
 	return (
 		<div className='flex flex-col gap-6 p-4 md:p-6 xl:flex-row xl:items-center xl:justify-between'>
@@ -22,7 +23,7 @@ export const HeaderProfile = () => {
 				<div className='shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-1 shadow-[0_0_30px_rgba(0,0,0,0.15)]'>
 					<img
 						className='h-20 w-20 rounded-xl object-cover md:h-24 md:w-24'
-						src='/assets/favicons/512x512.jpg'
+						src={user?.avatar || '/assets/favicons/512x512.jpg'}
 						alt='Avatar'
 					/>
 				</div>
@@ -30,9 +31,14 @@ export const HeaderProfile = () => {
 				<div className='min-w-0'>
 					{/* HEADER */}
 					<div className='flex flex-wrap items-center gap-3'>
-						<h1 className='truncate text-2xl font-semibold text-white md:text-3xl'>
-							{user?.username}
-						</h1>
+						<div className=''>
+							<h1 className='truncate text-2xl font-semibold text-white md:text-3xl'>
+								{user?.username}
+							</h1>
+							<div className=''>
+								{user?.firstName} {user?.lastName}
+							</div>
+						</div>
 
 						<span className='rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-300'>
 							ID: {user?.publicId}

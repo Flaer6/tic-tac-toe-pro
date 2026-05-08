@@ -111,12 +111,6 @@ export const useGameSocket = () => {
 		RESTORE ON MOUNT
 	========================= */
 
-	useEffect(() => {
-		if (socket.connected) {
-			socket.emit('restore_game')
-		}
-	}, [])
-
 	/* =========================
 		GAME EVENTS
 	========================= */
@@ -149,8 +143,11 @@ export const useGameSocket = () => {
 			setWinner(data.winner)
 
 			setTimeout(() => {
-				reset()
-				setStatus('idle')
+				setStatus(prev => {
+					if (prev === 'found') return prev
+					reset()
+					return 'idle'
+				})
 			}, 5000)
 		}
 
@@ -182,10 +179,8 @@ export const useGameSocket = () => {
 	========================= */
 
 	const handleFind = () => {
-		if (!socket.connected) {
-			console.log('SOCKET NOT CONNECTED')
-			return
-		}
+		if (!socket.connected) return
+		if (status === 'searching') return
 
 		if (status !== 'found') reset()
 

@@ -1,0 +1,17 @@
+query GetUserHistory {
+	getGameHistory {
+		id
+		roomId
+		finishedAt
+		winnerId
+		players {
+			id
+			winner
+			userId
+			user {
+				id
+				username
+			}
+		}
+	}
+}

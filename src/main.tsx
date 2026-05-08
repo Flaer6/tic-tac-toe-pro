@@ -6,6 +6,7 @@ import { Toaster } from 'react-hot-toast'
 import { AppInit } from './AppInit.tsx'
 import Router from './components/router/Router.tsx'
 import './index.css'
+import { ApolloClientProvider } from './providers/apolloClientProider.tsx'
 import PWABadge from './PWABadge.tsx'
 
 export const queryClient = new QueryClient({
@@ -18,22 +19,24 @@ export const queryClient = new QueryClient({
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>
-		<QueryClientProvider client={queryClient}>
-			<LazyMotion features={domAnimation}>
-				<Toaster
-					position='top-right'
-					toastOptions={{
-						style: {
-							background: '#1f1d2b',
-							color: '#fff',
-							border: '1px solid rgba(255,255,255,0.1)',
-						},
-					}}
-				/>
-				<AppInit />
-				<Router />
-			</LazyMotion>
-		</QueryClientProvider>
+		<ApolloClientProvider>
+			<QueryClientProvider client={queryClient}>
+				<LazyMotion features={domAnimation}>
+					<Toaster
+						position='top-right'
+						toastOptions={{
+							style: {
+								background: '#1f1d2b',
+								color: '#fff',
+								border: '1px solid rgba(255,255,255,0.1)',
+							},
+						}}
+					/>
+					<AppInit />
+					<Router />
+				</LazyMotion>
+			</QueryClientProvider>
+		</ApolloClientProvider>
 		<PWABadge />
 	</React.StrictMode>,
 )

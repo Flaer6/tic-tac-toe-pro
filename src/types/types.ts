@@ -52,7 +52,10 @@ export interface IProfileResponse {
 	publicId: number
 	username: string
 	email?: string
+	firstName?: string
+	lastName?: string
 	avatar: string | null
+	hasPassword?: boolean
 	createdAt: string | number
 }
 export interface IInputSearchUser {
@@ -94,4 +97,18 @@ export interface IMenu {
 	icon: LucideIcon
 	name: string
 	href: string
+}
+
+export interface ITab {
+	icon: LucideIcon
+	name: string
+	href: string
+}
+
+export interface IUpdateProfileResponse {
+	firstName?: string
+	lastName?: string
+	newPassword?: string
+	oldPassword?: string
+	confirmPassword?: string
 }
