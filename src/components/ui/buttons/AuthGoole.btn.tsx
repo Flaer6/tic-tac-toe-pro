@@ -1,7 +1,7 @@
 export const AuthGoogleBtn = () => {
 	return (
 		<a
-			href='http://192.168.1.11:4200/auth/google'
+			href={`${import.meta.env.VITE_API_URL}/auth/google`}
 			className='group flex w-full items-center justify-center gap-3 rounded-xl border border-white/10 bg-white px-4 py-3 font-medium text-gray-800 shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:bg-gray-100 hover:shadow-xl focus:ring-2 focus:ring-blue-500 focus:outline-none active:translate-y-0 mt-5'
 		>
 			<svg
