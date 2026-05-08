@@ -10,7 +10,7 @@ export const AsideMenu = () => {
 	const [isActive, setIsActive] = useState<boolean>(false)
 	return (
 		<aside
-			className={`relative h-screen bg-white/10 p-2 max-w-56 w-full flex flex-col justify-between max-[970px]:items-center max-[790px]:hidden max-[970px]:w-fit ${isActive && 'w-fit!'} `}
+			className={`relative h-full p-3 max-w-60 w-full flex flex-col justify-between max-[970px]:items-center max-[790px]:hidden max-[970px]:w-fit ${isActive && 'w-fit!'} bg-card`}
 		>
 			<button
 				type='button'

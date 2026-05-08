@@ -21,7 +21,12 @@ export const Layout = () => {
 		)
 
 	return (
-		<div className={cn({ flex: isAuth })}>
+		<div
+			className={cn(
+				{ flex: isAuth },
+				'bg-[url("/bg.png")] bg-cover bg-center h-full p-2.5',
+			)}
+		>
 			{!isAuth && <AuthLayout />}
 
 			{isAuth && (
@@ -31,7 +36,7 @@ export const Layout = () => {
 				</>
 			)}
 
-			<main className='mx-auto relative w-full overflow-y-auto h-dvh'>
+			<main className='mx-auto relative w-full overflow-y-auto h-dvh '>
 				<Outlet />
 			</main>
 
