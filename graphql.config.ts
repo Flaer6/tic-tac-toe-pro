@@ -18,6 +18,9 @@ const config: CodegenConfig = {
 		withHooks: true,
 		reactApolloVersion: 3,
 		apolloReactHooksImportFrom: '@apollo/client/react',
+		scalars: {
+			DateTime: 'string',
+		},
 	},
 }
 export default config

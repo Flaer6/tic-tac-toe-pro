@@ -1,8 +1,8 @@
 import { m } from 'framer-motion'
-import { useGetProfile } from '../../../hooks/useGetUser'
 import { socket } from '../../../shared/socket'
 import { useOnlineGameStore } from '../../../store/onlineGame.store'
 
+import { useGetMeQuery } from '../../../graphql/generated/output'
 import Square from '../localGame/Square'
 import styles from '../localGame/localGame.module.css'
 import { WinnerModal } from './WinnerModal'
@@ -18,7 +18,7 @@ export function OnlineBoard() {
 		roomId,
 	} = useOnlineGameStore()
 
-	const { user } = useGetProfile()
+	const { data } = useGetMeQuery()
 
 	if (!roomId) {
 		return <div>Игра не активна</div>
@@ -26,11 +26,11 @@ export function OnlineBoard() {
 
 	const opponentSymbol = symbol === 'X' ? 'O' : symbol === 'O' ? 'X' : null
 
-	const isMyTurn = turn === user?.id
+	const isMyTurn = turn === data?.getMe?.id
 
 	const handleClick = (index: number) => {
-		if (!user || !symbol) return
-		if (turn !== user.id) return
+		if (!data?.getMe || !symbol) return
+		if (turn !== data?.getMe.id) return
 		if (board[index] !== null) return
 
 		socket.emit('make_move', { index })
@@ -43,7 +43,7 @@ export function OnlineBoard() {
 					animate={{ opacity: isMyTurn ? 1 : 0.5 }}
 					className='flex flex-col'
 				>
-					<span className='text-lg font-semibold'>{user?.username}</span>
+					<span className='text-lg font-semibold'>{data?.getMe?.username}</span>
 					<span className='text-xs text-white/50'>Вы ({symbol})</span>
 				</m.div>
 				<m.div

@@ -1,18 +1,18 @@
 import { AnimatePresence, m } from 'framer-motion'
-import { useGetProfile } from '../../../hooks/useGetUser'
+import { useGetMeQuery } from '../../../graphql/generated/output'
 import { socket } from '../../../shared/socket'
 import { useOnlineGameStore } from '../../../store/onlineGame.store'
 
 export const WinnerModal = () => {
 	const { winner, opponentName, reset, reconnecting } = useOnlineGameStore()
-	const { user } = useGetProfile()
+	const { data } = useGetMeQuery()
 
 	const handleNewGame = () => {
 		reset()
 		socket.emit('find_game')
 	}
 
-	const isWin = winner === user?.id
+	const isWin = winner === data?.getMe?.id
 
 	return (
 		<AnimatePresence>

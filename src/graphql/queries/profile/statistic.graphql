@@ -1,5 +1,15 @@
-query getUserStats {
-	getUserStats {
+query getMyStats {
+	getMyStats {
+		losses
+		totalGames
+		winRate
+		winStreak
+		wins
+	}
+}
+
+query GetUserStats($id: String!) {
+	getUserStats(id: $id) {
 		losses
 		totalGames
 		winRate

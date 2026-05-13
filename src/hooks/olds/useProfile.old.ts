@@ -1,17 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import type { AxiosError } from 'axios'
 import toast from 'react-hot-toast'
-import { userService } from '../shared/services/userService'
-import { useAuthStore } from '../store/auth.store'
+import { userService } from '../../shared/services/userService'
+import { useAuthStore } from '../../store/auth.store'
 import {
 	FriendStatus,
 	type IErrorResponse,
 	type IFriendRequest,
 	type IInputSearchUser,
 	type IProfileResponse,
-} from '../types/types'
+} from '../../types/types'
 
-export const useProfile = () => {
+const useProfileOld = () => {
 	const { setMessages, messages } = useAuthStore()
 	const queryClient = useQueryClient()
 

@@ -17,6 +17,7 @@ import { ForgotPassword } from '../pages/auth/ForgotPassword'
 import { ResetPassword } from '../pages/auth/ResetPassword'
 import { GameHistory } from '../pages/profile/tabs/history/History'
 import { Statistic } from '../pages/profile/tabs/statistic/Statistic'
+import { UserProfile } from '../pages/profile/userProfile/UserProfile'
 import { Settings } from '../pages/settings/Settings'
 import { GameSettingsTab } from '../pages/settings/tabs/game-settings/GameSettingsTab'
 import { InterfaceTab } from '../pages/settings/tabs/interface/InterfaceTab'
@@ -52,6 +53,7 @@ export default function Router() {
 							<Route path='game-settings' element={<GameSettingsTab />} />
 							<Route path='interface' element={<InterfaceTab />} />
 						</Route>
+						<Route path='/:id' element={<UserProfile />}></Route>
 					</Route>
 				</Route>
 				<Route element={<PublicRoute />}>

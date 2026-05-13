@@ -1,5 +1,23 @@
-query GetUserHistory {
-	getGameHistory {
+query GetMyHistory {
+	getMyHistory {
+		id
+		roomId
+		finishedAt
+		winnerId
+		players {
+			id
+			winner
+			userId
+			user {
+				id
+				username
+			}
+		}
+	}
+}
+
+query GetUserHistory($id: String!) {
+	getUserHistory(id: $id) {
 		id
 		roomId
 		finishedAt

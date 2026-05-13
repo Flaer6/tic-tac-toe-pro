@@ -60,6 +60,7 @@ export const useAuthQuery = () => {
 	const handleLogout = async () => {
 		await authService.logout()
 		queryClient.clear()
+		setAuth(false)
 		navigate('/')
 	}
 

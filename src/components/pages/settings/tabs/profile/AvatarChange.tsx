@@ -1,10 +1,10 @@
 import { CameraIcon, Loader2Icon, UserIcon } from 'lucide-react'
 import { useRef, useState } from 'react'
-import { useGetProfile } from '../../../../../hooks/useGetUser'
+import { useGetMeQuery } from '../../../../../graphql/generated/output'
 import { api } from '../../../../../shared/api/api'
 
 export const AvatarChange = () => {
-	const { user, userRefetch } = useGetProfile()
+	const { data, refetch } = useGetMeQuery()
 
 	const inputRef = useRef<HTMLInputElement>(null)
 
@@ -28,7 +28,7 @@ export const AvatarChange = () => {
 				},
 			})
 
-			await userRefetch()
+			await refetch()
 		} catch (error) {
 			console.error(error)
 		} finally {
@@ -41,7 +41,9 @@ export const AvatarChange = () => {
 				<div className='relative w-fit group'>
 					<img
 						className='h-40 w-40 rounded-2xl object-cover ring-2 ring-white/10 transition-all duration-300 group-hover:brightness-75'
-						src={preview || user?.avatar || '/assets/favicons/512x512.jpg'}
+						src={
+							preview || data?.getMe?.avatar || '/assets/favicons/512x512.jpg'
+						}
 						alt='Avatar'
 					/>
 
@@ -74,13 +76,13 @@ export const AvatarChange = () => {
 					<div className='flex items-center gap-2'>
 						<UserIcon className='h-5 w-5 text-emerald-400' />
 
-						<h3 className='text-xl font-semibold'>{user?.username}</h3>
+						<h3 className='text-xl font-semibold'>{data?.getMe?.username}</h3>
 					</div>
 					<div className=''>
-						{user?.firstName} {user?.lastName}
+						{data?.getMe?.firstName} {data?.getMe?.lastName}
 					</div>
 					<p className='mt-2 text-sm text-muted-foreground'>
-						ID: {user?.publicId}
+						ID: {data?.getMe?.publicId}
 					</p>
 
 					<div className='mt-6 grid gap-4 sm:grid-cols-2'>
@@ -90,7 +92,7 @@ export const AvatarChange = () => {
 							</p>
 
 							<p className='truncate text-sm font-medium'>
-								{user?.email || 'Не указан'}
+								{data?.getMe?.email || 'Не указан'}
 							</p>
 						</div>
 
@@ -99,7 +101,9 @@ export const AvatarChange = () => {
 								Имя пользователя
 							</p>
 
-							<p className='truncate text-sm font-medium'>{user?.username}</p>
+							<p className='truncate text-sm font-medium'>
+								{data?.getMe?.username}
+							</p>
 						</div>
 					</div>
 				</div>

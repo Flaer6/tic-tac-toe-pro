@@ -1,21 +1,21 @@
 import { LogOut, UserRoundPen, Users } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useGetProfile } from '../../../hooks/useGetUser'
-import { useProfile } from '../../../hooks/useProfile'
+import { useGetMeQuery } from '../../../graphql/generated/output'
+
 import { authService } from '../../../shared/services/authService'
 import { useOnlineGameStore } from '../../../store/onlineGame.store'
+import { userDate } from '../../../utils/createAtUser'
 import { ConfirmModal } from '../../ui/modals/ConfirmModal'
 
 export const HeaderProfile = () => {
-	const { getFriends } = useProfile()
-	const { user, createAtUser } = useGetProfile()
+	const { data } = useGetMeQuery()
 	const { onlineUsers } = useOnlineGameStore()
 
 	const [isOpen, setIsOpen] = useState(false)
 
-	const isOnline = user?.id && onlineUsers.includes(String(user.id))
-	console.log(user)
+	const isOnline = data?.getMe.id && onlineUsers.includes(String(data.getMe.id))
+	const createAtUser = userDate(data?.getMe.createdAt)
 
 	return (
 		<div className='flex flex-col gap-6 p-4 md:p-6 xl:flex-row xl:items-center xl:justify-between'>
@@ -23,7 +23,7 @@ export const HeaderProfile = () => {
 				<div className='shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-1 shadow-[0_0_30px_rgba(0,0,0,0.15)]'>
 					<img
 						className='h-20 w-20 rounded-xl object-cover md:h-24 md:w-24'
-						src={user?.avatar || '/assets/favicons/512x512.jpg'}
+						src={data?.getMe?.avatar || '/assets/favicons/512x512.jpg'}
 						alt='Avatar'
 					/>
 				</div>
@@ -33,15 +33,15 @@ export const HeaderProfile = () => {
 					<div className='flex flex-wrap items-center gap-3'>
 						<div className=''>
 							<h1 className='truncate text-2xl font-semibold text-white md:text-3xl'>
-								{user?.username}
+								{data?.getMe?.username}
 							</h1>
 							<div className=''>
-								{user?.firstName} {user?.lastName}
+								{data?.getMe?.firstName} {data?.getMe?.lastName}
 							</div>
 						</div>
 
 						<span className='rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-300'>
-							ID: {user?.publicId}
+							ID: {data?.getMe?.publicId}
 						</span>
 
 						{/* ONLINE STATUS */}
@@ -76,7 +76,7 @@ export const HeaderProfile = () => {
 							<Users className='h-4 w-4 text-white/50' />
 							<span className='text-white/50'>Друзей:</span>
 							<span className='font-medium text-white'>
-								{getFriends?.length ?? 0}
+								{data?.getFriends?.length ?? 0}
 							</span>
 						</div>
 					</div>
@@ -86,7 +86,7 @@ export const HeaderProfile = () => {
 			{/* ACTIONS */}
 			<div className='flex w-full flex-col gap-3 sm:flex-row xl:w-auto'>
 				<Link
-					to='/Editor'
+					to='/settings'
 					className='inline-flex items-center justify-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-white transition duration-200 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/10 active:translate-y-0'
 				>
 					<UserRoundPen className='h-5 w-5 text-white/70' />

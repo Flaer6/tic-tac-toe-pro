@@ -1,19 +1,15 @@
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-
+import { useGetMeQuery } from '../../../../../graphql/generated/output'
 import { useProfileUpdate } from '../../../../../hooks/useProfileUpdate'
-
 import type { IUpdateProfileResponse } from '../../../../../types/types'
-
-import { useGetProfile } from '../../../../../hooks/useGetUser'
-
 import { SubmitButton } from '../../../../ui/buttons/Submit.btn'
 import { InputAuth } from '../../../../ui/inputs/InputAuth'
 
 export const SecurityTab = () => {
-	const { user } = useGetProfile()
+	const { data } = useGetMeQuery()
 
-	const hasPassword = user?.hasPassword
+	const hasPassword = data?.getMe?.hasPassword
 
 	const {
 		register,

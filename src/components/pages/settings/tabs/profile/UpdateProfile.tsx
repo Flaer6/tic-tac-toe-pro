@@ -1,14 +1,17 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { useGetProfile } from '../../../../../hooks/useGetUser'
+import { useGetMeQuery } from '../../../../../graphql/generated/output'
 import { useProfileUpdate } from '../../../../../hooks/useProfileUpdate'
 import type { IUpdateProfileResponse } from '../../../../../types/types'
+import { userDate } from '../../../../../utils/createAtUser'
 import { SubmitButton } from '../../../../ui/buttons/Submit.btn'
 import { InputAuth } from '../../../../ui/inputs/InputAuth'
 
 export const UpdateProfile = () => {
-	const { createAtUser, user } = useGetProfile()
+	const { data } = useGetMeQuery()
 	const { updateProfileMutate, isUpdating } = useProfileUpdate()
+	const createAtUser = userDate(data?.getMe.createdAt)
+
 	const {
 		register,
 		handleSubmit,
@@ -16,18 +19,19 @@ export const UpdateProfile = () => {
 		formState: { isDirty },
 	} = useForm<IUpdateProfileResponse>({
 		defaultValues: {
-			firstName: user?.firstName || 'hello',
-			lastName: user?.lastName || '',
+			firstName: data?.getMe?.firstName || 'hello',
+			lastName: data?.getMe?.lastName || '',
 		},
 	})
 	useEffect(() => {
-		if (user) {
+		if (data?.getMe) {
 			reset({
-				firstName: user.firstName || '',
-				lastName: user.lastName || '',
+				firstName: data?.getMe.firstName || '',
+				lastName: data?.getMe.lastName || '',
+				username: data?.getMe.username || '',
 			})
 		}
-	}, [user, reset])
+	}, [data?.getMe, reset])
 
 	const onSubmit = (data: IUpdateProfileResponse) => {
 		updateProfileMutate(data)
@@ -49,11 +53,22 @@ export const UpdateProfile = () => {
 							Имя пользователя
 						</span>
 
-						<span className='text-sm font-medium'>{user?.username}</span>
+						<span className='text-sm font-medium'>{data?.getMe?.username}</span>
 					</div>
 				</div>
 
 				<form className='space-y-5' onSubmit={handleSubmit(onSubmit)}>
+					<div className='grid grid-cols-[140px_1fr] items-center gap-4'>
+						<label className='text-sm text-muted-foreground'>
+							Имя пользователя
+						</label>
+
+						<InputAuth
+							type='text'
+							placeholder='Введите имя пользователя'
+							{...register('username')}
+						/>
+					</div>
 					<div className='grid grid-cols-[140px_1fr] items-center gap-4'>
 						<label className='text-sm text-muted-foreground'>Имя</label>
 

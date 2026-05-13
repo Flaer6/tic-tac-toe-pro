@@ -1,0 +1,15 @@
+mutation AcceptFriendRequest($input: FriendRequestDto!) {
+	acceptFriendRequest(input: $input)
+}
+
+mutation RejectFriendRequest($input: FriendRequestDto!) {
+	rejectFriendRequest(input: $input)
+}
+
+mutation SendFriendRequest($input: SendFriendRequestDto!) {
+	sendFriendRequest(input: $input)
+}
+
+mutation RemoveFriend($input: RemoveFriendDto!) {
+	removeFriend(input: $input)
+}

@@ -18,6 +18,27 @@ export type Scalars = {
   DateTime: { input: string; output: string; }
 };
 
+export type FriendRequest = {
+  __typename?: 'FriendRequest';
+  createdAt: Scalars['DateTime']['output'];
+  from: User;
+  fromId: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  status: FriendStatus;
+  to: User;
+  toId: Scalars['String']['output'];
+};
+
+export type FriendRequestDto = {
+  requestId: Scalars['String']['input'];
+};
+
+export enum FriendStatus {
+  Accepted = 'ACCEPTED',
+  Pending = 'PENDING',
+  Rejected = 'REJECTED'
+}
+
 export type GamePlayer = {
   __typename?: 'GamePlayer';
   createdAt: Scalars['DateTime']['output'];
@@ -51,38 +72,544 @@ export type GameUserStats = {
   wins: Scalars['Int']['output'];
 };
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  acceptFriendRequest: Scalars['Boolean']['output'];
+  rejectFriendRequest: Scalars['Boolean']['output'];
+  removeFriend: Scalars['Boolean']['output'];
+  sendFriendRequest: Scalars['Boolean']['output'];
+};
+
+
+export type MutationAcceptFriendRequestArgs = {
+  input: FriendRequestDto;
+};
+
+
+export type MutationRejectFriendRequestArgs = {
+  input: FriendRequestDto;
+};
+
+
+export type MutationRemoveFriendArgs = {
+  input: RemoveFriendDto;
+};
+
+
+export type MutationSendFriendRequestArgs = {
+  input: SendFriendRequestDto;
+};
+
 export type Query = {
   __typename?: 'Query';
-  getGameHistory: Array<GameStatistic>;
+  getFriendRequests: Array<FriendRequest>;
+  getFriends: Array<User>;
+  getMe: User;
+  getMyHistory: Array<GameStatistic>;
+  getMyStats: GameUserStats;
+  getUser: User;
+  getUserHistory: Array<GameStatistic>;
+  getUserProfile: User;
   getUserStats: GameUserStats;
+  searchUser: User;
+};
+
+
+export type QueryGetUserArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGetUserHistoryArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGetUserProfileArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGetUserStatsArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QuerySearchUserArgs = {
+  input: SearchUserDto;
+};
+
+export type RemoveFriendDto = {
+  friendId: Scalars['String']['input'];
+};
+
+export type SearchUserDto = {
+  identifier: Scalars['String']['input'];
+};
+
+export type SendFriendRequestDto = {
+  toId: Scalars['String']['input'];
 };
 
 export type User = {
   __typename?: 'User';
   avatar?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  email: Scalars['String']['output'];
   firstName?: Maybe<Scalars['String']['output']>;
+  hasPassword: Scalars['Boolean']['output'];
   id: Scalars['ID']['output'];
   lastName?: Maybe<Scalars['String']['output']>;
-  publicId: Scalars['Int']['output'];
+  publicId: Scalars['String']['output'];
   stats?: Maybe<GameUserStats>;
   username: Scalars['String']['output'];
   winStreak?: Maybe<Scalars['Int']['output']>;
 };
 
-export type GetUserHistoryQueryVariables = Exact<{ [key: string]: never; }>;
+export type FriendRequestDto = {
+  requestId: string;
+};
+
+export type FriendStatus =
+  | 'ACCEPTED'
+  | 'PENDING'
+  | 'REJECTED';
+
+export type RemoveFriendDto = {
+  friendId: string;
+};
+
+export type SearchUserDto = {
+  identifier: string;
+};
+
+export type SendFriendRequestDto = {
+  toId: string;
+};
+
+export type AcceptFriendRequestMutationVariables = Exact<{
+  input: FriendRequestDto;
+}>;
 
 
-export type GetUserHistoryQuery = { getGameHistory: Array<{ id: string, roomId: string, finishedAt: string | null, winnerId: string | null, players: Array<{ id: string, winner: boolean, userId: string, user: { id: string, username: string } }> }> };
+export type AcceptFriendRequestMutation = { acceptFriendRequest: boolean };
 
-export type GetUserStatsQueryVariables = Exact<{ [key: string]: never; }>;
+export type RejectFriendRequestMutationVariables = Exact<{
+  input: FriendRequestDto;
+}>;
+
+
+export type RejectFriendRequestMutation = { rejectFriendRequest: boolean };
+
+export type SendFriendRequestMutationVariables = Exact<{
+  input: SendFriendRequestDto;
+}>;
+
+
+export type SendFriendRequestMutation = { sendFriendRequest: boolean };
+
+export type RemoveFriendMutationVariables = Exact<{
+  input: RemoveFriendDto;
+}>;
+
+
+export type RemoveFriendMutation = { removeFriend: boolean };
+
+export type GetMeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMeQuery = { getMe: { avatar: string | null, firstName: string | null, id: string, lastName: string | null, publicId: string, username: string, createdAt: string, email: string, hasPassword: boolean }, getFriends: Array<{ id: string, avatar: string | null, firstName: string | null, lastName: string | null, publicId: string, username: string }>, getFriendRequests: Array<{ id: string, status: FriendStatus, from: { id: string, avatar: string | null, publicId: string, username: string }, to: { id: string, avatar: string | null, publicId: string, username: string } }> };
+
+export type SearchUserQueryVariables = Exact<{
+  input: SearchUserDto;
+}>;
+
+
+export type SearchUserQuery = { searchUser: { id: string, username: string, avatar: string | null, publicId: string } };
+
+export type GetUserQueryVariables = Exact<{
+  id: string;
+}>;
+
+
+export type GetUserQuery = { getUser: { id: string, avatar: string | null, firstName: string | null, lastName: string | null, publicId: string, username: string, createdAt: string } };
+
+export type GetMyHistoryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMyHistoryQuery = { getMyHistory: Array<{ id: string, roomId: string, finishedAt: string | null, winnerId: string | null, players: Array<{ id: string, winner: boolean, userId: string, user: { id: string, username: string } }> }> };
+
+export type GetUserHistoryQueryVariables = Exact<{
+  id: string;
+}>;
+
+
+export type GetUserHistoryQuery = { getUserHistory: Array<{ id: string, roomId: string, finishedAt: string | null, winnerId: string | null, players: Array<{ id: string, winner: boolean, userId: string, user: { id: string, username: string } }> }> };
+
+export type GetMyStatsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMyStatsQuery = { getMyStats: { losses: number, totalGames: number, winRate: number, winStreak: number, wins: number } };
+
+export type GetUserStatsQueryVariables = Exact<{
+  id: string;
+}>;
 
 
 export type GetUserStatsQuery = { getUserStats: { losses: number, totalGames: number, winRate: number, winStreak: number, wins: number } };
 
 
+export const AcceptFriendRequestDocument = gql`
+    mutation AcceptFriendRequest($input: FriendRequestDto!) {
+  acceptFriendRequest(input: $input)
+}
+    `;
+export type AcceptFriendRequestMutationFn = Apollo.MutationFunction<AcceptFriendRequestMutation, AcceptFriendRequestMutationVariables>;
+
+/**
+ * __useAcceptFriendRequestMutation__
+ *
+ * To run a mutation, you first call `useAcceptFriendRequestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAcceptFriendRequestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [acceptFriendRequestMutation, { data, loading, error }] = useAcceptFriendRequestMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAcceptFriendRequestMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<AcceptFriendRequestMutation, AcceptFriendRequestMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<AcceptFriendRequestMutation, AcceptFriendRequestMutationVariables>(AcceptFriendRequestDocument, options);
+      }
+export type AcceptFriendRequestMutationHookResult = ReturnType<typeof useAcceptFriendRequestMutation>;
+export type AcceptFriendRequestMutationResult = Apollo.MutationResult<AcceptFriendRequestMutation>;
+export type AcceptFriendRequestMutationOptions = Apollo.BaseMutationOptions<AcceptFriendRequestMutation, AcceptFriendRequestMutationVariables>;
+export const RejectFriendRequestDocument = gql`
+    mutation RejectFriendRequest($input: FriendRequestDto!) {
+  rejectFriendRequest(input: $input)
+}
+    `;
+export type RejectFriendRequestMutationFn = Apollo.MutationFunction<RejectFriendRequestMutation, RejectFriendRequestMutationVariables>;
+
+/**
+ * __useRejectFriendRequestMutation__
+ *
+ * To run a mutation, you first call `useRejectFriendRequestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRejectFriendRequestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [rejectFriendRequestMutation, { data, loading, error }] = useRejectFriendRequestMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useRejectFriendRequestMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RejectFriendRequestMutation, RejectFriendRequestMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<RejectFriendRequestMutation, RejectFriendRequestMutationVariables>(RejectFriendRequestDocument, options);
+      }
+export type RejectFriendRequestMutationHookResult = ReturnType<typeof useRejectFriendRequestMutation>;
+export type RejectFriendRequestMutationResult = Apollo.MutationResult<RejectFriendRequestMutation>;
+export type RejectFriendRequestMutationOptions = Apollo.BaseMutationOptions<RejectFriendRequestMutation, RejectFriendRequestMutationVariables>;
+export const SendFriendRequestDocument = gql`
+    mutation SendFriendRequest($input: SendFriendRequestDto!) {
+  sendFriendRequest(input: $input)
+}
+    `;
+export type SendFriendRequestMutationFn = Apollo.MutationFunction<SendFriendRequestMutation, SendFriendRequestMutationVariables>;
+
+/**
+ * __useSendFriendRequestMutation__
+ *
+ * To run a mutation, you first call `useSendFriendRequestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendFriendRequestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendFriendRequestMutation, { data, loading, error }] = useSendFriendRequestMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSendFriendRequestMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SendFriendRequestMutation, SendFriendRequestMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<SendFriendRequestMutation, SendFriendRequestMutationVariables>(SendFriendRequestDocument, options);
+      }
+export type SendFriendRequestMutationHookResult = ReturnType<typeof useSendFriendRequestMutation>;
+export type SendFriendRequestMutationResult = Apollo.MutationResult<SendFriendRequestMutation>;
+export type SendFriendRequestMutationOptions = Apollo.BaseMutationOptions<SendFriendRequestMutation, SendFriendRequestMutationVariables>;
+export const RemoveFriendDocument = gql`
+    mutation RemoveFriend($input: RemoveFriendDto!) {
+  removeFriend(input: $input)
+}
+    `;
+export type RemoveFriendMutationFn = Apollo.MutationFunction<RemoveFriendMutation, RemoveFriendMutationVariables>;
+
+/**
+ * __useRemoveFriendMutation__
+ *
+ * To run a mutation, you first call `useRemoveFriendMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveFriendMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeFriendMutation, { data, loading, error }] = useRemoveFriendMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useRemoveFriendMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RemoveFriendMutation, RemoveFriendMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<RemoveFriendMutation, RemoveFriendMutationVariables>(RemoveFriendDocument, options);
+      }
+export type RemoveFriendMutationHookResult = ReturnType<typeof useRemoveFriendMutation>;
+export type RemoveFriendMutationResult = Apollo.MutationResult<RemoveFriendMutation>;
+export type RemoveFriendMutationOptions = Apollo.BaseMutationOptions<RemoveFriendMutation, RemoveFriendMutationVariables>;
+export const GetMeDocument = gql`
+    query GetMe {
+  getMe {
+    avatar
+    firstName
+    id
+    lastName
+    publicId
+    username
+    createdAt
+    email
+    hasPassword
+  }
+  getFriends {
+    id
+    avatar
+    firstName
+    lastName
+    firstName
+    publicId
+    username
+  }
+  getFriendRequests {
+    id
+    status
+    from {
+      id
+      avatar
+      publicId
+      username
+    }
+    to {
+      id
+      avatar
+      publicId
+      username
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetMeQuery__
+ *
+ * To run a query within a React component, call `useGetMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetMeQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetMeQuery, GetMeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetMeQuery, GetMeQueryVariables>(GetMeDocument, options);
+      }
+export function useGetMeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetMeQuery, GetMeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetMeQuery, GetMeQueryVariables>(GetMeDocument, options);
+        }
+// @ts-ignore
+export function useGetMeSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetMeQuery, GetMeQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetMeQuery, GetMeQueryVariables>;
+export function useGetMeSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetMeQuery, GetMeQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetMeQuery | undefined, GetMeQueryVariables>;
+export function useGetMeSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetMeQuery, GetMeQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetMeQuery, GetMeQueryVariables>(GetMeDocument, options);
+        }
+export type GetMeQueryHookResult = ReturnType<typeof useGetMeQuery>;
+export type GetMeLazyQueryHookResult = ReturnType<typeof useGetMeLazyQuery>;
+export type GetMeSuspenseQueryHookResult = ReturnType<typeof useGetMeSuspenseQuery>;
+export type GetMeQueryResult = Apollo.QueryResult<GetMeQuery, GetMeQueryVariables>;
+export const SearchUserDocument = gql`
+    query SearchUser($input: SearchUserDto!) {
+  searchUser(input: $input) {
+    id
+    username
+    avatar
+    publicId
+  }
+}
+    `;
+
+/**
+ * __useSearchUserQuery__
+ *
+ * To run a query within a React component, call `useSearchUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchUserQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSearchUserQuery(baseOptions: ApolloReactHooks.QueryHookOptions<SearchUserQuery, SearchUserQueryVariables> & ({ variables: SearchUserQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<SearchUserQuery, SearchUserQueryVariables>(SearchUserDocument, options);
+      }
+export function useSearchUserLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SearchUserQuery, SearchUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<SearchUserQuery, SearchUserQueryVariables>(SearchUserDocument, options);
+        }
+// @ts-ignore
+export function useSearchUserSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<SearchUserQuery, SearchUserQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<SearchUserQuery, SearchUserQueryVariables>;
+export function useSearchUserSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<SearchUserQuery, SearchUserQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<SearchUserQuery | undefined, SearchUserQueryVariables>;
+export function useSearchUserSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<SearchUserQuery, SearchUserQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<SearchUserQuery, SearchUserQueryVariables>(SearchUserDocument, options);
+        }
+export type SearchUserQueryHookResult = ReturnType<typeof useSearchUserQuery>;
+export type SearchUserLazyQueryHookResult = ReturnType<typeof useSearchUserLazyQuery>;
+export type SearchUserSuspenseQueryHookResult = ReturnType<typeof useSearchUserSuspenseQuery>;
+export type SearchUserQueryResult = Apollo.QueryResult<SearchUserQuery, SearchUserQueryVariables>;
+export const GetUserDocument = gql`
+    query GetUser($id: String!) {
+  getUser(id: $id) {
+    id
+    avatar
+    firstName
+    lastName
+    publicId
+    username
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useGetUserQuery__
+ *
+ * To run a query within a React component, call `useGetUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetUserQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetUserQuery, GetUserQueryVariables> & ({ variables: GetUserQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+      }
+export function useGetUserLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+        }
+// @ts-ignore
+export function useGetUserSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetUserQuery, GetUserQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetUserQuery, GetUserQueryVariables>;
+export function useGetUserSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetUserQuery, GetUserQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetUserQuery | undefined, GetUserQueryVariables>;
+export function useGetUserSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+        }
+export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
+export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
+export type GetUserSuspenseQueryHookResult = ReturnType<typeof useGetUserSuspenseQuery>;
+export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;
+export const GetMyHistoryDocument = gql`
+    query GetMyHistory {
+  getMyHistory {
+    id
+    roomId
+    finishedAt
+    winnerId
+    players {
+      id
+      winner
+      userId
+      user {
+        id
+        username
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetMyHistoryQuery__
+ *
+ * To run a query within a React component, call `useGetMyHistoryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMyHistoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMyHistoryQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetMyHistoryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetMyHistoryQuery, GetMyHistoryQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetMyHistoryQuery, GetMyHistoryQueryVariables>(GetMyHistoryDocument, options);
+      }
+export function useGetMyHistoryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetMyHistoryQuery, GetMyHistoryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetMyHistoryQuery, GetMyHistoryQueryVariables>(GetMyHistoryDocument, options);
+        }
+// @ts-ignore
+export function useGetMyHistorySuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetMyHistoryQuery, GetMyHistoryQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetMyHistoryQuery, GetMyHistoryQueryVariables>;
+export function useGetMyHistorySuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetMyHistoryQuery, GetMyHistoryQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetMyHistoryQuery | undefined, GetMyHistoryQueryVariables>;
+export function useGetMyHistorySuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetMyHistoryQuery, GetMyHistoryQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetMyHistoryQuery, GetMyHistoryQueryVariables>(GetMyHistoryDocument, options);
+        }
+export type GetMyHistoryQueryHookResult = ReturnType<typeof useGetMyHistoryQuery>;
+export type GetMyHistoryLazyQueryHookResult = ReturnType<typeof useGetMyHistoryLazyQuery>;
+export type GetMyHistorySuspenseQueryHookResult = ReturnType<typeof useGetMyHistorySuspenseQuery>;
+export type GetMyHistoryQueryResult = Apollo.QueryResult<GetMyHistoryQuery, GetMyHistoryQueryVariables>;
 export const GetUserHistoryDocument = gql`
-    query GetUserHistory {
-  getGameHistory {
+    query GetUserHistory($id: String!) {
+  getUserHistory(id: $id) {
     id
     roomId
     finishedAt
@@ -112,10 +639,11 @@ export const GetUserHistoryDocument = gql`
  * @example
  * const { data, loading, error } = useGetUserHistoryQuery({
  *   variables: {
+ *      id: // value for 'id'
  *   },
  * });
  */
-export function useGetUserHistoryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetUserHistoryQuery, GetUserHistoryQueryVariables>) {
+export function useGetUserHistoryQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetUserHistoryQuery, GetUserHistoryQueryVariables> & ({ variables: GetUserHistoryQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return ApolloReactHooks.useQuery<GetUserHistoryQuery, GetUserHistoryQueryVariables>(GetUserHistoryDocument, options);
       }
@@ -134,9 +662,55 @@ export type GetUserHistoryQueryHookResult = ReturnType<typeof useGetUserHistoryQ
 export type GetUserHistoryLazyQueryHookResult = ReturnType<typeof useGetUserHistoryLazyQuery>;
 export type GetUserHistorySuspenseQueryHookResult = ReturnType<typeof useGetUserHistorySuspenseQuery>;
 export type GetUserHistoryQueryResult = Apollo.QueryResult<GetUserHistoryQuery, GetUserHistoryQueryVariables>;
+export const GetMyStatsDocument = gql`
+    query getMyStats {
+  getMyStats {
+    losses
+    totalGames
+    winRate
+    winStreak
+    wins
+  }
+}
+    `;
+
+/**
+ * __useGetMyStatsQuery__
+ *
+ * To run a query within a React component, call `useGetMyStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMyStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMyStatsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetMyStatsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetMyStatsQuery, GetMyStatsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetMyStatsQuery, GetMyStatsQueryVariables>(GetMyStatsDocument, options);
+      }
+export function useGetMyStatsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetMyStatsQuery, GetMyStatsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetMyStatsQuery, GetMyStatsQueryVariables>(GetMyStatsDocument, options);
+        }
+// @ts-ignore
+export function useGetMyStatsSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetMyStatsQuery, GetMyStatsQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetMyStatsQuery, GetMyStatsQueryVariables>;
+export function useGetMyStatsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetMyStatsQuery, GetMyStatsQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetMyStatsQuery | undefined, GetMyStatsQueryVariables>;
+export function useGetMyStatsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetMyStatsQuery, GetMyStatsQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetMyStatsQuery, GetMyStatsQueryVariables>(GetMyStatsDocument, options);
+        }
+export type GetMyStatsQueryHookResult = ReturnType<typeof useGetMyStatsQuery>;
+export type GetMyStatsLazyQueryHookResult = ReturnType<typeof useGetMyStatsLazyQuery>;
+export type GetMyStatsSuspenseQueryHookResult = ReturnType<typeof useGetMyStatsSuspenseQuery>;
+export type GetMyStatsQueryResult = Apollo.QueryResult<GetMyStatsQuery, GetMyStatsQueryVariables>;
 export const GetUserStatsDocument = gql`
-    query getUserStats {
-  getUserStats {
+    query GetUserStats($id: String!) {
+  getUserStats(id: $id) {
     losses
     totalGames
     winRate
@@ -158,10 +732,11 @@ export const GetUserStatsDocument = gql`
  * @example
  * const { data, loading, error } = useGetUserStatsQuery({
  *   variables: {
+ *      id: // value for 'id'
  *   },
  * });
  */
-export function useGetUserStatsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetUserStatsQuery, GetUserStatsQueryVariables>) {
+export function useGetUserStatsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetUserStatsQuery, GetUserStatsQueryVariables> & ({ variables: GetUserStatsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return ApolloReactHooks.useQuery<GetUserStatsQuery, GetUserStatsQueryVariables>(GetUserStatsDocument, options);
       }

@@ -1,11 +1,15 @@
 import { Clock, Trophy, XCircle } from 'lucide-react'
-import { useGetUserHistoryQuery } from '../../../../../graphql/generated/output'
-import { useGetProfile } from '../../../../../hooks/useGetUser'
+import { Link } from 'react-router-dom'
+
+import {
+	useGetMeQuery,
+	useGetMyHistoryQuery,
+} from '../../../../../graphql/generated/output'
 
 export const GameHistory = () => {
-	const { data } = useGetUserHistoryQuery()
-	const { user } = useGetProfile()
-	console.log(data)
+	const { data } = useGetMyHistoryQuery()
+
+	const { data: user } = useGetMeQuery()
 
 	return (
 		<div className='w-full max-w-4xl p-3 sm:p-4 md:p-6'>
@@ -19,20 +23,24 @@ export const GameHistory = () => {
 				<div className='mb-4 flex items-center justify-between'>
 					<div className='flex items-center gap-2 text-white/80'>
 						<Clock className='h-5 w-5 text-white/50' />
+
 						<span className='text-sm font-medium sm:text-base'>
 							Последние игры
 						</span>
 					</div>
 
 					<span className='rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/60 sm:text-sm'>
-						{data?.getGameHistory.length}
+						{data?.getMyHistory.length}
 					</span>
 				</div>
 
-				<div className='flex flex-col gap-4 max-h-[400px] overflow-y-auto'>
-					{data?.getGameHistory.map(game => {
-						const me = game.players.find(p => p.userId === user?.id)
-						const opponent = game.players.find(p => p.userId !== user?.id)
+				<div className='flex max-h-[400px] flex-col gap-4 overflow-y-auto'>
+					{data?.getMyHistory.map(game => {
+						const me = game.players.find(p => p.userId === user?.getMe?.id)
+
+						const opponent = game.players.find(
+							p => p.userId !== user?.getMe?.id,
+						)
 
 						const isWin = me?.winner
 
@@ -45,7 +53,10 @@ export const GameHistory = () => {
 										: 'border-red-500/20 bg-red-500/5'
 								}`}
 							>
-								<div className='flex items-center gap-4'>
+								<Link
+									to={`/${opponent?.user.id}`}
+									className='flex items-center gap-4 transition-opacity hover:opacity-80'
+								>
 									<div className='flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5'>
 										{isWin ? (
 											<Trophy className='text-emerald-400' />
@@ -55,15 +66,20 @@ export const GameHistory = () => {
 									</div>
 
 									<div>
-										<div className='text-white font-medium'>
+										<div className='font-medium text-white'>
 											vs {opponent?.user.username || 'Unknown'}
 										</div>
+
+										<div className='text-sm text-white/50'>
+											ID: {opponent?.user.id}
+										</div>
+
 										<div className='text-sm text-white/50'>
 											{game.finishedAt &&
 												new Date(game.finishedAt).toLocaleDateString()}
 										</div>
 									</div>
-								</div>
+								</Link>
 
 								<div className='text-sm text-white/60'>
 									{isWin ? 'Победа' : 'Поражение'}

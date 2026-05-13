@@ -1,0 +1,59 @@
+query GetMe {
+	getMe {
+		avatar
+		firstName
+		id
+		lastName
+		publicId
+		username
+		createdAt
+		email
+		hasPassword
+	}
+	getFriends {
+		id
+		avatar
+		firstName
+		lastName
+		firstName
+		publicId
+		username
+	}
+	getFriendRequests {
+		id
+		status
+		from {
+			id
+			avatar
+			publicId
+			username
+		}
+		to {
+			id
+			avatar
+			publicId
+			username
+		}
+	}
+}
+
+query SearchUser($input: SearchUserDto!) {
+	searchUser(input: $input) {
+		id
+		username
+		avatar
+		publicId
+	}
+}
+
+query GetUser($id: String!) {
+	getUser(id: $id) {
+		id
+		avatar
+		firstName
+		lastName
+		publicId
+		username
+		createdAt
+	}
+}

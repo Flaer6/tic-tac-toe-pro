@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
-import { useGetProfile } from '../../../hooks/useGetUser'
+import { useGetMeQuery } from '../../../graphql/generated/output'
 
 export const ProfileStatus = ({ className }: { className?: string }) => {
-	const { user } = useGetProfile()
+	const { data } = useGetMeQuery()
 
 	return (
 		<div className=''>
@@ -13,13 +13,13 @@ export const ProfileStatus = ({ className }: { className?: string }) => {
 				<div className=''>
 					<img
 						className='max-w-11 rounded-xl'
-						src={user?.avatar || '/assets/favicons/512x512.jpg'}
+						src={data?.getMe?.avatar || '/assets/favicons/512x512.jpg'}
 						alt=''
 					/>
 				</div>
 				<div className={className}>
-					<div className='text-xl'>{user?.username}</div>
-					<div className='text-primary text-xs'>{user?.publicId}</div>
+					<div className='text-xl'>{data?.getMe?.username}</div>
+					<div className='text-primary text-xs'>{data?.getMe?.publicId}</div>
 				</div>
 			</Link>
 		</div>

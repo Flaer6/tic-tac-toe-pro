@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import type { AxiosError } from 'axios'
-import { userService } from '../shared/services/userService'
-import { useAuthStore } from '../store/auth.store'
-import type { IProfileResponse } from '../types/types'
+import { userService } from '../../shared/services/userService'
+import { useAuthStore } from '../../store/auth.store'
+import type { IProfileResponse } from '../../types/types'
 
-export const useGetProfile = () => {
+const useGetProfile1111 = () => {
 	const isAuth = useAuthStore(state => state.isAuth)
 
 	const { data: user, refetch: userRefetch } = useQuery<

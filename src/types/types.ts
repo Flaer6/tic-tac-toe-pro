@@ -1,5 +1,9 @@
 import type { LucideIcon } from 'lucide-react'
 import type { HTMLAttributes, ReactNode } from 'react'
+import type {
+	GetUserHistoryQuery,
+	GetUserQuery,
+} from '../graphql/generated/output'
 
 export interface GameState {
 	history: (string | null)[][]
@@ -110,5 +114,15 @@ export interface IUpdateProfileResponse {
 	lastName?: string
 	newPassword?: string
 	oldPassword?: string
+	username?: string
 	confirmPassword?: string
+}
+
+export interface IUser {
+	data?: GetUserQuery['getUser']
+}
+
+export interface IHistoryUser {
+	data?: GetUserHistoryQuery['getUserHistory']
+	userId: string | undefined
 }

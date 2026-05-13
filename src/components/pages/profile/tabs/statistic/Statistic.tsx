@@ -1,10 +1,10 @@
-import { useGetUserStatsQuery } from '../../../../../graphql/generated/output'
+import { useGetMyStatsQuery } from '../../../../../graphql/generated/output'
 import { StatItem } from './StatItem'
 import { getStatsItems } from './statistic.data'
 
 export const Statistic = () => {
-	const { data, loading, error } = useGetUserStatsQuery()
-	const items = getStatsItems(data?.getUserStats)
+	const { data, loading, error } = useGetMyStatsQuery()
+	const items = getStatsItems(data?.getMyStats)
 
 	console.log({ data, loading, error })
 	if (loading) return <div>Loading...</div>

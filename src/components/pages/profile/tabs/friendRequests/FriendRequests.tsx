@@ -1,9 +1,15 @@
 import { UserPlus } from 'lucide-react'
-import { useProfile } from '../../../../../hooks/useProfile'
+import {
+	FriendStatus,
+	useGetMeQuery,
+} from '../../../../../graphql/generated/output'
 import { Requests } from './Requests'
 
 export const FriendRequests = () => {
-	const { pendingRequests } = useProfile()
+	const { data } = useGetMeQuery()
+	const pendingRequests =
+		data?.getFriendRequests?.filter(r => r.status === FriendStatus.Pending) ??
+		[]
 
 	return (
 		<div className='w-full max-w-4xl p-3 sm:p-4 md:p-6'>
