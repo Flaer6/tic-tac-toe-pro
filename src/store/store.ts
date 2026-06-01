@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import applyMoveLimit from '../components/pages/localGame/MoveLimit'
+import applyMoveLimit from '../components/pages/game/localGame/MoveLimit'
 import type { GameState } from '../types/types'
 
 export const useGameStore = create<GameState>((set, get) => ({
@@ -17,7 +17,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 		const updatedSquares = applyMoveLimit(
 			nextSquares,
 			newMoves,
-			xIsNext ? 'X' : 'O'
+			xIsNext ? 'X' : 'O',
 		)
 
 		// Обновляем массив ходов после удаления старых

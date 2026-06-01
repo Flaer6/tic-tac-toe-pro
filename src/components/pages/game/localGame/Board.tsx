@@ -1,6 +1,6 @@
 import cn from 'clsx'
-import { useGameStore } from '../../../store/store'
-import type { BoardProps } from '../../../types/types'
+import { useGameStore } from '../../../../store/store'
+import type { BoardProps } from '../../../../types/types'
 import Square from './Square'
 import calculateWinner from './Winner'
 import styles from './localGame.module.css'

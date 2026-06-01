@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
-import { useGameSocket } from '../../../hooks/useGameSocket'
-import { Loader } from '../../ui/Loader'
+import { useGameSocket } from '../../../../hooks/useGameSocket'
+import { Loader } from '../../../ui/Loader'
 import { OnlineBoard } from './OnlineBoard'
 
 export const OnlineGame = () => {

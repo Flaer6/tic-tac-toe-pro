@@ -1,8 +1,8 @@
 import { m } from 'framer-motion'
-import { socket } from '../../../shared/socket'
-import { useOnlineGameStore } from '../../../store/onlineGame.store'
+import { socket } from '../../../../shared/socket'
+import { useOnlineGameStore } from '../../../../store/onlineGame.store'
 
-import { useGetMeQuery } from '../../../graphql/generated/output'
+import { useGetMeQuery } from '../../../../graphql/generated/output'
 import Square from '../localGame/Square'
 import styles from '../localGame/localGame.module.css'
 import { WinnerModal } from './WinnerModal'

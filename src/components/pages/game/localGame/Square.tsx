@@ -1,6 +1,6 @@
 import cn from 'clsx'
 import { useRef } from 'react'
-import type { SquareProps } from '../../../types/types'
+import type { SquareProps } from '../../../../types/types'
 import styles from './localGame.module.css'
 
 export default function Square({

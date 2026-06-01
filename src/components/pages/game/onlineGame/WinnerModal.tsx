@@ -1,7 +1,7 @@
 import { AnimatePresence, m } from 'framer-motion'
-import { useGetMeQuery } from '../../../graphql/generated/output'
-import { socket } from '../../../shared/socket'
-import { useOnlineGameStore } from '../../../store/onlineGame.store'
+import { useGetMeQuery } from '../../../../graphql/generated/output'
+import { socket } from '../../../../shared/socket'
+import { useOnlineGameStore } from '../../../../store/onlineGame.store'
 
 export const WinnerModal = () => {
 	const { winner, opponentName, reset, reconnecting } = useOnlineGameStore()
