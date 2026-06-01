@@ -24,8 +24,10 @@ export interface SquareProps {
 
 export interface BoardProps {
 	squares: (string | null)[]
-	onPlay: (nextSquares: (string | null)[], index: number) => void
+	onPlay?: (nextSquares: (string | null)[], index: number) => void
 	xIsNext: boolean
+	onCellClick?: (index: number) => void
+	resetGame?: () => void
 }
 
 export interface IProps extends HTMLAttributes<HTMLElement> {

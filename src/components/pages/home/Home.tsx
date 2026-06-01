@@ -22,7 +22,7 @@ export default function Home() {
 					<FaUser /> VS <FaUser />
 				</Button>
 				<Button to='/online'>Online</Button>
-				<Button to='/' soon>
+				<Button to='/game-vs-ai'>
 					<FaRobot /> VS <FaRobot />
 				</Button>
 			</div>

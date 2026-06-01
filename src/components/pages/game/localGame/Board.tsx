@@ -1,18 +1,29 @@
 import cn from 'clsx'
-import { useGameStore } from '../../../../store/store'
 import type { BoardProps } from '../../../../types/types'
 import Square from './Square'
 import calculateWinner from './Winner'
 import styles from './localGame.module.css'
 
-export default function Board({ squares, onPlay, xIsNext }: BoardProps) {
-	const { resetGame } = useGameStore()
+export default function Board({
+	squares,
+	onPlay,
+	xIsNext,
+	onCellClick,
+	resetGame,
+}: BoardProps) {
 	function handleClick(i: number) {
-		if (calculateWinner(squares) || squares[i]) {
+		if (calculateWinner(squares) || squares[i]) return
+
+		// 🤖 AI MODE
+		if (onCellClick) {
+			onCellClick(i)
 			return
 		}
+
+		// 👥 PvP MODE
 		const nextSquares = squares.slice()
 		nextSquares[i] = xIsNext ? 'X' : 'O'
+
 		onPlay(nextSquares, i)
 	}
 
@@ -25,15 +36,16 @@ export default function Board({ squares, onPlay, xIsNext }: BoardProps) {
 				<div className='absolute top-0 left-0 right-0 bottom-0 z-30 backdrop-blur-sm'>
 					<div className={styles.winner}>
 						<span className='text-black'>
-							Победитель:
+							Победитель:{' '}
 							<span
 								className={cn('X', {
-									['O']: winner == 'O',
+									['O']: winner === 'O',
 								})}
 							>
 								{winner}
 							</span>
 						</span>
+
 						<button
 							className='mt-4 px-4 py-2 bg-red-500 text-white font-bold hover:bg-red-600'
 							onClick={resetGame}
@@ -42,14 +54,13 @@ export default function Board({ squares, onPlay, xIsNext }: BoardProps) {
 						</button>
 					</div>
 				</div>
-			) : (
-				''
-			)}
+			) : null}
 
-			<div className='mb-3 p-2 text-7xl font-semibold flex justify-between gap-4 items-center bg-neutral-900 bg-opacity-60 border-[5px] border-neutral-900 border-opacity-50 rounded-xl '>
-				<div className={cn(status == 'X' ? 'X' : 'X-off')}>X</div>
-				<div className={cn(status == 'O' ? 'O' : 'O-off')}>O</div>
+			<div className='mb-3 p-2 text-7xl font-semibold flex justify-between gap-4 items-center bg-neutral-900 bg-opacity-60 border-[5px] border-neutral-900 border-opacity-50 rounded-xl'>
+				<div className={cn(status === 'X' ? 'X' : 'X-off')}>X</div>
+				<div className={cn(status === 'O' ? 'O' : 'O-off')}>O</div>
 			</div>
+
 			<div className={styles.board}>
 				{squares.map((square, index) => (
 					<Square

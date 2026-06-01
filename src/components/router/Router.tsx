@@ -15,6 +15,7 @@ import { Friends } from '../pages/profile/tabs/friends/Friends'
 
 import { ForgotPassword } from '../pages/auth/ForgotPassword'
 import { ResetPassword } from '../pages/auth/ResetPassword'
+import GameVsAI from '../pages/game/ai/GameVsAI'
 import { GameHistory } from '../pages/profile/tabs/history/History'
 import { Statistic } from '../pages/profile/tabs/statistic/Statistic'
 import { UserProfile } from '../pages/profile/userProfile/UserProfile'
@@ -39,6 +40,7 @@ export default function Router() {
 				<Route element={<Layout />}>
 					<Route index element={<Home />} />
 					<Route path='/game' element={<Game />} />
+					<Route path='/game-vs-ai' element={<GameVsAI />} />
 					<Route element={<PrivateRoute />}>
 						<Route path='/profile' element={<Profile />}>
 							<Route index element={<Statistic />} />

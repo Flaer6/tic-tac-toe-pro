@@ -35,7 +35,12 @@ export default function Game() {
 			</div>
 
 			<div className='flex flex-col items-center justify-center w-full h-auto'>
-				<Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+				<Board
+					xIsNext={xIsNext}
+					squares={currentSquares}
+					onPlay={handlePlay}
+					resetGame={resetGame}
+				/>
 			</div>
 		</div>
 	)
