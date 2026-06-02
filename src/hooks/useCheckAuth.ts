@@ -1,25 +1,29 @@
-import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
+import { useEffect } from 'react'
 import { useAuthStore } from '../store/auth.store'
 
-export const useCheckAuth = () => {
-	const { setAuth, setAccessToken } = useAuthStore()
+export const useAuthBootstrap = () => {
+	const setAccessToken = useAuthStore(s => s.setAccessToken)
+	const setAuthLoading = useAuthStore(s => s.setAuthLoading)
+	const logout = useAuthStore(s => s.logout)
 
-	return useQuery({
-		queryKey: ['checkAuth'],
-		queryFn: async () => {
-			const res = await axios.post(
-				`${import.meta.env.VITE_API_URL}/auth/refresh`,
-				null,
-				{
-					withCredentials: true,
-				},
-			)
-			setAuth(true)
-			setAccessToken(res.data.accessToken)
-			return res.data
-		},
+	useEffect(() => {
+		const init = async () => {
+			try {
+				const res = await axios.post(
+					`${import.meta.env.VITE_API_URL}/auth/refresh`,
+					{},
+					{ withCredentials: true },
+				)
 
-		retry: false,
-	})
+				setAccessToken(res.data.accessToken)
+			} catch {
+				logout()
+			} finally {
+				setAuthLoading(false)
+			}
+		}
+
+		init()
+	}, [])
 }

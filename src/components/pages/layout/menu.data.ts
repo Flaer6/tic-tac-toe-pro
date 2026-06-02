@@ -1,4 +1,5 @@
 import {
+	Bot,
 	CircleUser,
 	Gamepad2,
 	Globe,
@@ -23,6 +24,11 @@ export const menuData: IMenu[] = [
 		icon: Globe,
 		name: 'Играть Онлайн',
 		href: '/online',
+	},
+	{
+		icon: Bot,
+		name: 'Играть С Ботом',
+		href: '/game-vs-ai',
 	},
 	{
 		icon: Users,

@@ -1,13 +1,44 @@
 import { motion } from 'framer-motion'
 import { useGameSocket } from '../../../../hooks/useGameSocket'
-import { Loader } from '../../../ui/Loader'
 import { OnlineBoard } from './OnlineBoard'
 
 export const OnlineGame = () => {
 	const { handleFind, handleCancel, status } = useGameSocket()
+	const cells = Array.from({ length: 9 })
 
 	return (
 		<div className='flex flex-col items-center justify-center h-full w-full gap-6 text-white'>
+			{status !== 'found' && (
+				<div className='flex items-center justify-center min-h-[200px] w-full '>
+					<div className='grid grid-cols-3  bg-white/3 border border-white/10 rounded-2xl p-2 w-full max-w-[320px] sm:max-w-[420px] md:max-w-[500px]'>
+						{cells.map((_, i) => (
+							<div
+								key={i}
+								className='aspect-square w-full border border-white/10 flex items-center justify-center'
+							>
+								<motion.span
+									initial={{ opacity: 0, scale: 0 }}
+									className={`text-sm sm:text-base md:text-lg lg:text-xl ${
+										i % 2 === 0 ? 'text-green-400' : 'text-blue-400'
+									}`}
+									animate={
+										status === 'searching'
+											? { opacity: [0, 1, 0], scale: [0, 1.6, 0] }
+											: {}
+									}
+									transition={
+										status === 'searching'
+											? { duration: 1.2, repeat: Infinity, delay: i * 0.08 }
+											: {}
+									}
+								>
+									{i % 2 === 0 ? 'X' : 'O'}
+								</motion.span>
+							</div>
+						))}
+					</div>
+				</div>
+			)}
 			{status === 'idle' && (
 				<motion.div
 					initial={{ opacity: 0, scale: 0.9 }}
@@ -24,13 +55,13 @@ export const OnlineGame = () => {
 					</button>
 				</motion.div>
 			)}
+
 			{status === 'searching' && (
 				<motion.div
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
 					className='flex flex-col items-center gap-6'
 				>
-					<Loader />
 					<div className='text-white/60 text-sm'>Поиск соперника...</div>
 
 					<button
@@ -48,10 +79,6 @@ export const OnlineGame = () => {
 					animate={{ opacity: 1, scale: 1 }}
 					className='flex flex-col items-center gap-4 w-full'
 				>
-					<div className='text-lg text-green-400 flex items-center gap-2'>
-						🎮 Игра найдена!
-					</div>
-
 					<div className=''>
 						<OnlineBoard />
 					</div>

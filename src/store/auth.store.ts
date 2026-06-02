@@ -2,12 +2,14 @@ import { create } from 'zustand'
 
 type Store = {
 	messages: string[] | null
-	isAuth: boolean
+
 	accessToken: string | null
 	userId: string | null
 
+	isAuthLoading: boolean
 	setMessages: (msg: string[] | null) => void
-	setAuth: (isAuth: boolean) => void
+
+	setAuthLoading: (v: boolean) => void
 	setAccessToken: (token: string | null) => void
 	setUserId: (id: string | null) => void
 	logout: () => void
@@ -15,20 +17,24 @@ type Store = {
 
 export const useAuthStore = create<Store>(set => ({
 	messages: null,
-	accessToken: localStorage.getItem('accessToken'),
-	isAuth: !!localStorage.getItem('accessToken'),
+	accessToken: null,
 	userId: null,
+	isAuthLoading: true,
 
+	setAuthLoading: v => set({ isAuthLoading: v }),
 	setAccessToken: token => {
-		set({
-			accessToken: token,
-			isAuth: !!token,
-		})
+		set({ accessToken: token })
 	},
+
 	setUserId: id => set({ userId: id }),
+
 	setMessages: msg => set({ messages: msg || [] }),
-	setAuth: isAuth => set({ isAuth }),
+
 	logout: () => {
-		set({ isAuth: false, messages: [], accessToken: null })
+		set({
+			accessToken: null,
+			userId: null,
+			messages: [],
+		})
 	},
 }))

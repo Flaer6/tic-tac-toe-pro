@@ -1,6 +1,5 @@
-import { useEffect } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { useCheckAuth } from '../../hooks/useCheckAuth'
+import { useAuthBootstrap } from '../../hooks/useCheckAuth'
 import { PrivateRoute, PublicRoute } from '../../utils/guards/routeGuard'
 import { Login } from '../pages/auth/Login'
 import { Register } from '../pages/auth/Register'
@@ -27,11 +26,7 @@ import { SecurityTab } from '../pages/settings/tabs/security/SecurityTab'
 import { VerifyEmail } from '../test'
 
 export default function Router() {
-	const checkAuth = useCheckAuth()
-	useEffect(() => {
-		if (localStorage.getItem('accessToken')) checkAuth
-	}, [])
-
+	useAuthBootstrap()
 	return (
 		<BrowserRouter>
 			<Routes>

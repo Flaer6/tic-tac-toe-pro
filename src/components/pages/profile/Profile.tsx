@@ -13,12 +13,6 @@ export const Profile = () => {
 
 					<div className='border-t border-white/10 bg-black/10'>
 						<div className='relative'>
-							{/* LEFT FADE */}
-							<div className='pointer-events-none absolute left-0 top-0 z-10 h-full w-8 bg-linear-to-r from-black/40 to-transparent md:hidden' />
-
-							{/* RIGHT FADE */}
-							<div className='pointer-events-none absolute right-0 top-0 z-10 h-full w-8 bg-linear-to-r from-black/40 to-transparent md:hidden' />
-
 							<div className='scrollbar-none flex snap-x snap-mandatory items-center gap-1 overflow-x-auto px-2 md:justify-center md:px-4'>
 								{tabsProfile.map((tab, index) => {
 									const Icon = tab.icon

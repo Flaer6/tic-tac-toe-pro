@@ -1,6 +1,5 @@
 import cn from 'clsx'
 import { Outlet } from 'react-router-dom'
-import { useCheckAuth } from '../../../hooks/useCheckAuth'
 import { useGameSocket } from '../../../hooks/useGameSocket'
 import { useAuthStore } from '../../../store/auth.store'
 import { Loader } from '../../ui/Loader'
@@ -9,11 +8,11 @@ import { AsideMenu } from './AsideMenu'
 import { MobileMenu } from './MobileMenu'
 
 export const Layout = () => {
-	const { isAuth } = useAuthStore()
-	const { isLoading } = useCheckAuth()
+	const isAuth = !!useAuthStore(state => state.accessToken)
+	const isAuthLoading = useAuthStore(s => s.isAuthLoading)
 
 	useGameSocket()
-	if (isLoading)
+	if (isAuthLoading)
 		return (
 			<div className='fixed inset-0 z-50 flex items-center justify-center bg-[#1f1d2b]/80 backdrop-blur-sm'>
 				<Loader />
