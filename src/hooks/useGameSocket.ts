@@ -161,7 +161,7 @@ export const useGameSocket = () => {
 		socket.on('move_made', handleMove)
 		socket.on('opponent_left', handleOpponentLeft)
 		socket.on('game_over', handleGameOver)
-		socket.on('search_canceled', handleCancelEvent)
+		socket.on('search_cancelled', handleCancelEvent)
 
 		return () => {
 			socket.off('searching_game', handleSearching)
@@ -189,14 +189,9 @@ export const useGameSocket = () => {
 	}
 
 	const handleCancel = () => {
-		if (!socket.connected) {
-			console.log('SOCKET NOT CONNECTED')
-			return
-		}
+		if (!socket.connected) return
 
-		socket.emit('cancel_find_game')
-		reset()
-		setStatus('idle')
+		socket.emit('cancel_search')
 	}
 
 	return {

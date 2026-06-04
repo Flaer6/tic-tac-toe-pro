@@ -15,7 +15,7 @@ export const InputAuth = forwardRef<
 				ref={ref}
 				{...props}
 				type={isPassword && showPassword ? 'text' : props.type}
-				className='border border-white/10 bg-gradient px-4 py-2 w-full rounded-md outline-none text-white text-[16px] transition bg-[rgba(31,29,43,0.85)] pr-10'
+				className='border border-white/10 bg-gradient pl-2 py-2 w-full rounded-md outline-none text-white text-[16px] transition bg-[rgba(31,29,43,0.85)] pr-10'
 			/>
 
 			{isPassword && (

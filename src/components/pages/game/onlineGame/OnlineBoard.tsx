@@ -116,7 +116,10 @@ export function OnlineBoard() {
 				>
 					<img
 						className='max-w-12 w-full max-h-12 sm:w-14 sm:h-14 rounded-md object-cover shrink-0'
-						src={data?.getMe?.avatar}
+						src={
+							data?.getMe?.avatar ||
+							`https://ui-avatars.com/api/?name=${displayName}&background=random`
+						}
 						alt='avatar'
 					/>
 
