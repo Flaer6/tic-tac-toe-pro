@@ -3,6 +3,7 @@ import { domAnimation, LazyMotion } from 'framer-motion'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { Toaster } from 'react-hot-toast'
+import { registerSW } from 'virtual:pwa-register'
 import { AppInit } from './AppInit.tsx'
 import Router from './components/router/Router.tsx'
 import './index.css'
@@ -16,7 +17,9 @@ export const queryClient = new QueryClient({
 		},
 	},
 })
-
+registerSW({
+	immediate: true,
+})
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>
 		<ApolloClientProvider>

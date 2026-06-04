@@ -10,7 +10,7 @@ export default defineConfig({
 		tailwindcss(),
 		VitePWA({
 			includeAssets: ['**/*.png', '**/*.jpg'],
-			registerType: 'prompt',
+			registerType: 'autoUpdate',
 			injectRegister: false,
 
 			pwaAssets: {
@@ -19,11 +19,11 @@ export default defineConfig({
 			},
 
 			manifest: {
-				name: 'Tic Tac Toe',
-				short_name: 'TT3',
+				name: 'Крестики Нолики Онлайн',
+				short_name: 'Крестики Нолики ',
 				description: 'Tic Tac Toe Pro Version',
-				theme_color: '#166b9f',
-				background_color: '#166b9f',
+				theme_color: '#1f1d2b',
+				background_color: '#1f1d2b',
 				display: 'standalone',
 				orientation: 'portrait',
 				icons: [
@@ -57,6 +57,17 @@ export default defineConfig({
 				globPatterns: ['**/*.{js,css,html,svg,png,ico}'],
 				cleanupOutdatedCaches: true,
 				clientsClaim: true,
+				runtimeCaching: [
+					{
+						urlPattern: ({ request }) => request.destination === 'document',
+						handler: 'NetworkFirst',
+					},
+					{
+						urlPattern: ({ request }) =>
+							['script', 'style', 'image'].includes(request.destination),
+						handler: 'CacheFirst',
+					},
+				],
 			},
 
 			devOptions: {
