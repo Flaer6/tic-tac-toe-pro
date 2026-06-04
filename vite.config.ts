@@ -14,13 +14,13 @@ export default defineConfig({
 			injectRegister: false,
 
 			pwaAssets: {
-				disabled: false,
+				disabled: true,
 				config: true,
 			},
 
 			manifest: {
 				name: 'Крестики Нолики Онлайн',
-				short_name: 'Крестики Нолики ',
+				short_name: 'Крестики Нолики',
 				description: 'Tic Tac Toe Pro Version',
 				theme_color: '#1f1d2b',
 				background_color: '#1f1d2b',
@@ -41,13 +41,13 @@ export default defineConfig({
 					{
 						src: '/assets/favicons/192x192.jpg',
 						sizes: '192x192',
-						type: 'image/jpg',
+						type: 'image/jpeg',
 						purpose: 'maskable',
 					},
 					{
 						src: '/assets/favicons/512x512.jpg',
 						sizes: '512x512',
-						type: 'image/jpg',
+						type: 'image/jpeg',
 						purpose: 'maskable',
 					},
 				],
