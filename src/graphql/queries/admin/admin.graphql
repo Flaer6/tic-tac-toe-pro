@@ -1,0 +1,17 @@
+query getAllUsers {
+	getAllUsers {
+		count
+		users {
+			id
+			avatar
+			firstName
+			lastName
+			email
+			role
+			publicId
+			username
+			createdAt
+		}
+	}
+	Admin
+}

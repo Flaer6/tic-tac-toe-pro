@@ -13,7 +13,7 @@ export const UserProfileHeader = ({ data }: IUser) => {
 
 	const { data: statsData } = useGetUserStatsQuery({
 		variables: {
-			id: data!.id,
+			id: data?.id,
 		},
 		skip: !data?.id,
 	})
@@ -86,7 +86,7 @@ export const UserProfileHeader = ({ data }: IUser) => {
 									sendFriendRequest({
 										variables: {
 											input: {
-												toId: data!.id,
+												toId: data?.id,
 											},
 										},
 									})

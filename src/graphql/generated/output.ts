@@ -75,6 +75,7 @@ export type GameUserStats = {
 export type Mutation = {
   __typename?: 'Mutation';
   acceptFriendRequest: Scalars['Boolean']['output'];
+  deleteUser: Scalars['String']['output'];
   rejectFriendRequest: Scalars['Boolean']['output'];
   removeFriend: Scalars['Boolean']['output'];
   sendFriendRequest: Scalars['Boolean']['output'];
@@ -83,6 +84,11 @@ export type Mutation = {
 
 export type MutationAcceptFriendRequestArgs = {
   input: FriendRequestDto;
+};
+
+
+export type MutationDeleteUserArgs = {
+  userId: Scalars['String']['input'];
 };
 
 
@@ -102,6 +108,8 @@ export type MutationSendFriendRequestArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  Admin: Scalars['String']['output'];
+  getAllUsers: UsersResponse;
   getFriendRequests: Array<FriendRequest>;
   getFriends: Array<User>;
   getMe: User;
@@ -161,9 +169,21 @@ export type User = {
   id: Scalars['ID']['output'];
   lastName?: Maybe<Scalars['String']['output']>;
   publicId: Scalars['String']['output'];
+  role: UserRole;
   stats?: Maybe<GameUserStats>;
   username: Scalars['String']['output'];
   winStreak?: Maybe<Scalars['Int']['output']>;
+};
+
+export enum UserRole {
+  Admin = 'ADMIN',
+  Regular = 'REGULAR'
+}
+
+export type UsersResponse = {
+  __typename?: 'UsersResponse';
+  count: Scalars['Int']['output'];
+  users: Array<User>;
 };
 
 export type FriendRequestDto = {
@@ -186,6 +206,17 @@ export type SearchUserDto = {
 export type SendFriendRequestDto = {
   toId: string;
 };
+
+export type UserRole =
+  | 'ADMIN'
+  | 'REGULAR';
+
+export type DeleteUserMutationVariables = Exact<{
+  input: string;
+}>;
+
+
+export type DeleteUserMutation = { deleteUser: string };
 
 export type AcceptFriendRequestMutationVariables = Exact<{
   input: FriendRequestDto;
@@ -215,24 +246,29 @@ export type RemoveFriendMutationVariables = Exact<{
 
 export type RemoveFriendMutation = { removeFriend: boolean };
 
+export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllUsersQuery = { Admin: string, getAllUsers: { count: number, users: Array<{ id: string, avatar: string | null, firstName: string | null, lastName: string | null, email: string, role: UserRole, publicId: string, username: string, createdAt: string }> } };
+
 export type GetMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetMeQuery = { getMe: { avatar: string | null, firstName: string | null, id: string, lastName: string | null, publicId: string, username: string, createdAt: string, email: string, hasPassword: boolean }, getFriends: Array<{ id: string, avatar: string | null, firstName: string | null, lastName: string | null, publicId: string, username: string }>, getFriendRequests: Array<{ id: string, status: FriendStatus, from: { id: string, avatar: string | null, publicId: string, username: string }, to: { id: string, avatar: string | null, publicId: string, username: string } }> };
+export type GetMeQuery = { getMe: { avatar: string | null, firstName: string | null, id: string, lastName: string | null, publicId: string, username: string, createdAt: string, email: string, hasPassword: boolean, role: UserRole }, getFriends: Array<{ id: string, avatar: string | null, firstName: string | null, lastName: string | null, publicId: string, username: string, role: UserRole }>, getFriendRequests: Array<{ id: string, status: FriendStatus, from: { id: string, avatar: string | null, publicId: string, username: string, role: UserRole }, to: { id: string, avatar: string | null, publicId: string, username: string, role: UserRole } }> };
 
 export type SearchUserQueryVariables = Exact<{
   input: SearchUserDto;
 }>;
 
 
-export type SearchUserQuery = { searchUser: { id: string, username: string, avatar: string | null, publicId: string } };
+export type SearchUserQuery = { searchUser: { id: string, username: string, avatar: string | null, publicId: string, role: UserRole } };
 
 export type GetUserQueryVariables = Exact<{
   id: string;
 }>;
 
 
-export type GetUserQuery = { getUser: { id: string, avatar: string | null, firstName: string | null, lastName: string | null, publicId: string, username: string, createdAt: string } };
+export type GetUserQuery = { getUser: { id: string, avatar: string | null, firstName: string | null, lastName: string | null, publicId: string, username: string, createdAt: string, role: UserRole } };
 
 export type GetMyHistoryQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -259,6 +295,37 @@ export type GetUserStatsQueryVariables = Exact<{
 export type GetUserStatsQuery = { getUserStats: { losses: number, totalGames: number, winRate: number, winStreak: number, wins: number } };
 
 
+export const DeleteUserDocument = gql`
+    mutation DeleteUser($input: String!) {
+  deleteUser(userId: $input)
+}
+    `;
+export type DeleteUserMutationFn = Apollo.MutationFunction<DeleteUserMutation, DeleteUserMutationVariables>;
+
+/**
+ * __useDeleteUserMutation__
+ *
+ * To run a mutation, you first call `useDeleteUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteUserMutation, { data, loading, error }] = useDeleteUserMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useDeleteUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteUserMutation, DeleteUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(DeleteUserDocument, options);
+      }
+export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutation>;
+export type DeleteUserMutationResult = Apollo.MutationResult<DeleteUserMutation>;
+export type DeleteUserMutationOptions = Apollo.BaseMutationOptions<DeleteUserMutation, DeleteUserMutationVariables>;
 export const AcceptFriendRequestDocument = gql`
     mutation AcceptFriendRequest($input: FriendRequestDto!) {
   acceptFriendRequest(input: $input)
@@ -383,6 +450,60 @@ export function useRemoveFriendMutation(baseOptions?: ApolloReactHooks.MutationH
 export type RemoveFriendMutationHookResult = ReturnType<typeof useRemoveFriendMutation>;
 export type RemoveFriendMutationResult = Apollo.MutationResult<RemoveFriendMutation>;
 export type RemoveFriendMutationOptions = Apollo.BaseMutationOptions<RemoveFriendMutation, RemoveFriendMutationVariables>;
+export const GetAllUsersDocument = gql`
+    query getAllUsers {
+  getAllUsers {
+    count
+    users {
+      id
+      avatar
+      firstName
+      lastName
+      email
+      role
+      publicId
+      username
+      createdAt
+    }
+  }
+  Admin
+}
+    `;
+
+/**
+ * __useGetAllUsersQuery__
+ *
+ * To run a query within a React component, call `useGetAllUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllUsersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllUsersQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAllUsersQuery, GetAllUsersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetAllUsersQuery, GetAllUsersQueryVariables>(GetAllUsersDocument, options);
+      }
+export function useGetAllUsersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAllUsersQuery, GetAllUsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetAllUsersQuery, GetAllUsersQueryVariables>(GetAllUsersDocument, options);
+        }
+// @ts-ignore
+export function useGetAllUsersSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetAllUsersQuery, GetAllUsersQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetAllUsersQuery, GetAllUsersQueryVariables>;
+export function useGetAllUsersSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetAllUsersQuery, GetAllUsersQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetAllUsersQuery | undefined, GetAllUsersQueryVariables>;
+export function useGetAllUsersSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetAllUsersQuery, GetAllUsersQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetAllUsersQuery, GetAllUsersQueryVariables>(GetAllUsersDocument, options);
+        }
+export type GetAllUsersQueryHookResult = ReturnType<typeof useGetAllUsersQuery>;
+export type GetAllUsersLazyQueryHookResult = ReturnType<typeof useGetAllUsersLazyQuery>;
+export type GetAllUsersSuspenseQueryHookResult = ReturnType<typeof useGetAllUsersSuspenseQuery>;
+export type GetAllUsersQueryResult = Apollo.QueryResult<GetAllUsersQuery, GetAllUsersQueryVariables>;
 export const GetMeDocument = gql`
     query GetMe {
   getMe {
@@ -395,6 +516,7 @@ export const GetMeDocument = gql`
     createdAt
     email
     hasPassword
+    role
   }
   getFriends {
     id
@@ -404,6 +526,7 @@ export const GetMeDocument = gql`
     firstName
     publicId
     username
+    role
   }
   getFriendRequests {
     id
@@ -413,12 +536,14 @@ export const GetMeDocument = gql`
       avatar
       publicId
       username
+      role
     }
     to {
       id
       avatar
       publicId
       username
+      role
     }
   }
 }
@@ -465,6 +590,7 @@ export const SearchUserDocument = gql`
     username
     avatar
     publicId
+    role
   }
 }
     `;
@@ -514,6 +640,7 @@ export const GetUserDocument = gql`
     publicId
     username
     createdAt
+    role
   }
 }
     `;

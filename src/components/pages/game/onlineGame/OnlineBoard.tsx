@@ -132,6 +132,11 @@ export function OnlineBoard() {
 							{data?.getMe?.publicId}
 						</span>
 					</div>
+					{data?.getMe.role === 'ADMIN' && (
+						<span className='px-2 py-1 text-xs rounded-md font-medium bg-red-500/20 text-red-400'>
+							ADMIN
+						</span>
+					)}
 				</m.div>
 
 				{/* Соперник */}
@@ -139,6 +144,11 @@ export function OnlineBoard() {
 					animate={{ opacity: !isMyTurn ? 1 : 0.5 }}
 					className='flex items-center justify-end gap-3 w-full backdrop-blur-xl bg-white/10 rounded-md p-2 bg-gradient'
 				>
+					{opponentData?.getUser?.role === 'ADMIN' && (
+						<span className='px-2 py-1 text-xs rounded-md font-medium bg-red-500/20 text-red-400'>
+							ADMIN
+						</span>
+					)}
 					<div className='flex flex-col items-end min-w-0'>
 						<span className='text-sm sm:text-base md:text-lg font-semibold truncate'>
 							{opponentDisplayName}

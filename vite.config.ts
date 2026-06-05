@@ -9,7 +9,6 @@ export default defineConfig({
 		react(),
 		tailwindcss(),
 		VitePWA({
-			includeAssets: ['**/*.png', '**/*.jpg'],
 			registerType: 'autoUpdate',
 			injectRegister: false,
 

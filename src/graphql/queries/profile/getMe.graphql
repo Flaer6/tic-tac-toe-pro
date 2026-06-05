@@ -9,6 +9,7 @@ query GetMe {
 		createdAt
 		email
 		hasPassword
+		role
 	}
 	getFriends {
 		id
@@ -18,6 +19,7 @@ query GetMe {
 		firstName
 		publicId
 		username
+		role
 	}
 	getFriendRequests {
 		id
@@ -27,12 +29,14 @@ query GetMe {
 			avatar
 			publicId
 			username
+			role
 		}
 		to {
 			id
 			avatar
 			publicId
 			username
+			role
 		}
 	}
 }
@@ -43,6 +47,7 @@ query SearchUser($input: SearchUserDto!) {
 		username
 		avatar
 		publicId
+		role
 	}
 }
 
@@ -55,5 +60,6 @@ query GetUser($id: String!) {
 		publicId
 		username
 		createdAt
+		role
 	}
 }

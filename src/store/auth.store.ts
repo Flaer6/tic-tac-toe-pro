@@ -5,7 +5,7 @@ type Store = {
 
 	accessToken: string | null
 	userId: string | null
-
+	role: 'REGULAR' | 'ADMIN' | null
 	isAuthLoading: boolean
 	setMessages: (msg: string[] | null) => void
 
@@ -13,6 +13,7 @@ type Store = {
 	setAccessToken: (token: string | null) => void
 	setUserId: (id: string | null) => void
 	logout: () => void
+	setRole: (role: 'REGULAR' | 'ADMIN' | null) => void
 }
 
 export const useAuthStore = create<Store>(set => ({
@@ -20,7 +21,8 @@ export const useAuthStore = create<Store>(set => ({
 	accessToken: null,
 	userId: null,
 	isAuthLoading: true,
-
+	role: null,
+	setRole: role => set({ role }),
 	setAuthLoading: v => set({ isAuthLoading: v }),
 	setAccessToken: token => {
 		set({ accessToken: token })

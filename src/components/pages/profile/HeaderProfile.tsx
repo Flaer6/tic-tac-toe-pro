@@ -9,14 +9,20 @@ import { userDate } from '../../../utils/createAtUser'
 import { ConfirmModal } from '../../ui/modals/ConfirmModal'
 
 export const HeaderProfile = () => {
-	const { data } = useGetMeQuery()
+	const { data, loading } = useGetMeQuery()
 	const { onlineUsers } = useOnlineGameStore()
 
 	const [isOpen, setIsOpen] = useState(false)
 
 	const isOnline = data?.getMe.id && onlineUsers.includes(String(data.getMe.id))
 	const createAtUser = userDate(data?.getMe.createdAt)
-
+	if (loading) {
+		return (
+			<div className='flex items-center justify-center h-screen text-gray-400'>
+				Loading...
+			</div>
+		)
+	}
 	return (
 		<div className='flex flex-col gap-6 p-4 md:p-6 xl:flex-row xl:items-center xl:justify-between'>
 			<div className='flex min-w-0 items-center gap-4 md:gap-5'>

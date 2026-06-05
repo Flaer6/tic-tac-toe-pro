@@ -10,7 +10,6 @@ export const useAuthQuery = () => {
 	const queryClient = useQueryClient()
 
 	const { setMessages, messages, setAccessToken } = useAuthStore()
-	const { setAuth } = useAuthStore()
 	const { mutate: registerMutate, isError: isRegisterError } = useMutation<
 		IAuthResponse,
 		AxiosError<IErrorResponse>,
@@ -43,7 +42,6 @@ export const useAuthQuery = () => {
 		mutationFn: authService.login,
 		onSuccess: async data => {
 			setAccessToken(data.accessToken)
-			setAuth(true)
 			queryClient.invalidateQueries({ queryKey: ['profile'] })
 			navigate('/')
 		},
@@ -60,7 +58,6 @@ export const useAuthQuery = () => {
 	const handleLogout = async () => {
 		await authService.logout()
 		queryClient.clear()
-		setAuth(false)
 		navigate('/')
 	}
 

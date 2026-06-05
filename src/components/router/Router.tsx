@@ -1,6 +1,10 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { useAuthBootstrap } from '../../hooks/useCheckAuth'
-import { PrivateRoute, PublicRoute } from '../../utils/guards/routeGuard'
+import {
+	AdminRoute,
+	PrivateRoute,
+	PublicRoute,
+} from '../../utils/guards/routeGuard'
 import { Login } from '../pages/auth/Login'
 import { Register } from '../pages/auth/Register'
 import Game from '../pages/game/localGame/Game'
@@ -12,6 +16,7 @@ import { Profile } from '../pages/profile/Profile'
 import { FriendRequests } from '../pages/profile/tabs/friendRequests/FriendRequests'
 import { Friends } from '../pages/profile/tabs/friends/Friends'
 
+import { Admin } from '../pages/admin/Admin'
 import { ForgotPassword } from '../pages/auth/ForgotPassword'
 import { ResetPassword } from '../pages/auth/ResetPassword'
 import GameVsAI from '../pages/game/ai/GameVsAI'
@@ -27,6 +32,7 @@ import { VerifyEmail } from '../test'
 
 export default function Router() {
 	useAuthBootstrap()
+
 	return (
 		<BrowserRouter>
 			<Routes>
@@ -51,6 +57,9 @@ export default function Router() {
 							<Route path='interface' element={<InterfaceTab />} />
 						</Route>
 						<Route path='/:id' element={<UserProfile />}></Route>
+					</Route>
+					<Route element={<AdminRoute />}>
+						<Route path='/admin' element={<Admin />} />
 					</Route>
 				</Route>
 				<Route element={<PublicRoute />}>

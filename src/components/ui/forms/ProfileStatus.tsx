@@ -3,7 +3,9 @@ import { useGetMeQuery } from '../../../graphql/generated/output'
 
 export const ProfileStatus = ({ className }: { className?: string }) => {
 	const { data } = useGetMeQuery()
-
+	if (!data?.getMe) {
+		return null
+	}
 	return (
 		<div className=''>
 			<Link

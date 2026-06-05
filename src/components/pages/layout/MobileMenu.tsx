@@ -1,13 +1,19 @@
 import { Menu, X } from 'lucide-react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useGetMeQuery } from '../../../graphql/generated/output'
 import { ProfileStatus } from '../../ui/forms/ProfileStatus'
 import { Logo } from '../../ui/Logo'
-import { menuData } from './menu.data'
+import { getMenuData } from './menu.data'
 
 export const MobileMenu = () => {
 	const [isActive, setIsActive] = useState<boolean>(false)
+	const { data } = useGetMeQuery()
 
+	const menu = useMemo(
+		() => getMenuData(data?.getMe?.role),
+		[data?.getMe?.role],
+	)
 	return (
 		<div className='min-[790px]:hidden'>
 			<button
@@ -31,7 +37,7 @@ export const MobileMenu = () => {
 					<div className='pl-15 mb-10 text-right'>
 						<Logo className='' />
 					</div>
-					{menuData.map((item, index) => (
+					{menu.map((item, index) => (
 						<li key={index}>
 							<Link
 								to={item.href}
