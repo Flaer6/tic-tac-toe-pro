@@ -29,7 +29,7 @@ export const FriendsList = () => {
 							className='group flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-3 transition-all hover:bg-white/10 sm:gap-4 sm:p-4'
 						>
 							<Link
-								to={`/${friend.id}`}
+								to={`/user/${friend.id}`}
 								className='flex min-w-0 flex-1 items-center gap-3 sm:gap-4'
 							>
 								<div className='relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-lg shadow-black/20'>

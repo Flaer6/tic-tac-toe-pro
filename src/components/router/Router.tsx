@@ -56,7 +56,7 @@ export default function Router() {
 							<Route path='game-settings' element={<GameSettingsTab />} />
 							<Route path='interface' element={<InterfaceTab />} />
 						</Route>
-						<Route path='/:id' element={<UserProfile />}></Route>
+						<Route path='/user/:id' element={<UserProfile />} />
 					</Route>
 					<Route element={<AdminRoute />}>
 						<Route path='/admin' element={<Admin />} />

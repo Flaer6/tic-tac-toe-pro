@@ -3,20 +3,23 @@ import {
 	useGetUserHistoryQuery,
 	useGetUserQuery,
 } from '../../../../graphql/generated/output'
+import NotFound from '../../notFound/NotFound'
 import { UserProfileHeader } from './UserProfileHeader'
 import { UserProfileHistory } from './UserProfileHistory'
 
 export function UserProfile() {
 	const { id } = useParams<{ id: string }>()
 
-	const { data, loading } = useGetUserQuery({ variables: { id: id! } })
+	const { data, loading, error } = useGetUserQuery({ variables: { id: id! } })
 
 	const { data: userHistory } = useGetUserHistoryQuery({
 		variables: { id: id! },
 	})
 
 	const user = data?.getUser
-
+	if (error) {
+		return <NotFound />
+	}
 	if (loading) {
 		return (
 			<div className='flex min-h-screen items-center justify-center'>
@@ -33,7 +36,7 @@ export function UserProfile() {
 					<UserProfileHistory data={userHistory?.getUserHistory} userId={id} />
 
 					<div className='flex flex-col gap-6'>
-						<div className='rounded-[32px] border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl md:p-6'>
+						<div className='rounded-[32px] border border-white/10 bg-white/3 p-5 backdrop-blur-xl md:p-6'>
 							<h2 className='mb-5 text-xl font-semibold text-white'>
 								Информация
 							</h2>

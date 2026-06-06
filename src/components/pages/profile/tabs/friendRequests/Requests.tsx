@@ -30,7 +30,7 @@ export const Requests = () => {
 						className='flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-3 transition-all hover:bg-white/10 max-sm:flex-col max-sm:items-start sm:p-4'
 					>
 						<Link
-							to={`/${request.from?.id}`}
+							to={`/user/${request.from?.id}`}
 							className='flex items-start gap-3 transition-opacity hover:opacity-80 sm:items-center sm:gap-4'
 						>
 							<div className='flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-md shadow-black/20'>

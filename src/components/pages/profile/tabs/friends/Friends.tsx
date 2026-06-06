@@ -64,7 +64,7 @@ export const Friends = () => {
 				<div className='mb-6 max-h-[400px] sm:mb-8'>
 					{data && (
 						<div className='flex flex-col gap-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-4 sm:flex-row sm:items-center sm:justify-between'>
-							<Link to={`/${data.searchUser.id}`}>
+							<Link to={`/user/${data.searchUser.id}`}>
 								<div className='flex min-w-0 items-center gap-3 sm:gap-4'>
 									<div className='flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-lg shadow-black/20'>
 										<img

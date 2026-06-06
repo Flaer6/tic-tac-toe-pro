@@ -54,7 +54,7 @@ export const GameHistory = () => {
 								}`}
 							>
 								<Link
-									to={`/${opponent?.user.id}`}
+									to={`/user/${opponent?.user.id}`}
 									className='flex items-center gap-4 transition-opacity hover:opacity-80'
 								>
 									<div className='flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5'>
