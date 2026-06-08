@@ -15,7 +15,7 @@ export default function Home() {
 			</div>
 		)
 	}
-
+	console.log(data)
 	return (
 		<div className='text-center min-h-screen relative flex flex-col gap-32 items-center p-20'>
 			{isAuth && (

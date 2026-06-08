@@ -1,44 +1,68 @@
 import { create } from 'zustand'
 
-type Store = {
-	messages: string[] | null
+type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated'
 
+type Role = 'REGULAR' | 'ADMIN' | null
+
+type Store = {
+	// --- auth ---
 	accessToken: string | null
 	userId: string | null
-	role: 'REGULAR' | 'ADMIN' | null
-	isAuthLoading: boolean
-	setMessages: (msg: string[] | null) => void
+	role: Role
+	status: AuthStatus
 
-	setAuthLoading: (v: boolean) => void
+	// --- optional app state ---
+	messages: string[]
+
+	// --- actions ---
 	setAccessToken: (token: string | null) => void
 	setUserId: (id: string | null) => void
+	setRole: (role: Role) => void
+
+	setStatus: (status: AuthStatus) => void
+
+	setMessages: (msg: string[] | null) => void
+
 	logout: () => void
-	setRole: (role: 'REGULAR' | 'ADMIN' | null) => void
 }
 
 export const useAuthStore = create<Store>(set => ({
-	messages: null,
+	// ======================
+	// STATE
+	// ======================
 	accessToken: null,
 	userId: null,
-	isAuthLoading: true,
 	role: null,
-	setRole: role => set({ role }),
-	setAuthLoading: v => set({ isAuthLoading: v }),
-	setAccessToken: token => {
-		set({ accessToken: token })
-	},
+	status: 'loading',
+
+	messages: [],
+
+	// ======================
+	// SETTERS
+	// ======================
+	setAccessToken: token =>
+		set({
+			accessToken: token,
+			status: token ? 'authenticated' : 'unauthenticated',
+		}),
 
 	setUserId: id => set({ userId: id }),
 
-	setMessages: msg => set({ messages: msg || [] }),
+	setRole: role => set({ role }),
 
-	logout: () => {
+	setStatus: status => set({ status }),
+
+	setMessages: msg => set({ messages: msg ?? [] }),
+
+	// ======================
+	// LOGOUT
+	// ======================
+	logout: () =>
 		set({
 			accessToken: null,
-			role: null,
-			isAuthLoading: false,
 			userId: null,
+			role: null,
 			messages: [],
-		})
-	},
+			status: 'unauthenticated',
+		}),
 }))
