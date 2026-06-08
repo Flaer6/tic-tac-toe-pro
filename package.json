@@ -14,6 +14,7 @@
 		"@apollo/client": "3.11.8",
 		"@capacitor/android": "^8.4.0",
 		"@capacitor/core": "^8.4.0",
+		"@codetrix-studio/capacitor-google-auth": "^3.4.0-rc.4",
 		"@graphql-codegen/cli": "^7.0.0",
 		"@graphql-codegen/typescript": "^6.0.0",
 		"@graphql-codegen/typescript-operations": "^6.0.0",

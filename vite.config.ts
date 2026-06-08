@@ -52,7 +52,7 @@ export default defineConfig({
 			},
 
 			workbox: {
-				globPatterns: ['**/*.{js,css,html,svg,png,ico}'],
+				globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2,json}'],
 				cleanupOutdatedCaches: true,
 				clientsClaim: true,
 				runtimeCaching: [
@@ -61,9 +61,8 @@ export default defineConfig({
 						handler: 'NetworkFirst',
 					},
 					{
-						urlPattern: ({ request }) =>
-							['script', 'style', 'image'].includes(request.destination),
-						handler: 'CacheFirst',
+						urlPattern: ({ request }) => request.destination === 'image',
+						handler: 'StaleWhileRevalidate',
 					},
 				],
 			},

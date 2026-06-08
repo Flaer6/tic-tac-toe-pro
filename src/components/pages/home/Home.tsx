@@ -1,10 +1,21 @@
 import { FaRobot, FaUser } from 'react-icons/fa'
-import { useAuthStore } from '../../../store/auth.store'
+import { useGetMeQuery } from '../../../graphql/generated/output'
 import Button from '../../ui/buttons/Button'
 import { ProfileStatus } from '../../ui/forms/ProfileStatus'
+import { Loader } from '../../ui/Loader'
 
 export default function Home() {
-	const isAuth = !!useAuthStore(state => state.accessToken)
+	const { data, loading } = useGetMeQuery()
+
+	const isAuth = !!data?.getMe
+	if (loading) {
+		return (
+			<div className='fixed inset-0 z-50 flex items-center justify-center bg-[#1f1d2b]/80 backdrop-blur-sm'>
+				<Loader />
+			</div>
+		)
+	}
+
 	return (
 		<div className='text-center min-h-screen relative flex flex-col gap-32 items-center p-20'>
 			{isAuth && (

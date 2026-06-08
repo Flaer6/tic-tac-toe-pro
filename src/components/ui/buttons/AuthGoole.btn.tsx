@@ -1,7 +1,34 @@
+import { Capacitor } from '@capacitor/core'
+
 export const AuthGoogleBtn = () => {
+	const handleLogin = async () => {
+		const isNative = Capacitor.isNativePlatform()
+
+		if (isNative) {
+			// MOBILE FLOW (правильный)
+			const { GoogleAuth } =
+				await import('@codetrix-studio/capacitor-google-auth')
+
+			const user = await GoogleAuth.signIn()
+
+			await fetch(`${import.meta.env.VITE_API_URL}/auth/google/mobile`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				credentials: 'include',
+				body: JSON.stringify({
+					googleUser: user,
+				}),
+			})
+		} else {
+			// WEB FLOW
+			window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`
+		}
+	}
 	return (
-		<a
-			href={`${import.meta.env.VITE_API_URL}/auth/google`}
+		<button
+			onClick={handleLogin}
 			className='group flex w-full items-center justify-center gap-3 rounded-xl border border-white/10 bg-white px-4 py-3 font-medium text-gray-800 shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:bg-gray-100 hover:shadow-xl focus:ring-2 focus:ring-blue-500 focus:outline-none active:translate-y-0 mt-5'
 		>
 			<svg
@@ -28,6 +55,6 @@ export const AuthGoogleBtn = () => {
 			</svg>
 
 			<span className='text-sm sm:text-base'>Войти с помощью Google</span>
-		</a>
+		</button>
 	)
 }

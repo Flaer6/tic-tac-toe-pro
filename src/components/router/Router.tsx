@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { useAuthBootstrap } from '../../hooks/useCheckAuth'
 import {
 	AdminRoute,
 	PrivateRoute,
@@ -31,8 +30,6 @@ import { SecurityTab } from '../pages/settings/tabs/security/SecurityTab'
 import { VerifyEmail } from '../test'
 
 export default function Router() {
-	useAuthBootstrap()
-
 	return (
 		<BrowserRouter>
 			<Routes>

@@ -35,6 +35,8 @@ export const useAuthStore = create<Store>(set => ({
 	logout: () => {
 		set({
 			accessToken: null,
+			role: null,
+			isAuthLoading: false,
 			userId: null,
 			messages: [],
 		})

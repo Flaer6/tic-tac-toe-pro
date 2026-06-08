@@ -13,7 +13,7 @@ const authLink = setContext((_, { headers }) => {
 	return {
 		headers: {
 			...headers,
-			Authorization: token ? `Bearer ${token}` : '',
+			Authorization: token ? `Bearer ${token}` : undefined,
 		},
 	}
 })
@@ -25,10 +25,15 @@ const httpLink = new HttpLink({
 
 export const client = new ApolloClient({
 	link: ApolloLink.from([authLink, httpLink]),
-	cache: new InMemoryCache(),
-	defaultOptions: {
-		watchQuery: {
-			fetchPolicy: 'cache-first',
+	cache: new InMemoryCache({
+		typePolicies: {
+			Query: {
+				fields: {
+					getMe: {
+						merge: false,
+					},
+				},
+			},
 		},
-	},
+	}),
 })

@@ -1,3 +1,4 @@
+import { client } from '../../libs/apollo-client'
 import { useAuthStore } from '../../store/auth.store'
 import type { IAuthResponse, IInputAuth } from '../../types/types'
 import { api } from '../api/api'
@@ -24,13 +25,9 @@ class AuthService {
 	}
 
 	async logout(): Promise<void> {
-		try {
-			await api.post('/auth/logout')
-		} catch (error) {
-			console.error('Logout error:', error)
-		} finally {
-			useAuthStore.getState().logout()
-		}
+		await api.post('/auth/logout')
+		useAuthStore.getState().logout()
+		await client.resetStore()
 	}
 }
 
