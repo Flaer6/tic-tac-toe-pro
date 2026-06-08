@@ -1,13 +1,18 @@
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
-import { SetContextLink } from '@apollo/client/link/context'
+import {
+	ApolloClient,
+	ApolloLink,
+	HttpLink,
+	InMemoryCache,
+} from '@apollo/client'
+import { setContext } from '@apollo/client/link/context'
 import { useAuthStore } from '../store/auth.store'
 
-const authLink = new SetContextLink(prevContext => {
+const authLink = setContext((_, { headers }) => {
 	const token = useAuthStore.getState().accessToken
 
 	return {
 		headers: {
-			...prevContext.headers,
+			...headers,
 			Authorization: token ? `Bearer ${token}` : '',
 		},
 	}
@@ -19,7 +24,7 @@ const httpLink = new HttpLink({
 })
 
 export const client = new ApolloClient({
-	link: authLink.concat(httpLink),
+	link: ApolloLink.from([authLink, httpLink]),
 	cache: new InMemoryCache(),
 	defaultOptions: {
 		watchQuery: {

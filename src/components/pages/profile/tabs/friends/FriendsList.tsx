@@ -11,12 +11,14 @@ import { useOnlineGameStore } from '../../../../../store/onlineGame.store'
 export const FriendsList = () => {
 	const { onlineUsers } = useOnlineGameStore()
 
-	const { data } = useGetMeQuery()
+	const { data, loading } = useGetMeQuery()
 
 	const [removeFriend] = useRemoveFriendMutation({
 		refetchQueries: ['GetMe'],
 	})
-
+	if (loading) {
+		return <div>Loading...</div>
+	}
 	return (
 		<div className='max-h-[420px] space-y-3 overflow-y-auto pr-1 sm:pr-2'>
 			{data?.getFriends?.length ? (

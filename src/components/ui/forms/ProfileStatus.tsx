@@ -2,7 +2,12 @@ import { Link } from 'react-router-dom'
 import { useGetMeQuery } from '../../../graphql/generated/output'
 
 export const ProfileStatus = ({ className }: { className?: string }) => {
-	const { data } = useGetMeQuery()
+	const { data, loading } = useGetMeQuery()
+
+	if (loading) {
+		return <div>Loading...</div>
+	}
+
 	if (!data?.getMe) {
 		return null
 	}

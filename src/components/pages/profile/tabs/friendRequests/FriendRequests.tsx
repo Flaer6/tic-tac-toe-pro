@@ -1,14 +1,12 @@
 import { UserPlus } from 'lucide-react'
-import {
-	FriendStatus,
-	useGetMeQuery,
-} from '../../../../../graphql/generated/output'
+import { useGetMeQuery } from '../../../../../graphql/generated/output'
+import { FriendStatus } from '../../../../../types/types'
 import { Requests } from './Requests'
 
 export const FriendRequests = () => {
 	const { data } = useGetMeQuery()
 	const pendingRequests =
-		data?.getFriendRequests?.filter(r => r.status === FriendStatus.Pending) ??
+		data?.getFriendRequests?.filter(r => r.status === FriendStatus.PENDING) ??
 		[]
 
 	return (

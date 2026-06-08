@@ -24,7 +24,7 @@ export default function Board({
 		const nextSquares = squares.slice()
 		nextSquares[i] = xIsNext ? 'X' : 'O'
 
-		onPlay(nextSquares, i)
+		if (onPlay) onPlay(nextSquares, i)
 	}
 
 	const winner = calculateWinner(squares)

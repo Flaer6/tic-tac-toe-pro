@@ -4,7 +4,7 @@ import Button from '../../ui/buttons/Button'
 import { ProfileStatus } from '../../ui/forms/ProfileStatus'
 
 export default function Home() {
-	const { isAuth } = useAuthStore()
+	const isAuth = !!useAuthStore(state => state.accessToken)
 	return (
 		<div className='text-center min-h-screen relative flex flex-col gap-32 items-center p-20'>
 			{isAuth && (

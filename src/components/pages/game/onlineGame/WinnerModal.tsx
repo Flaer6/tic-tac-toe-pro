@@ -253,7 +253,7 @@ export const WinnerModal = () => {
 							{/* ── Buttons ── */}
 							<div className='w-full flex flex-col sm:flex-row gap-3'>
 								<m.button
-									whileHover={{ scale: 1.04, brightness: 1.1 }}
+									whileHover={{ scale: 1.04, filter: 'brightness(1.1)' }}
 									whileTap={{ scale: 0.96 }}
 									onClick={handleNewGame}
 									className='flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-semibold text-sm sm:text-base transition-all'

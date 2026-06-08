@@ -2,11 +2,11 @@ import { Check, UserPlus, X } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 import {
-	FriendStatus,
 	useAcceptFriendRequestMutation,
 	useGetMeQuery,
 	useRejectFriendRequestMutation,
 } from '../../../../../graphql/generated/output'
+import { FriendStatus } from '../../../../../types/types'
 
 export const Requests = () => {
 	const { data } = useGetMeQuery()
@@ -18,7 +18,7 @@ export const Requests = () => {
 		useRejectFriendRequestMutation({ refetchQueries: ['GetMe'] })
 
 	const pendingRequests =
-		data?.getFriendRequests?.filter(r => r.status === FriendStatus.Pending) ??
+		data?.getFriendRequests?.filter(r => r.status === FriendStatus.PENDING) ??
 		[]
 
 	return (
