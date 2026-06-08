@@ -1,10 +1,9 @@
-import axios from 'axios'
 import { useEffect } from 'react'
 import { client } from '../libs/apollo-client'
+import { getValidToken } from '../shared/api/refresh'
 import { useAuthStore } from '../store/auth.store'
 
 export const useAuthBootstrap = () => {
-	const setAccessToken = useAuthStore(s => s.setAccessToken)
 	const setStatus = useAuthStore(s => s.setStatus)
 	const logout = useAuthStore(s => s.logout)
 
@@ -13,20 +12,24 @@ export const useAuthBootstrap = () => {
 			setStatus('loading')
 
 			try {
-				const res = await axios.post(
-					`${import.meta.env.VITE_API_URL}/auth/refresh`,
-					{},
-					{ withCredentials: true },
-				)
+				// Используем общую функцию getValidToken.
+				// Она сама сделает запрос, обновит Zustand и разрулит очереди, если они возникнут.
+				await getValidToken()
 
-				setAccessToken(res.data.accessToken)
-
-				await client.resetStore()
+				setStatus('authenticated') // Не забудьте перевести статус в успех
 			} catch (e) {
+				// Если рефреш не удался (нет куки или она протухла)
 				logout()
+				setStatus('unauthenticated') // Устанавливаем статус неавторизованного пользователя
+
+				// Очищаем кэш Apollo при неудачной авторизации,
+				// используя безопасный clearStore вместо resetStore
+				await client
+					.clearStore()
+					.catch(err => console.error('Ошибка очистки кэша:', err))
 			}
 		}
 
 		init()
-	}, [])
+	}, [logout, setStatus]) // Добавляем зависимости для соблюдения правил React Hooks
 }

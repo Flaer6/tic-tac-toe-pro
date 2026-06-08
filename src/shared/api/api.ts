@@ -1,14 +1,23 @@
 import axios from 'axios'
+
 import { useAuthStore } from '../../store/auth.store'
+import { getValidToken } from './refresh'
 
 export const api = axios.create({
 	baseURL: import.meta.env.VITE_API_URL,
 	withCredentials: true,
 })
 
-let isRefreshing = false
-let refreshQueue: ((token: string) => void)[] = []
+// Добавляем accessToken во все запросы
+api.interceptors.request.use(config => {
+	const token = useAuthStore.getState().accessToken
+	if (token) {
+		config.headers.Authorization = `Bearer ${token}`
+	}
+	return config
+})
 
+// Перехватываем 401 ошибку
 api.interceptors.response.use(
 	res => res,
 	async error => {
@@ -21,31 +30,11 @@ api.interceptors.response.use(
 		) {
 			originalRequest._retry = true
 
-			if (isRefreshing) {
-				return new Promise(resolve => {
-					refreshQueue.push((token: string) => {
-						originalRequest.headers = {
-							...originalRequest.headers,
-							Authorization: `Bearer ${token}`,
-						}
-
-						resolve(api(originalRequest))
-					})
-				})
-			}
-
-			isRefreshing = true
-
 			try {
-				const res = await api.post('/auth/refresh')
+				// Запрашиваем новый токен через единый сервис очереди
+				const newToken = await getValidToken()
 
-				const newToken = res.data.accessToken
-
-				useAuthStore.getState().setAccessToken(newToken)
-
-				refreshQueue.forEach(cb => cb(newToken))
-				refreshQueue = []
-
+				// Повторяем упавший запрос с новым токеном
 				originalRequest.headers = {
 					...originalRequest.headers,
 					Authorization: `Bearer ${newToken}`,
@@ -53,10 +42,7 @@ api.interceptors.response.use(
 
 				return api(originalRequest)
 			} catch (err) {
-				useAuthStore.getState().logout()
 				return Promise.reject(err)
-			} finally {
-				isRefreshing = false
 			}
 		}
 

@@ -1,7 +1,6 @@
 import cn from 'clsx'
 import { Outlet } from 'react-router-dom'
 import { useGetMeQuery } from '../../../graphql/generated/output'
-import { useAuthBootstrap } from '../../../hooks/useCheckAuth'
 import { useGameSocket } from '../../../hooks/useGameSocket'
 import { useAuthStore } from '../../../store/auth.store'
 import { Loader } from '../../ui/Loader'
@@ -10,8 +9,6 @@ import { AsideMenu } from './AsideMenu'
 import { MobileMenu } from './MobileMenu'
 
 export const Layout = () => {
-	useAuthBootstrap()
-
 	const status = useAuthStore(s => s.status)
 
 	// 💥 правильный gate
