@@ -6,8 +6,8 @@ import {
 } from '../../utils/guards/routeGuard'
 import { Login } from '../pages/auth/Login'
 import { Register } from '../pages/auth/Register'
-import Game from '../pages/game/localGame/Game'
-import { OnlineGame } from '../pages/game/onlineGame/OnlineGame'
+import Game from '../pages/game/localGame/standard/Game'
+import { OnlineGame } from '../pages/game/onlineGame/standard/OnlineGame'
 import Home from '../pages/home/Home'
 import { Layout } from '../pages/layout/Layout'
 import NotFound from '../pages/notFound/NotFound'
@@ -20,6 +20,7 @@ import { ForgotPassword } from '../pages/auth/ForgotPassword'
 import { ResetPassword } from '../pages/auth/ResetPassword'
 import GameVsAI from '../pages/game/ai/GameVsAI'
 import { GameHistory } from '../pages/profile/tabs/history/History'
+import { Skins } from '../pages/profile/tabs/skins/Skins'
 import { Statistic } from '../pages/profile/tabs/statistic/Statistic'
 import { UserProfile } from '../pages/profile/userProfile/UserProfile'
 import { Settings } from '../pages/settings/Settings'
@@ -45,6 +46,7 @@ export default function Router() {
 							<Route path='history' element={<GameHistory />} />
 							<Route path='friends' element={<Friends />} />
 							<Route path='friendRequests' element={<FriendRequests />} />
+							<Route path='skins' element={<Skins />} />
 						</Route>
 						<Route path='/online' element={<OnlineGame />} />
 						<Route path='/settings' element={<Settings />}>

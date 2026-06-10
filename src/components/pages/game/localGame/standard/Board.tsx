@@ -1,5 +1,5 @@
 import cn from 'clsx'
-import type { BoardProps } from '../../../../types/types'
+import type { BoardProps } from '../../../../../types/types'
 import Square from './Square'
 import calculateWinner from './Winner'
 import styles from './localGame.module.css'
@@ -14,13 +14,13 @@ export default function Board({
 	function handleClick(i: number) {
 		if (calculateWinner(squares) || squares[i]) return
 
-		// 🤖 AI MODE
+		//  AI MODE
 		if (onCellClick) {
 			onCellClick(i)
 			return
 		}
 
-		// 👥 PvP MODE
+		//  PvP MODE
 		const nextSquares = squares.slice()
 		nextSquares[i] = xIsNext ? 'X' : 'O'
 

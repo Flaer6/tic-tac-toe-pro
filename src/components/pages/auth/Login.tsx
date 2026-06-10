@@ -52,12 +52,14 @@ export const Login = () => {
 							className='w-full'
 							{...register('password')}
 						/>
-						<a
-							href='/forgotPassword'
-							className='text-primary text-right hover:text-white -mt-3'
-						>
-							Забыли пароль?
-						</a>
+						<div className='flex justify-end'>
+							<a
+								href='/forgotPassword'
+								className='text-primary  text-right hover:text-white -mt-3'
+							>
+								Забыли пароль?
+							</a>
+						</div>
 						<SubmitButton className='py-3 mt-2'>Войти</SubmitButton>
 					</form>
 					<AuthGoogleBtn />

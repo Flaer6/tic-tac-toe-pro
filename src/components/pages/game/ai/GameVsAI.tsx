@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import Board from '../localGame/Board'
-import calculateWinner from '../localGame/Winner'
+import Board from '../localGame/standard/Board'
+import calculateWinner from '../localGame/standard/Winner'
 import { getBotMove } from './bot'
 
 type Player = 'X' | 'O' | ''

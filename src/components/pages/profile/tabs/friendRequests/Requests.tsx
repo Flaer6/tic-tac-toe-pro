@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import { Check, UserPlus, X } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { Link } from 'react-router-dom'
@@ -21,97 +22,102 @@ export const Requests = () => {
 		data?.getFriendRequests?.filter(r => r.status === FriendStatus.PENDING) ??
 		[]
 
+	if (!pendingRequests.length) {
+		return (
+			<div className='flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/[0.07] bg-white/[0.01] px-4 py-12 text-center'>
+				<div className='mb-3 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/[0.06] bg-white/[0.03]'>
+					<UserPlus className='h-5 w-5 text-white/20' />
+				</div>
+				<p className='text-sm font-medium text-white/50'>Нет входящих заявок</p>
+				<p className='mt-1 text-xs text-white/25'>
+					Заявки появятся здесь, когда кто-то добавит тебя в друзья
+				</p>
+			</div>
+		)
+	}
+
 	return (
-		<div className='max-h-[420px] space-y-3 overflow-y-auto pr-1 sm:pr-2'>
-			{pendingRequests.length > 0 ? (
-				pendingRequests.map(request => (
-					<div
-						key={request.id}
-						className='flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-3 transition-all hover:bg-white/10 max-sm:flex-col max-sm:items-start sm:p-4'
-					>
+		<motion.div
+			className='flex max-h-[420px] flex-col overflow-y-auto'
+			initial='hidden'
+			animate='show'
+			variants={{ hidden: {}, show: { transition: { staggerChildren: 0.07 } } }}
+		>
+			{pendingRequests.map(request => (
+				<motion.div
+					key={request.id}
+					variants={{
+						hidden: { opacity: 0, y: 5 },
+						show: {
+							opacity: 1,
+							y: 0,
+							transition: { duration: 0.25, ease: 'easeOut' },
+						},
+					}}
+					className='group relative border-b border-white/[0.04] last:border-b-0 transition-colors duration-200 hover:bg-white/[0.03]'
+				>
+					{/* Left accent bar */}
+					<div className='absolute inset-y-0 left-0 w-[3px] rounded-r-full bg-indigo-500 opacity-40 transition-opacity duration-200 group-hover:opacity-70' />
+
+					<div className='flex items-center gap-4 py-3.5 pl-5 pr-4'>
+						{/* Avatar */}
 						<Link
 							to={`/user/${request.from?.id}`}
-							className='flex items-start gap-3 transition-opacity hover:opacity-80 sm:items-center sm:gap-4'
+							className='relative shrink-0'
 						>
-							<div className='flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-md shadow-black/20'>
+							<div className='h-10 w-10 overflow-hidden rounded-xl border border-white/10'>
 								<img
 									src={request.from?.avatar || '/assets/favicons/512x512.jpg'}
 									alt='avatar'
-									className='h-full w-full object-cover transition-transform duration-300 hover:scale-105'
+									className='h-full w-full object-cover transition-transform duration-300 group-hover:scale-105'
 								/>
-							</div>
-
-							<div className='min-w-0 flex-1'>
-								<div className='truncate text-sm font-medium text-white sm:text-base'>
-									{request.from?.username}
-								</div>
-
-								<div className='truncate text-xs text-white/50 sm:text-sm'>
-									ID: {request.from?.id}
-								</div>
 							</div>
 						</Link>
 
-						<div className='mt-3 flex gap-2 max-sm:w-full max-sm:flex-col'>
+						{/* Name */}
+						<Link to={`/user/${request.from?.id}`} className='min-w-0 flex-1'>
+							<div className='truncate text-sm font-semibold text-white/90'>
+								{request.from?.username}
+							</div>
+							<div className='text-xs text-white/30'>
+								#{request.from?.id?.slice(0, 8)}…
+							</div>
+						</Link>
+
+						{/* Actions */}
+						<div className='flex shrink-0 items-center gap-2'>
 							<button
 								type='button'
+								disabled={isAccepting}
 								onClick={() => {
 									AcceptFriendRequest({
-										variables: {
-											input: {
-												requestId: request.id,
-											},
-										},
+										variables: { input: { requestId: request.id } },
 									})
-
 									toast.success('Друг добавлен 🎉')
 								}}
-								className='inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-emerald-500 px-4 py-3 text-sm font-medium text-white transition hover:bg-emerald-600'
-								disabled={isAccepting}
+								className='inline-flex h-8 items-center gap-1.5 rounded-lg border border-emerald-500/25 bg-emerald-500/10 px-3 text-xs font-semibold text-emerald-400 transition-all duration-200 hover:border-emerald-500/40 hover:bg-emerald-500/20 hover:text-emerald-300 disabled:opacity-40'
 							>
-								<Check size={16} />
-								Принять
+								<Check size={13} />
+								<span className='hidden sm:inline'>Принять</span>
 							</button>
 
 							<button
 								type='button'
+								disabled={isRejecting}
 								onClick={() => {
 									RejectFriendRequest({
-										variables: {
-											input: {
-												requestId: request.id,
-											},
-										},
+										variables: { input: { requestId: request.id } },
 									})
-
-									toast('Заявка отклонена', {
-										icon: '❌',
-									})
+									toast('Заявка отклонена', { icon: '❌' })
 								}}
-								className='inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-red-500 px-4 py-3 text-sm font-medium text-white transition hover:bg-red-600'
-								disabled={isRejecting}
+								className='inline-flex h-8 w-8 items-center justify-center rounded-lg border border-red-500/15 bg-red-500/5 text-red-400/60 transition-all duration-200 hover:border-red-500/25 hover:bg-red-500/10 hover:text-red-400 disabled:opacity-40'
 							>
-								<X size={16} />
-								Отклонить
+								<X size={14} />
 							</button>
 						</div>
 					</div>
-				))
-			) : (
-				<div className='flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/10 bg-white/[0.02] px-4 py-10 text-center'>
-					<div className='mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/5'>
-						<UserPlus className='h-7 w-7 text-white/30' />
-					</div>
-
-					<div className='text-base font-medium text-white/80'>
-						Нет входящих заявок
-					</div>
-
-					<div className='mt-1 max-w-sm text-sm text-white/45'>
-						Когда кто-то отправит тебе заявку в друзья, она появится здесь
-					</div>
-				</div>
-			)}
-		</div>
+				</motion.div>
+			))}
+		</motion.div>
 	)
 }

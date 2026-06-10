@@ -1,4 +1,4 @@
-import calculateWinner from '../localGame/Winner'
+import calculateWinner from '../localGame/standard/Winner'
 
 type Player = 'X' | 'O' | ''
 

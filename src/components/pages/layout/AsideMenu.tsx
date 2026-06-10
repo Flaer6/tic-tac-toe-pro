@@ -21,7 +21,7 @@ export const AsideMenu = () => {
 		>
 			<button
 				type='button'
-				className='absolute top-0 right-0 z-10 text-primary max-[970px]:hidden'
+				className='absolute top-5 right-2 z-10 text-primary max-[970px]:hidden'
 				onClick={() => setIsActive(!isActive)}
 			>
 				{!isActive ? <PanelLeftClose /> : <PanelRightClose />}

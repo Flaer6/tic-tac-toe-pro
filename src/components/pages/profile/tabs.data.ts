@@ -1,4 +1,4 @@
-import { BarChart3, Clock3, UserPlus, Users } from 'lucide-react'
+import { BarChart3, Clock3, Sparkles, UserPlus, Users } from 'lucide-react'
 import type { ITab } from '../../../types/types'
 
 export const tabsProfile: ITab[] = [
@@ -21,5 +21,10 @@ export const tabsProfile: ITab[] = [
 		icon: UserPlus,
 		name: 'Заявки в друзья',
 		href: 'friendRequests',
+	},
+	{
+		icon: Sparkles,
+		name: 'Скины',
+		href: 'skins',
 	},
 ]

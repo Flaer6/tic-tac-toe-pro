@@ -1,7 +1,7 @@
 import cn from 'clsx'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useGameStore } from '../../../../store/store'
+import { useGameStore } from '../../../../../store/store'
 import Board from './Board'
 
 export default function Game() {

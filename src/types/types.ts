@@ -122,6 +122,7 @@ export interface IUpdateProfileResponse {
 
 export interface IUser {
 	data?: GetUserQuery['getUser']
+	loading?: boolean
 }
 
 export interface IHistoryUser {

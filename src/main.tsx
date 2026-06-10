@@ -1,3 +1,4 @@
+import '@aejkatappaja/phantom-ui'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { domAnimation, LazyMotion } from 'framer-motion'
 import React from 'react'

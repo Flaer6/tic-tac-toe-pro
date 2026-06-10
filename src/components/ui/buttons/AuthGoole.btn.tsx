@@ -1,26 +1,12 @@
 import { Capacitor } from '@capacitor/core'
+import toast from 'react-hot-toast'
 
 export const AuthGoogleBtn = () => {
 	const handleLogin = async () => {
 		const isNative = Capacitor.isNativePlatform()
 
 		if (isNative) {
-			// MOBILE FLOW (правильный)
-			const { GoogleAuth } =
-				await import('@codetrix-studio/capacitor-google-auth')
-
-			const user = await GoogleAuth.signIn()
-
-			await fetch(`${import.meta.env.VITE_API_URL}/auth/google/mobile`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				credentials: 'include',
-				body: JSON.stringify({
-					googleUser: user,
-				}),
-			})
+			toast('Данная опция доступна только в веб версии игры :(')
 		} else {
 			// WEB FLOW
 			window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`

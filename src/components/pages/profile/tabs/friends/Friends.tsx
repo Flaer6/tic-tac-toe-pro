@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import { Plus, Search, Users } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
@@ -21,123 +22,123 @@ export const Friends = () => {
 
 	const onSearch = async (formData: IInputSearchUser) => {
 		await searchUser({
-			variables: {
-				input: {
-					identifier: formData.identifier,
-				},
-			},
+			variables: { input: { identifier: formData.identifier } },
 		})
 	}
-	console.log(userError?.message)
 
 	return (
 		<div className='w-full max-w-4xl p-3 sm:p-4 md:p-6'>
-			<div className='mb-6 flex flex-col gap-2 sm:mb-8'>
-				<h2 className='text-2xl font-semibold text-white sm:text-3xl'>
-					Друзья
-				</h2>
+			{/* Header */}
+			<div className='mb-7'>
+				<p className='mb-1 text-xs font-semibold uppercase tracking-widest text-indigo-400/70'>
+					Социальное
+				</p>
+				<h2 className='text-2xl font-bold text-white sm:text-3xl'>Друзья</h2>
 			</div>
 
-			<div className='rounded-3xl border border-white/10 bg-white/[0.03] p-4 sm:p-5 md:p-6'>
-				<div className='mb-6 sm:mb-8'>
+			<div className='relative overflow-hidden rounded-3xl border border-white/6 bg-white/2 backdrop-blur-xl'>
+				<div className='absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-indigo-500/30 to-transparent' />
+
+				{/* Search section */}
+				<div className='border-b border-white/5 p-5 md:p-6'>
 					<form onSubmit={handleSubmit(onSearch)}>
 						<div className='flex flex-col gap-3 sm:flex-row sm:items-center'>
 							<div className='relative w-full'>
-								<div className='pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-white/35'>
-									<Search size={18} />
+								<div className='pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-white/25'>
+									<Search size={16} />
 								</div>
-
 								<InputAuth
 									placeholder='Введите ID или username'
-									className='w-full pl-11'
+									className='w-full pl-10'
 									{...register('identifier')}
 								/>
 							</div>
-
-							<SubmitButton className='w-full py-3 sm:w-auto sm:min-w-[120px]'>
+							<SubmitButton className='w-full py-3 sm:w-auto sm:min-w-[110px]'>
 								Найти
 							</SubmitButton>
 						</div>
 					</form>
-				</div>
 
-				<div className='mb-6 max-h-[400px] sm:mb-8'>
-					{data && (
-						<div className='flex flex-col gap-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-4 sm:flex-row sm:items-center sm:justify-between'>
-							<Link to={`/user/${data.searchUser.id}`}>
-								<div className='flex min-w-0 items-center gap-3 sm:gap-4'>
-									<div className='flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-lg shadow-black/20'>
+					{/* Search result / feedback */}
+					<div className='mt-3'>
+						{data && (
+							<motion.div
+								initial={{ opacity: 0, y: -6 }}
+								animate={{ opacity: 1, y: 0 }}
+								className='flex flex-col gap-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.06] p-4 sm:flex-row sm:items-center sm:justify-between'
+							>
+								<Link
+									to={`/user/${data.searchUser.id}`}
+									className='flex min-w-0 items-center gap-3'
+								>
+									<div className='relative h-11 w-11 shrink-0 overflow-hidden rounded-xl border border-white/10'>
 										<img
 											src={
 												data.searchUser.avatar || '/assets/favicons/512x512.jpg'
 											}
 											alt='avatar'
-											className='h-full w-full object-cover transition-transform duration-300 hover:scale-105'
+											className='h-full w-full object-cover'
 										/>
 									</div>
-
 									<div className='min-w-0'>
-										<div className='truncate text-base font-medium text-white sm:text-lg'>
+										<div className='truncate text-sm font-semibold text-white'>
 											{data.searchUser.username}
 										</div>
-										<div className='text-sm text-white/50'>
-											ID: {data.searchUser.publicId}
+										<div className='text-xs text-white/40'>
+											#{data.searchUser.publicId}
 										</div>
 									</div>
-								</div>
-							</Link>
-							<button
-								type='button'
-								onClick={() =>
-									sendFriendRequest({
-										variables: {
-											input: {
-												toId: data.searchUser.id,
-											},
-										},
-									})
-								}
-								className='inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 px-4 py-3 text-sm font-medium text-white transition hover:bg-emerald-600 sm:w-auto z-20'
-							>
-								<Plus size={16} />
-								Добавить
-							</button>
-						</div>
-					)}
+								</Link>
+								<button
+									type='button'
+									onClick={() =>
+										sendFriendRequest({
+											variables: { input: { toId: data.searchUser.id } },
+										})
+									}
+									className='inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500/90 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-emerald-500 sm:w-auto'
+								>
+									<Plus size={14} />
+									Добавить
+								</button>
+							</motion.div>
+						)}
 
-					{userError && (
-						<div className='rounded-2xl border border-white/10 bg-white/[0.02] px-4 py-5 text-center text-sm text-white/50 sm:text-base'>
-							По вашему запросу ничего не найдено
-						</div>
-					)}
+						{userError && (
+							<p className='rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3 text-center text-xs text-white/35'>
+								По вашему запросу никого не найдено
+							</p>
+						)}
 
-					{isAddFriend && (
-						<div className='rounded-2xl border border-emerald-500/20 bg-emerald-500/5 px-4 py-5 text-center text-sm text-emerald-400 sm:text-base'>
-							Заявка отправлена ✅
-						</div>
-					)}
+						{isAddFriend && (
+							<p className='rounded-xl border border-emerald-500/20 bg-emerald-500/[0.06] px-4 py-3 text-center text-xs font-medium text-emerald-400'>
+								Заявка отправлена ✓
+							</p>
+						)}
 
-					{friendError && friendError.message && (
-						<div className='rounded-2xl border border-red-500/20 bg-red-500/5 px-4 py-5 text-center text-sm text-red-400 sm:text-base'>
-							{friendError.message}
-						</div>
-					)}
+						{friendError?.message && (
+							<p className='rounded-xl border border-red-500/20 bg-red-500/[0.06] px-4 py-3 text-center text-xs font-medium text-red-400'>
+								{friendError.message}
+							</p>
+						)}
+					</div>
 				</div>
 
-				<div className='mb-4 flex items-center justify-between gap-3'>
-					<div className='flex items-center gap-2 text-white/80'>
-						<Users className='h-5 w-5 text-white/50' />
-						<span className='text-sm font-medium sm:text-base'>
-							Список друзей
-						</span>
+				{/* Friends list header */}
+				<div className='flex items-center justify-between px-5 py-4 md:px-6'>
+					<div className='flex items-center gap-2 text-white/60'>
+						<Users className='h-4 w-4 text-white/25' />
+						<span className='text-sm font-medium'>Список друзей</span>
 					</div>
-
-					<span className='rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/60 sm:text-sm'>
+					<span className='rounded-xl border border-white/[0.07] bg-white/[0.04] px-2.5 py-1 text-xs font-medium text-white/40'>
 						{getMe?.getFriends?.length ?? 0}
 					</span>
 				</div>
 
-				<FriendsList />
+				{/* Friends list */}
+				<div className='px-5 pb-5 md:px-6 md:pb-6'>
+					<FriendsList />
+				</div>
 			</div>
 		</div>
 	)

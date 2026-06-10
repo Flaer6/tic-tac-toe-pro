@@ -1,4 +1,5 @@
-import { Clock, Trophy, XCircle } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { Clock, Trophy, User, XCircle } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 import {
@@ -8,86 +9,170 @@ import {
 
 export const GameHistory = () => {
 	const { data } = useGetMyHistoryQuery()
-
 	const { data: user } = useGetMeQuery()
+
+	const games = data?.getMyHistory ?? []
+	const wins = games.filter(
+		g => g.players.find(p => p.userId === user?.getMe?.id)?.winner,
+	).length
 
 	return (
 		<div className='w-full max-w-4xl p-3 sm:p-4 md:p-6'>
-			<div className='mb-6 sm:mb-8'>
-				<h2 className='text-2xl font-semibold text-white sm:text-3xl'>
+			{/* Header */}
+			<div className='mb-7'>
+				<p className='mb-1 text-xs font-semibold uppercase tracking-widest text-indigo-400/70'>
+					Активность
+				</p>
+				<h2 className='text-2xl font-bold text-white sm:text-3xl'>
 					История игр
 				</h2>
 			</div>
 
-			<div className='rounded-3xl border border-white/10 bg-white/3 p-4 sm:p-5 md:p-6'>
-				<div className='mb-4 flex items-center justify-between'>
-					<div className='flex items-center gap-2 text-white/80'>
-						<Clock className='h-5 w-5 text-white/50' />
+			<div className='relative overflow-hidden rounded-3xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-xl'>
+				{/* Top gradient line */}
+				<div className='absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent' />
 
-						<span className='text-sm font-medium sm:text-base'>
-							Последние игры
-						</span>
+				{/* Card header with win/loss summary */}
+				<div className='flex items-center justify-between border-b border-white/[0.05] px-5 py-4'>
+					<div className='flex items-center gap-2.5 text-white/70'>
+						<Clock className='h-4 w-4 text-white/30' />
+						<span className='text-sm font-medium'>Последние игры</span>
 					</div>
 
-					<span className='rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/60 sm:text-sm'>
-						{data?.getMyHistory.length}
-					</span>
+					<div className='flex items-center gap-2'>
+						<span className='rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-xs font-semibold text-emerald-400'>
+							{wins}W
+						</span>
+						<span className='rounded-xl border border-red-500/20 bg-red-500/10 px-2.5 py-1 text-xs font-semibold text-red-400'>
+							{games.length - wins}L
+						</span>
+						<span className='rounded-xl border border-white/[0.07] bg-white/[0.04] px-2.5 py-1 text-xs font-medium text-white/40'>
+							{games.length} игр
+						</span>
+					</div>
 				</div>
 
-				<div className='flex max-h-[400px] flex-col gap-4 overflow-y-auto'>
-					{data?.getMyHistory.map(game => {
-						const me = game.players.find(p => p.userId === user?.getMe?.id)
+				{/* List */}
+				<motion.div
+					className='flex max-h-[460px] flex-col overflow-y-auto'
+					initial='hidden'
+					animate='show'
+					variants={{
+						hidden: {},
+						show: { transition: { staggerChildren: 0.06 } },
+					}}
+				>
+					{games.length === 0 && (
+						<div className='flex flex-col items-center gap-3 py-16 text-center'>
+							<Clock className='h-8 w-8 text-white/15' />
+							<p className='text-sm text-white/30'>Игр пока нет</p>
+						</div>
+					)}
 
+					{games.map(game => {
+						const me = game.players.find(p => p.userId === user?.getMe?.id)
 						const opponent = game.players.find(
 							p => p.userId !== user?.getMe?.id,
 						)
-
 						const isWin = me?.winner
 
 						return (
-							<div
+							<motion.div
 								key={game.id}
-								className={`flex flex-col gap-4 rounded-2xl border p-4 sm:flex-row sm:items-center sm:justify-between ${
-									isWin
-										? 'border-emerald-500/20 bg-emerald-500/5'
-										: 'border-red-500/20 bg-red-500/5'
-								}`}
+								variants={{
+									hidden: { opacity: 0, y: 6 },
+									show: {
+										opacity: 1,
+										y: 0,
+										transition: { duration: 0.28, ease: 'easeOut' },
+									},
+								}}
+								className={`
+									group relative border-b border-white/[0.04] last:border-b-0
+									transition-colors duration-200
+									${isWin ? 'hover:bg-emerald-500/[0.04]' : 'hover:bg-red-500/[0.04]'}
+								`}
 							>
+								{/* Win/loss side bar */}
+								<div
+									className={`absolute inset-y-0 left-0 w-[3px] ${isWin ? 'bg-emerald-500' : 'bg-red-500'} opacity-50 transition-opacity duration-200 group-hover:opacity-90`}
+								/>
+
 								<Link
 									to={`/user/${opponent?.user.id}`}
-									className='flex items-center gap-4 transition-opacity hover:opacity-80'
+									className='flex items-center justify-between px-5 py-4 pl-7'
 								>
-									<div className='flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5'>
-										{isWin ? (
-											<Trophy className='text-emerald-400' />
-										) : (
-											<XCircle className='text-red-400' />
-										)}
+									{/* Left: avatar + info */}
+									<div className='flex items-center gap-4'>
+										<div
+											className={`
+											flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl
+											border transition-colors duration-200
+											${
+												isWin
+													? 'border-emerald-500/20 bg-emerald-500/10 group-hover:bg-emerald-500/15'
+													: 'border-red-500/20 bg-red-500/10 group-hover:bg-red-500/15'
+											}
+										`}
+										>
+											{isWin ? (
+												<Trophy className='h-4 w-4 text-emerald-400' />
+											) : (
+												<XCircle className='h-4 w-4 text-red-400' />
+											)}
+										</div>
+
+										<div>
+											<div className='flex items-center gap-2'>
+												<span className='text-sm font-semibold text-white/90'>
+													{opponent?.user.username || 'Unknown'}
+												</span>
+												<span
+													className={`text-xs font-semibold ${isWin ? 'text-emerald-400' : 'text-red-400'}`}
+												>
+													{isWin ? 'Победа' : 'Поражение'}
+												</span>
+											</div>
+											<div className='mt-0.5 flex items-center gap-3'>
+												<span className='flex items-center gap-1 text-xs text-white/30'>
+													<User className='h-3 w-3' />
+													{opponent?.user.id?.slice(0, 8)}…
+												</span>
+												{game.finishedAt && (
+													<span className='text-xs text-white/30'>
+														{new Date(game.finishedAt).toLocaleDateString(
+															'ru-RU',
+															{
+																day: 'numeric',
+																month: 'short',
+																year: 'numeric',
+															},
+														)}
+													</span>
+												)}
+											</div>
+										</div>
 									</div>
 
-									<div>
-										<div className='font-medium text-white'>
-											vs {opponent?.user.username || 'Unknown'}
-										</div>
-
-										<div className='text-sm text-white/50'>
-											ID: {opponent?.user.id}
-										</div>
-
-										<div className='text-sm text-white/50'>
-											{game.finishedAt &&
-												new Date(game.finishedAt).toLocaleDateString()}
-										</div>
-									</div>
+									{/* Right: arrow */}
+									<svg
+										className='h-4 w-4 flex-shrink-0 text-white/15 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-white/30'
+										fill='none'
+										viewBox='0 0 16 16'
+									>
+										<path
+											d='M6 3l5 5-5 5'
+											stroke='currentColor'
+											strokeWidth='1.5'
+											strokeLinecap='round'
+											strokeLinejoin='round'
+										/>
+									</svg>
 								</Link>
-
-								<div className='text-sm text-white/60'>
-									{isWin ? 'Победа' : 'Поражение'}
-								</div>
-							</div>
+							</motion.div>
 						)
 					})}
-				</div>
+				</motion.div>
 			</div>
 		</div>
 	)

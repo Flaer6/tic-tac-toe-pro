@@ -1,8 +1,8 @@
 import { AnimatePresence, m } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { useGetMeQuery } from '../../../../graphql/generated/output'
-import { socket } from '../../../../shared/socket'
-import { useOnlineGameStore } from '../../../../store/onlineGame.store'
+import { useGetMeQuery } from '../../../../../graphql/generated/output'
+import { socket } from '../../../../../shared/socket'
+import { useOnlineGameStore } from '../../../../../store/onlineGame.store'
 
 const ParticlesBurst = ({ isWin }: { isWin: boolean }) => {
 	const particles = Array.from({ length: 16 })

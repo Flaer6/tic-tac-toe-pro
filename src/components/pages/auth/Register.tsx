@@ -18,7 +18,7 @@ export const Register = () => {
 		<div className='min-h-screen flex items-center justify-center px-4'>
 			<div className='w-full max-w-md'>
 				{/* CARD */}
-				<div className='rounded-3xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-6 sm:p-8 shadow-[0_0_40px_rgba(0,0,0,0.3)]'>
+				<div className='rounded-3xl border border-white/10 bg-white/3 backdrop-blur-xl p-6 sm:p-8 shadow-[0_0_40px_rgba(0,0,0,0.3)]'>
 					{/* HEADER */}
 					<div className='mb-6 text-center'>
 						<h1 className='text-2xl sm:text-3xl font-semibold text-white'>
