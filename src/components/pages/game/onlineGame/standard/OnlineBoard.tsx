@@ -1,5 +1,6 @@
 import cn from 'clsx'
 import { m } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import {
 	useGetMeQuery,
 	useGetUserQuery,
@@ -11,6 +12,42 @@ import Square from '../../localGame/standard/Square'
 import styles from '../../localGame/standard/localGame.module.css'
 import { WinnerModal } from './WinnerModal'
 
+const TURN_SECONDS = 20
+
+function getDisplayName(
+	firstName?: string | null,
+	lastName?: string | null,
+	username?: string | null,
+	fallback = 'Игрок',
+) {
+	if (firstName || lastName) {
+		return `${firstName ?? ''} ${lastName ?? ''}`.trim()
+	}
+	return username ?? fallback
+}
+
+function useTurnCountdown(turnDeadline: number | null) {
+	const [timeLeft, setTimeLeft] = useState(TURN_SECONDS)
+
+	useEffect(() => {
+		if (!turnDeadline) {
+			setTimeLeft(TURN_SECONDS)
+			return
+		}
+
+		const tick = () => {
+			const left = Math.max(0, Math.ceil((turnDeadline - Date.now()) / 1000))
+			setTimeLeft(left)
+		}
+
+		tick()
+		const id = setInterval(tick, 200)
+		return () => clearInterval(id)
+	}, [turnDeadline])
+
+	return timeLeft
+}
+
 export function OnlineBoard() {
 	const {
 		board,
@@ -21,24 +58,38 @@ export function OnlineBoard() {
 		reconnecting,
 		opponentId,
 		roomId,
+		turnDeadline,
 	} = useOnlineGameStore()
 
 	const { data: opponentData } = useGetUserQuery({
 		variables: { id: opponentId! },
+		skip: !opponentId,
 	})
 	const { data } = useGetMeQuery()
 
-	const user = data?.getMe
+	const me = data?.getMe
 
-	const displayName =
-		user?.firstName || user?.lastName
-			? `${user?.firstName ?? ''} ${user?.lastName ?? ''}`.trim()
-			: user?.username
+	const displayName = getDisplayName(me?.firstName, me?.lastName, me?.username)
+	const opponentDisplayName = getDisplayName(
+		opponentData?.getUser?.firstName,
+		opponentData?.getUser?.lastName,
+		opponentData?.getUser?.username,
+		'Соперник',
+	)
 
-	const opponentDisplayName =
-		opponentData?.getUser?.firstName || opponentData?.getUser?.lastName
-			? `${opponentData?.getUser?.firstName ?? ''} ${opponentData?.getUser?.lastName ?? ''}`.trim()
-			: opponentData?.getUser?.username || 'Соперник'
+	const isMyTurn = turn === me?.id
+	const opponentSymbol = symbol === 'X' ? 'O' : symbol === 'O' ? 'X' : null
+
+	const timeLeft = useTurnCountdown(turnDeadline ?? null)
+	const timerFraction = timeLeft / TURN_SECONDS
+	const timerUrgent = timeLeft <= 5
+
+	const handleClick = (index: number) => {
+		if (!me || !symbol) return
+		if (turn !== me.id) return
+		if (board[index] !== null) return
+		socket.emit('make_move', { index })
+	}
 
 	if (!roomId) {
 		return (
@@ -46,16 +97,6 @@ export function OnlineBoard() {
 				<span className='text-sm'>Игра не активна</span>
 			</div>
 		)
-	}
-
-	const opponentSymbol = symbol === 'X' ? 'O' : symbol === 'O' ? 'X' : null
-	const isMyTurn = turn === data?.getMe?.id
-
-	const handleClick = (index: number) => {
-		if (!data?.getMe || !symbol) return
-		if (turn !== data?.getMe.id) return
-		if (board[index] !== null) return
-		socket.emit('make_move', { index })
 	}
 
 	return (
@@ -66,7 +107,7 @@ export function OnlineBoard() {
 				initial={{ opacity: 0, y: -6 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.25 }}
-				className='flex flex-col items-center gap-1'
+				className='flex w-full flex-col items-center gap-2'
 			>
 				{/* X vs O symbols */}
 				<div className='flex items-center gap-4'>
@@ -78,7 +119,7 @@ export function OnlineBoard() {
 						transition={{ duration: 0.3 }}
 						className={cn(
 							'text-5xl font-bold sm:text-6xl',
-							symbol === 'X' ? 'X' : 'O',
+							symbol === 'X' ? 'text-indigo-400' : 'text-rose-400',
 						)}
 					>
 						{symbol}
@@ -96,7 +137,7 @@ export function OnlineBoard() {
 						transition={{ duration: 0.3 }}
 						className={cn(
 							'text-5xl font-bold sm:text-6xl',
-							opponentSymbol === 'X' ? 'X' : 'O',
+							opponentSymbol === 'X' ? 'text-indigo-400' : 'text-rose-400',
 						)}
 					>
 						{opponentSymbol}
@@ -120,6 +161,40 @@ export function OnlineBoard() {
 							? 'Ваш ход'
 							: 'Ход соперника'}
 				</div>
+
+				{/* Timer bar */}
+				{!reconnecting && (
+					<div className='w-full max-w-xs'>
+						<div className='flex items-center justify-between mb-1'>
+							<span
+								className={cn(
+									'text-xs font-mono font-semibold tabular-nums transition-colors duration-300',
+									timerUrgent
+										? 'text-red-400'
+										: isMyTurn
+											? 'text-emerald-400'
+											: 'text-white/30',
+								)}
+							>
+								{timeLeft}с
+							</span>
+						</div>
+						<div className='h-1 w-full overflow-hidden rounded-full bg-white/[0.06]'>
+							<m.div
+								className={cn(
+									'h-full rounded-full transition-colors duration-300',
+									timerUrgent
+										? 'bg-red-400'
+										: isMyTurn
+											? 'bg-emerald-400'
+											: 'bg-white/20',
+								)}
+								animate={{ width: `${timerFraction * 100}%` }}
+								transition={{ duration: 0.2, ease: 'linear' }}
+							/>
+						</div>
+					</div>
+				)}
 			</m.div>
 
 			{/* Players row */}
@@ -141,7 +216,7 @@ export function OnlineBoard() {
 					<img
 						className='max-h-11 max-w-11 shrink-0 rounded-xl object-cover sm:max-h-13 sm:max-w-13'
 						src={
-							data?.getMe?.avatar ||
+							me?.avatar ||
 							`https://ui-avatars.com/api/?name=${displayName}&background=random`
 						}
 						alt='avatar'
@@ -151,11 +226,9 @@ export function OnlineBoard() {
 							<span className='truncate text-sm font-semibold text-white/90'>
 								{displayName}
 							</span>
-							{data?.getMe.role === 'ADMIN' && <AdminLabel />}
+							{me?.role === 'ADMIN' && <AdminLabel />}
 						</div>
-						<span className='text-xs text-white/30'>
-							#{data?.getMe?.publicId}
-						</span>
+						<span className='text-xs text-white/30'>#{me?.publicId}</span>
 					</div>
 				</m.div>
 

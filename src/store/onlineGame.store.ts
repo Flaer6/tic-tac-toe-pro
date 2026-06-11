@@ -13,6 +13,7 @@ interface IGame {
 	turn: string
 	moves: Record<string, number[]>
 	winner?: string | null
+	turnDeadline?: number | null
 }
 
 interface OnlineGameState {
@@ -23,13 +24,16 @@ interface OnlineGameState {
 	winner: string | null
 	removingIndex: number | null
 	opponentId: string | null
+	status: 'idle' | 'searching' | 'found'
 	opponentName: string | null
 	reconnecting: boolean
 	onlineUsers: string[]
+	turnDeadline: number | null
+
+	setStatus: (status: 'idle' | 'searching' | 'found') => void
 	setOnlineUsers: (users: string[]) => void
 	addOnlineUser: (userId: string) => void
 	removeOnlineUser: (userId: string) => void
-
 	setReconnecting: (value: boolean) => void
 	setGame: (data: IGame, userId: string) => void
 	setWinner: (winner: string) => void
@@ -37,6 +41,7 @@ interface OnlineGameState {
 		board: (string | null)[],
 		turn: string,
 		removingIndex: number | null,
+		turnDeadline?: number | null,
 	) => void
 	reset: () => void
 }
@@ -52,11 +57,11 @@ export const useOnlineGameStore = create<OnlineGameState>(set => ({
 	opponentName: null,
 	reconnecting: false,
 	onlineUsers: [],
+	turnDeadline: null,
+	status: 'idle',
+	setStatus: status => set({ status }),
 
-	setOnlineUsers: users =>
-		set({
-			onlineUsers: [...users],
-		}),
+	setOnlineUsers: users => set({ onlineUsers: [...users] }),
 
 	addOnlineUser: userId =>
 		set(state => ({
@@ -67,6 +72,7 @@ export const useOnlineGameStore = create<OnlineGameState>(set => ({
 		set(state => ({
 			onlineUsers: state.onlineUsers.filter(id => id !== userId),
 		})),
+
 	setReconnecting: value => set({ reconnecting: value }),
 
 	setGame: (data, userId) => {
@@ -84,16 +90,18 @@ export const useOnlineGameStore = create<OnlineGameState>(set => ({
 			opponentName: opponent?.username ?? null,
 			winner: null,
 			removingIndex: null,
+			turnDeadline: data.turnDeadline ?? null,
 		})
 	},
 
 	setWinner: winner => set({ winner }),
 
-	updateBoard: (board, turn, removingIndex) =>
+	updateBoard: (board, turn, removingIndex, turnDeadline = null) =>
 		set({
 			board,
 			turn,
 			removingIndex,
+			turnDeadline,
 		}),
 
 	reset: () =>
@@ -106,5 +114,7 @@ export const useOnlineGameStore = create<OnlineGameState>(set => ({
 			removingIndex: null,
 			opponentId: null,
 			opponentName: null,
+			turnDeadline: null,
+			status: 'idle',
 		}),
 }))

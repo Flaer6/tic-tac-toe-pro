@@ -19,10 +19,10 @@ export function UserProfile() {
 	if (error) {
 		return <NotFound />
 	}
-	if (loading) return <div className=''>Загрузка...</div>
+	// if (loading) return <div className=''>Загрузка...</div>
 
 	return (
-		<phantom-ui loading={loading}>
+		<phantom-ui loading={loading ? true : undefined}>
 			<div className='min-h-screen w-full p-4 pt-16 md:p-6 xl:p-8'>
 				<div className='mx-auto flex w-full max-w-7xl flex-col gap-6'>
 					<UserProfileHeader data={data?.getUser} loading={loading} />

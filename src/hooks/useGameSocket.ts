@@ -1,10 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { socket } from '../shared/socket'
 import { useOnlineGameStore } from '../store/onlineGame.store'
 import type { IDataGameRequest } from '../types/types'
-
-type Status = 'idle' | 'searching' | 'found'
 
 export const useGameSocket = () => {
 	const {
@@ -18,7 +16,7 @@ export const useGameSocket = () => {
 		removeOnlineUser,
 	} = useOnlineGameStore()
 
-	const [status, setStatus] = useState<Status>('idle')
+	const { status, setStatus } = useOnlineGameStore()
 
 	/* =========================
 		HELPERS
@@ -27,11 +25,8 @@ export const useGameSocket = () => {
 	const getUserIdFromToken = () => {
 		try {
 			const auth = socket.auth as { token?: string }
-
 			if (!auth?.token) return null
-
 			const payload = JSON.parse(atob(auth.token.split('.')[1]))
-
 			return payload.id ?? null
 		} catch {
 			return null
@@ -40,12 +35,10 @@ export const useGameSocket = () => {
 
 	const applyGameState = (data: IDataGameRequest) => {
 		const userId = getUserIdFromToken()
-
 		if (!userId) {
 			console.log('NO USER ID')
 			return
 		}
-
 		setGame(data, userId)
 		setStatus('found')
 	}
@@ -55,25 +48,15 @@ export const useGameSocket = () => {
 	========================= */
 
 	useEffect(() => {
-		const handleOnlineUsers = (users: string[]) => {
-			setOnlineUsers(users)
-		}
-
-		const handleUserOnline = (userId: string) => {
-			addOnlineUser(userId)
-		}
-
-		const handleUserOffline = (userId: string) => {
-			removeOnlineUser(userId)
-		}
+		const handleOnlineUsers = (users: string[]) => setOnlineUsers(users)
+		const handleUserOnline = (userId: string) => addOnlineUser(userId)
+		const handleUserOffline = (userId: string) => removeOnlineUser(userId)
 
 		socket.on('online_users', handleOnlineUsers)
 		socket.on('user_online', handleUserOnline)
 		socket.on('user_offline', handleUserOffline)
 
-		if (socket.connected) {
-			socket.emit('get_online_users')
-		}
+		if (socket.connected) socket.emit('get_online_users')
 
 		return () => {
 			socket.off('online_users', handleOnlineUsers)
@@ -87,13 +70,10 @@ export const useGameSocket = () => {
 	========================= */
 
 	useEffect(() => {
-		const handleDisconnect = () => {
-			setReconnecting(true)
-		}
+		const handleDisconnect = () => setReconnecting(true)
 
 		const handleConnect = () => {
 			setReconnecting(false)
-
 			socket.emit('restore_game')
 			socket.emit('get_online_users')
 		}
@@ -108,28 +88,18 @@ export const useGameSocket = () => {
 	}, [setReconnecting])
 
 	/* =========================
-		RESTORE ON MOUNT
-	========================= */
-
-	/* =========================
 		GAME EVENTS
 	========================= */
 
 	useEffect(() => {
-		const handleSearching = () => {
-			setStatus('searching')
-		}
+		const handleSearching = () => setStatus('searching')
 
-		const handleGameFound = (data: IDataGameRequest) => {
-			applyGameState(data)
-		}
+		const handleGameFound = (data: IDataGameRequest) => applyGameState(data)
 
-		const handleGameRestored = (data: IDataGameRequest) => {
-			applyGameState(data)
-		}
+		const handleGameRestored = (data: IDataGameRequest) => applyGameState(data)
 
 		const handleMove = (data: IDataGameRequest) => {
-			updateBoard(data.board, data.turn, data.removingIndex)
+			updateBoard(data.board, data.turn, data.removingIndex, data.turnDeadline)
 		}
 
 		const handleOpponentLeft = () => {
@@ -139,20 +109,17 @@ export const useGameSocket = () => {
 		}
 
 		const handleGameOver = (data: IDataGameRequest) => {
-			updateBoard(data.board, data.turn, data.removingIndex)
+			updateBoard(data.board, data.turn, data.removingIndex, null)
 			setWinner(data.winner)
 
 			setTimeout(() => {
-				setStatus(prev => {
-					if (prev === 'found') return prev
-					reset()
-					return 'idle'
-				})
+				reset()
+				setStatus('idle')
 			}, 5000)
 		}
 
 		const handleCancelEvent = () => {
-			setStatus(prev => (prev === 'searching' ? 'idle' : prev))
+			if (status === 'searching') setStatus('idle')
 		}
 
 		socket.on('searching_game', handleSearching)
@@ -170,7 +137,7 @@ export const useGameSocket = () => {
 			socket.off('move_made', handleMove)
 			socket.off('opponent_left', handleOpponentLeft)
 			socket.off('game_over', handleGameOver)
-			socket.off('search_canceled', handleCancelEvent)
+			socket.off('search_cancelled', handleCancelEvent) // было 'search_canceled' — опечатка
 		}
 	}, [reset, setGame, setWinner, updateBoard])
 
@@ -181,16 +148,13 @@ export const useGameSocket = () => {
 	const handleFind = () => {
 		if (!socket.connected) return
 		if (status === 'searching') return
-
 		if (status !== 'found') reset()
-
 		setStatus('searching')
 		socket.emit('find_game')
 	}
 
 	const handleCancel = () => {
 		if (!socket.connected) return
-
 		socket.emit('cancel_search')
 	}
 

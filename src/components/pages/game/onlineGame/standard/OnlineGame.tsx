@@ -1,10 +1,17 @@
 import { motion } from 'framer-motion'
+import { useEffect } from 'react'
 import { useGameSocket } from '../../../../../hooks/useGameSocket'
+import { useOnlineGameStore } from '../../../../../store/onlineGame.store'
 import { OnlineBoard } from './OnlineBoard'
 
 export const OnlineGame = () => {
-	const { handleFind, handleCancel, status } = useGameSocket()
 	const cells = Array.from({ length: 9 })
+	const { handleFind, handleCancel, status } = useGameSocket()
+	const { roomId, setStatus } = useOnlineGameStore()
+
+	useEffect(() => {
+		if (roomId) setStatus('found')
+	}, [])
 
 	return (
 		<div className='flex flex-col items-center justify-center h-full w-full gap-6 text-white'>

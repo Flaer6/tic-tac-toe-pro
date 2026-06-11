@@ -94,9 +94,9 @@ export interface IDataGameRequest {
 		username: string
 		publicId: string
 	}[]
-
 	moves: Record<string, number[]>
 	winner: string
+	turnDeadline?: number | null
 }
 
 export interface IMenu {

@@ -1,6 +1,10 @@
 import { AnimatePresence, m } from 'framer-motion'
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { useGetMeQuery } from '../../../../../graphql/generated/output'
+import {
+	useGetMeQuery,
+	useGetMyHistoryQuery,
+} from '../../../../../graphql/generated/output'
 import { socket } from '../../../../../shared/socket'
 import { useOnlineGameStore } from '../../../../../store/onlineGame.store'
 
@@ -50,7 +54,12 @@ const ParticlesBurst = ({ isWin }: { isWin: boolean }) => {
 export const WinnerModal = () => {
 	const { winner, opponentName, reset, reconnecting } = useOnlineGameStore()
 	const { data } = useGetMeQuery()
+	const { refetch: refetchHistory } = useGetMyHistoryQuery({ skip: !winner })
 
+	useEffect(() => {
+		if (!winner) return
+		void refetchHistory()
+	}, [winner])
 	const displayName =
 		data?.getMe?.firstName || data?.getMe?.lastName
 			? `${data?.getMe?.firstName ?? ''} ${data?.getMe?.lastName ?? ''}`.trim()
