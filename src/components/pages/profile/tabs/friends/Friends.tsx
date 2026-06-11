@@ -1,14 +1,13 @@
 import { motion } from 'framer-motion'
 import { Plus, Search, Users } from 'lucide-react'
-import { useForm } from 'react-hook-form'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useDebounce } from 'use-debounce'
 import {
 	useGetMeQuery,
 	useSearchUserLazyQuery,
 	useSendFriendRequestMutation,
 } from '../../../../../graphql/generated/output'
-import type { IInputSearchUser } from '../../../../../types/types'
-import { SubmitButton } from '../../../../ui/buttons/Submit.btn'
 import { InputAuth } from '../../../../ui/inputs/InputAuth'
 import { FriendsList } from './FriendsList'
 
@@ -18,14 +17,20 @@ export const Friends = () => {
 	const [sendFriendRequest, { data: isAddFriend, error: friendError }] =
 		useSendFriendRequestMutation()
 
-	const { handleSubmit, register } = useForm<IInputSearchUser>()
+	const [search, setSearch] = useState('')
+	const [debouncedSearch] = useDebounce(search, 400)
 
-	const onSearch = async (formData: IInputSearchUser) => {
-		await searchUser({
-			variables: { input: { identifier: formData.identifier } },
+	useEffect(() => {
+		if (debouncedSearch.trim().length < 2) return
+
+		searchUser({
+			variables: {
+				input: {
+					identifier: debouncedSearch,
+				},
+			},
 		})
-	}
-
+	}, [debouncedSearch])
 	return (
 		<div className='w-full max-w-4xl p-3 sm:p-4 md:p-6'>
 			{/* Header */}
@@ -41,7 +46,7 @@ export const Friends = () => {
 
 				{/* Search section */}
 				<div className='border-b border-white/5 p-5 md:p-6'>
-					<form onSubmit={handleSubmit(onSearch)}>
+					<form>
 						<div className='flex flex-col gap-3 sm:flex-row sm:items-center'>
 							<div className='relative w-full'>
 								<div className='pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-white/25'>
@@ -50,42 +55,39 @@ export const Friends = () => {
 								<InputAuth
 									placeholder='Введите ID или username'
 									className='w-full pl-10'
-									{...register('identifier')}
+									value={search}
+									onChange={e => setSearch(e.target.value)}
 								/>
 							</div>
-							<SubmitButton className='w-full py-3 sm:w-auto sm:min-w-[110px]'>
-								Найти
-							</SubmitButton>
 						</div>
 					</form>
 
 					{/* Search result / feedback */}
 					<div className='mt-3'>
-						{data && (
+						{data?.searchUser.map(user => (
 							<motion.div
+								key={user.id}
 								initial={{ opacity: 0, y: -6 }}
 								animate={{ opacity: 1, y: 0 }}
-								className='flex flex-col gap-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.06] p-4 sm:flex-row sm:items-center sm:justify-between'
+								className='flex flex-col gap-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/6 p-4 sm:flex-row sm:items-center sm:justify-between'
 							>
 								<Link
-									to={`/user/${data.searchUser.id}`}
+									to={`/user/${user.id}`}
 									className='flex min-w-0 items-center gap-3'
 								>
 									<div className='relative h-11 w-11 shrink-0 overflow-hidden rounded-xl border border-white/10'>
 										<img
-											src={
-												data.searchUser.avatar || '/assets/favicons/512x512.jpg'
-											}
+											src={user.avatar || '/assets/favicons/512x512.jpg'}
 											alt='avatar'
 											className='h-full w-full object-cover'
 										/>
 									</div>
 									<div className='min-w-0'>
 										<div className='truncate text-sm font-semibold text-white'>
-											{data.searchUser.username}
+											{user.username}
 										</div>
 										<div className='text-xs text-white/40'>
-											#{data.searchUser.publicId}
+											#{user.publicId}
 										</div>
 									</div>
 								</Link>
@@ -93,7 +95,7 @@ export const Friends = () => {
 									type='button'
 									onClick={() =>
 										sendFriendRequest({
-											variables: { input: { toId: data.searchUser.id } },
+											variables: { input: { toId: user.id } },
 										})
 									}
 									className='inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500/90 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-emerald-500 sm:w-auto'
@@ -102,22 +104,22 @@ export const Friends = () => {
 									Добавить
 								</button>
 							</motion.div>
-						)}
+						))}
 
 						{userError && (
-							<p className='rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3 text-center text-xs text-white/35'>
+							<p className='rounded-xl border border-white/6 bg-white/2 px-4 py-3 text-center text-xs text-white/35'>
 								По вашему запросу никого не найдено
 							</p>
 						)}
 
 						{isAddFriend && (
-							<p className='rounded-xl border border-emerald-500/20 bg-emerald-500/[0.06] px-4 py-3 text-center text-xs font-medium text-emerald-400'>
+							<p className='rounded-xl border border-emerald-500/20 bg-emerald-500/6 px-4 py-3 text-center text-xs font-medium text-emerald-400'>
 								Заявка отправлена ✓
 							</p>
 						)}
 
 						{friendError?.message && (
-							<p className='rounded-xl border border-red-500/20 bg-red-500/[0.06] px-4 py-3 text-center text-xs font-medium text-red-400'>
+							<p className='rounded-xl border border-red-500/20 bg-red-500/6 px-4 py-3 text-center text-xs font-medium text-red-400'>
 								{friendError.message}
 							</p>
 						)}
@@ -130,7 +132,7 @@ export const Friends = () => {
 						<Users className='h-4 w-4 text-white/25' />
 						<span className='text-sm font-medium'>Список друзей</span>
 					</div>
-					<span className='rounded-xl border border-white/[0.07] bg-white/[0.04] px-2.5 py-1 text-xs font-medium text-white/40'>
+					<span className='rounded-xl border border-white/[0.07] bg-white/4 px-2.5 py-1 text-xs font-medium text-white/40'>
 						{getMe?.getFriends?.length ?? 0}
 					</span>
 				</div>

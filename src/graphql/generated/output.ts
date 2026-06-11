@@ -81,7 +81,7 @@ export type SearchUserQueryVariables = Exact<{
 }>;
 
 
-export type SearchUserQuery = { searchUser: { id: string, username: string, avatar: string | null, publicId: string, role: UserRole } };
+export type SearchUserQuery = { searchUser: Array<{ id: string, username: string, avatar: string | null, publicId: string, role: UserRole }> };
 
 export type GetUserQueryVariables = Exact<{
   id: string;
