@@ -27,7 +27,7 @@ class AuthService {
 	async logout(): Promise<void> {
 		await api.post('/auth/logout')
 		useAuthStore.getState().logout()
-		await client.resetStore()
+		await client.clearStore()
 	}
 }
 

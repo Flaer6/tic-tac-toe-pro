@@ -25,8 +25,16 @@ export const Layout = () => {
 	// ======================
 	if (status === 'loading') {
 		return (
-			<div className='fixed inset-0 z-50 flex items-center justify-center bg-[#1f1d2b]/80 backdrop-blur-sm'>
+			<div className='fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-[#070B14]/90 backdrop-blur-md'>
+				{/* Ambient blobs */}
+				<div className='pointer-events-none absolute -left-32 -top-32 h-64 w-64 rounded-full bg-indigo-600/10 blur-[80px]' />
+				<div className='pointer-events-none absolute -bottom-32 -right-32 h-64 w-64 rounded-full bg-violet-600/8 blur-[80px]' />
+
 				<Loader />
+
+				<p className='text-xs font-semibold uppercase tracking-widest text-white/20'>
+					Загрузка…
+				</p>
 			</div>
 		)
 	}

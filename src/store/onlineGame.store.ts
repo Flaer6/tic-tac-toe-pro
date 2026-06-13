@@ -29,7 +29,10 @@ interface OnlineGameState {
 	reconnecting: boolean
 	onlineUsers: string[]
 	turnDeadline: number | null
+	gameOverTimer: ReturnType<typeof setTimeout> | null
 
+	setGameOverTimer: (id: ReturnType<typeof setTimeout> | null) => void
+	clearGameOverTimer: () => void
 	setStatus: (status: 'idle' | 'searching' | 'found') => void
 	setOnlineUsers: (users: string[]) => void
 	addOnlineUser: (userId: string) => void
@@ -58,9 +61,18 @@ export const useOnlineGameStore = create<OnlineGameState>(set => ({
 	reconnecting: false,
 	onlineUsers: [],
 	turnDeadline: null,
+	gameOverTimer: null,
 	status: 'idle',
-	setStatus: status => set({ status }),
-
+	setStatus: status => {
+		console.trace('setStatus', status)
+		set({ status })
+	},
+	setGameOverTimer: id => set({ gameOverTimer: id }),
+	clearGameOverTimer: () =>
+		set(state => {
+			if (state.gameOverTimer) clearTimeout(state.gameOverTimer)
+			return { gameOverTimer: null }
+		}),
 	setOnlineUsers: users => set({ onlineUsers: [...users] }),
 
 	addOnlineUser: userId =>
@@ -104,7 +116,8 @@ export const useOnlineGameStore = create<OnlineGameState>(set => ({
 			turnDeadline,
 		}),
 
-	reset: () =>
+	reset: () => {
+		console.trace('reset called')
 		set({
 			board: Array(9).fill(null),
 			turn: null,
@@ -116,5 +129,6 @@ export const useOnlineGameStore = create<OnlineGameState>(set => ({
 			opponentName: null,
 			turnDeadline: null,
 			status: 'idle',
-		}),
+		})
+	},
 }))

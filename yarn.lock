@@ -1241,6 +1241,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@capacitor/app@npm:^8.1.0":
+  version: 8.1.0
+  resolution: "@capacitor/app@npm:8.1.0"
+  peerDependencies:
+    "@capacitor/core": ">=8.0.0"
+  checksum: 10c0/670a5bc3f0c1706f9d09ad03873836ac9b56e1ca6c9853e283d43b4ff04c7295b30801d49f563206aadcf882245025be1ecdc12c22c7d479c636b34123e9a0d3
+  languageName: node
+  linkType: hard
+
+"@capacitor/browser@npm:^8.0.3":
+  version: 8.0.3
+  resolution: "@capacitor/browser@npm:8.0.3"
+  peerDependencies:
+    "@capacitor/core": ">=8.0.0"
+  checksum: 10c0/c4dea47e4035a54f4697f062f176285d66015812fd544c18f39b6c2f4fdfb327011c603abc6fafee6af5a1399777e5cf1e0c5c19e6e6c1a2f4af8bdaf9b5d2cf
+  languageName: node
+  linkType: hard
+
 "@capacitor/cli@npm:^8.4.0":
   version: 8.4.0
   resolution: "@capacitor/cli@npm:8.4.0"
@@ -10488,6 +10506,8 @@ __metadata:
     "@aejkatappaja/phantom-ui": "npm:^1.1.0"
     "@apollo/client": "npm:3.11.8"
     "@capacitor/android": "npm:^8.4.0"
+    "@capacitor/app": "npm:^8.1.0"
+    "@capacitor/browser": "npm:^8.0.3"
     "@capacitor/cli": "npm:^8.4.0"
     "@capacitor/core": "npm:^8.4.0"
     "@codetrix-studio/capacitor-google-auth": "npm:^3.4.0-rc.4"

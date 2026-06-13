@@ -52,7 +52,14 @@ const ParticlesBurst = ({ isWin }: { isWin: boolean }) => {
 }
 
 export const WinnerModal = () => {
-	const { winner, opponentName, reset, reconnecting } = useOnlineGameStore()
+	const {
+		winner,
+		opponentName,
+		reset,
+		reconnecting,
+		setStatus,
+		clearGameOverTimer,
+	} = useOnlineGameStore()
 	const { data } = useGetMeQuery()
 	const { refetch: refetchHistory } = useGetMyHistoryQuery({ skip: !winner })
 
@@ -60,54 +67,55 @@ export const WinnerModal = () => {
 		if (!winner) return
 		void refetchHistory()
 	}, [winner])
+
+	const isWin = winner === data?.getMe?.id
+
 	const displayName =
 		data?.getMe?.firstName || data?.getMe?.lastName
 			? `${data?.getMe?.firstName ?? ''} ${data?.getMe?.lastName ?? ''}`.trim()
 			: data?.getMe?.username
 
+	// НЕ используем useGameSocket — он регистрирует дублирующие листенеры
 	const handleNewGame = () => {
-		reset()
+		clearGameOverTimer()
+		setStatus('searching')
 		socket.emit('find_game')
 	}
 
 	const handleMenu = () => {
+		clearGameOverTimer()
 		reset()
 	}
 
-	const isWin = winner === data?.getMe?.id
-
 	return (
 		<AnimatePresence>
-			{/* ── Reconnecting overlay ── */}
+			{/* Reconnecting overlay */}
 			{reconnecting && (
 				<m.div
 					key='reconnecting'
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
 					exit={{ opacity: 0 }}
-					className='absolute inset-0 flex items-center justify-center bg-black/75 backdrop-blur-lg z-50'
+					className='absolute inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-lg'
 				>
 					<m.div
 						initial={{ scale: 0.85, y: 16 }}
 						animate={{ scale: 1, y: 0 }}
 						exit={{ scale: 0.85, y: 16 }}
-						className='relative bg-[#13111c] border border-white/10 px-8 py-7 rounded-2xl text-center shadow-2xl'
+						className='relative rounded-2xl border border-white/10 bg-[#13111c] px-8 py-7 text-center shadow-2xl'
 					>
-						{/* glow ring */}
 						<div className='absolute inset-0 rounded-2xl ring-1 ring-yellow-400/20 pointer-events-none' />
-
 						<div
-							className='text-base sm:text-lg font-semibold mb-5 tracking-wide'
+							className='mb-5 text-base font-semibold tracking-wide sm:text-lg'
 							style={{ color: '#facc15', fontFamily: "'DM Mono', monospace" }}
 						>
 							Переподключение…
 						</div>
-
-						<div className='flex gap-3 justify-center'>
+						<div className='flex justify-center gap-3'>
 							{[0, 1, 2].map(i => (
 								<m.div
 									key={i}
-									className='w-2 h-2 rounded-full bg-yellow-400'
+									className='h-2 w-2 rounded-full bg-yellow-400'
 									animate={{ y: [0, -7, 0], opacity: [0.4, 1, 0.4] }}
 									transition={{
 										duration: 0.7,
@@ -122,7 +130,7 @@ export const WinnerModal = () => {
 				</m.div>
 			)}
 
-			{/* ── Winner / Loser modal ── */}
+			{/* Winner / Loser modal */}
 			{!reconnecting && winner && (
 				<m.div
 					key='result'
@@ -130,21 +138,21 @@ export const WinnerModal = () => {
 					animate={{ opacity: 1 }}
 					exit={{ opacity: 0 }}
 					transition={{ duration: 0.35 }}
-					className='absolute inset-0 flex items-center justify-center backdrop-blur-lg bg-black/60 z-50 px-4'
+					className='absolute inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-lg'
 				>
 					<m.div
 						initial={{ scale: 0.72, y: 48, opacity: 0 }}
 						animate={{ scale: 1, y: 0, opacity: 1 }}
 						exit={{ scale: 0.72, y: 48, opacity: 0 }}
 						transition={{ type: 'spring', stiffness: 300, damping: 26 }}
-						className='relative w-full max-w-sm sm:max-w-md overflow-hidden rounded-3xl shadow-2xl'
+						className='relative w-full max-w-sm overflow-hidden rounded-3xl shadow-2xl sm:max-w-md'
 						style={{
 							background: 'linear-gradient(160deg, #1a1828 0%, #0f0d1a 100%)',
 						}}
 					>
-						{/* ── Top accent bar ── */}
+						{/* Top accent bar */}
 						<div
-							className='absolute top-0 inset-x-0 h-[3px]'
+							className='absolute inset-x-0 top-0 h-[3px]'
 							style={{
 								background: isWin
 									? 'linear-gradient(90deg, transparent, #4ade80, transparent)'
@@ -152,16 +160,16 @@ export const WinnerModal = () => {
 							}}
 						/>
 
-						{/* ── Ambient glow ── */}
+						{/* Ambient glow */}
 						<div
-							className='absolute -top-20 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full blur-3xl opacity-20 pointer-events-none'
+							className='pointer-events-none absolute -top-20 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full blur-3xl opacity-20'
 							style={{ background: isWin ? '#22c55e' : '#ef4444' }}
 						/>
 
 						<ParticlesBurst isWin={isWin} />
 
-						<div className='relative z-10 p-6 sm:p-8 flex flex-col items-center gap-5'>
-							{/* ── Emoji badge ── */}
+						<div className='relative z-10 flex flex-col items-center gap-5 p-6 sm:p-8'>
+							{/* Emoji badge */}
 							<m.div
 								initial={{ scale: 0, rotate: -20 }}
 								animate={{ scale: 1, rotate: 0 }}
@@ -171,7 +179,7 @@ export const WinnerModal = () => {
 									damping: 18,
 									delay: 0.15,
 								}}
-								className='flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-2xl text-4xl sm:text-5xl shadow-lg'
+								className='flex h-16 w-16 items-center justify-center rounded-2xl text-4xl shadow-lg sm:h-20 sm:w-20 sm:text-5xl'
 								style={{
 									background: isWin
 										? 'linear-gradient(135deg, #166534 0%, #15803d 100%)'
@@ -184,13 +192,13 @@ export const WinnerModal = () => {
 								{isWin ? '🏆' : '💀'}
 							</m.div>
 
-							{/* ── Title ── */}
+							{/* Title */}
 							<div className='text-center'>
 								<m.h2
 									initial={{ opacity: 0, y: 10 }}
 									animate={{ opacity: 1, y: 0 }}
 									transition={{ delay: 0.2 }}
-									className='text-2xl sm:text-3xl font-extrabold tracking-tight'
+									className='text-2xl font-extrabold tracking-tight sm:text-3xl'
 									style={{
 										fontFamily: "'DM Mono', monospace",
 										color: isWin ? '#4ade80' : '#f87171',
@@ -202,7 +210,7 @@ export const WinnerModal = () => {
 									initial={{ opacity: 0 }}
 									animate={{ opacity: 1 }}
 									transition={{ delay: 0.3 }}
-									className='mt-1 text-sm text-white/40 tracking-wide'
+									className='mt-1 text-sm tracking-wide text-white/40'
 								>
 									{isWin
 										? 'Отличная игра, так держать!'
@@ -210,20 +218,20 @@ export const WinnerModal = () => {
 								</m.p>
 							</div>
 
-							{/* ── Winner card (only on win) ── */}
+							{/* Winner card */}
 							{isWin && data?.getMe && (
 								<m.div
 									initial={{ opacity: 0, scale: 0.9 }}
 									animate={{ opacity: 1, scale: 1 }}
 									transition={{ delay: 0.35 }}
-									className='w-full flex items-center gap-3 px-4 py-3 rounded-2xl'
+									className='flex w-full items-center gap-3 rounded-2xl px-4 py-3'
 									style={{
 										background: 'rgba(255,255,255,0.05)',
 										border: '1px solid rgba(255,255,255,0.08)',
 									}}
 								>
 									<img
-										className='max-w-11 w-full max-h-11 sm:w-13 sm:h-13 rounded-xl object-cover flex-shrink-0'
+										className='max-h-11 max-w-11 w-full shrink-0 rounded-xl object-cover sm:h-13 sm:w-13'
 										src={
 											data.getMe.avatar ||
 											`https://ui-avatars.com/api/?name=${data.getMe.username}&background=1e293b&color=fff`
@@ -231,17 +239,16 @@ export const WinnerModal = () => {
 										alt='avatar'
 									/>
 									<div className='min-w-0'>
-										<div className='text-white font-semibold text-sm sm:text-base truncate'>
+										<div className='truncate text-sm font-semibold text-white sm:text-base'>
 											{displayName}
 										</div>
-										<div className='text-white/40 text-xs truncate mt-0.5'>
+										<div className='mt-0.5 truncate text-xs text-white/40'>
 											{data.getMe.publicId}
 										</div>
 									</div>
-
-									<div className='ml-auto flex-shrink-0'>
+									<div className='ml-auto shrink-0'>
 										<div
-											className='px-2.5 py-1 rounded-lg text-xs font-bold tracking-widest uppercase'
+											className='rounded-lg px-2.5 py-1 text-xs font-bold uppercase tracking-widest'
 											style={{
 												background: 'rgba(74,222,128,0.15)',
 												color: '#4ade80',
@@ -253,28 +260,26 @@ export const WinnerModal = () => {
 								</m.div>
 							)}
 
-							{/* ── Divider ── */}
 							<div
-								className='w-full h-px'
+								className='h-px w-full'
 								style={{ background: 'rgba(255,255,255,0.07)' }}
 							/>
 
-							{/* ── Buttons ── */}
-							<div className='w-full flex flex-col sm:flex-row gap-3'>
+							{/* Buttons */}
+							<div className='flex w-full flex-col gap-3 sm:flex-row'>
 								<m.button
 									whileHover={{ scale: 1.04, filter: 'brightness(1.1)' }}
 									whileTap={{ scale: 0.96 }}
 									onClick={handleNewGame}
-									className='flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-semibold text-sm sm:text-base transition-all'
+									className='flex flex-1 items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-white transition-all sm:text-base'
 									style={{
 										background:
 											'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
-										color: '#fff',
 										boxShadow: '0 4px 20px rgba(37,99,235,0.35)',
 									}}
 								>
 									<svg
-										className='w-4 h-4'
+										className='h-4 w-4'
 										fill='none'
 										viewBox='0 0 24 24'
 										stroke='currentColor'
@@ -293,7 +298,7 @@ export const WinnerModal = () => {
 									whileHover={{ scale: 1.04 }}
 									whileTap={{ scale: 0.96 }}
 									onClick={handleMenu}
-									className='flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-semibold text-sm sm:text-base transition-all'
+									className='flex flex-1 items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition-all sm:text-base'
 									style={{
 										background: 'rgba(255,255,255,0.06)',
 										border: '1px solid rgba(255,255,255,0.1)',
@@ -301,7 +306,7 @@ export const WinnerModal = () => {
 									}}
 								>
 									<svg
-										className='w-4 h-4'
+										className='h-4 w-4'
 										fill='none'
 										viewBox='0 0 24 24'
 										stroke='currentColor'

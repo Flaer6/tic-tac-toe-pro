@@ -4,6 +4,9 @@ const config: CapacitorConfig = {
 	appId: 'com.tictactoepro.tie',
 	appName: 'Крестики-Нолики Онлайн',
 	webDir: 'dist',
+	server: {
+		androidScheme: 'https',
+	},
 	plugins: {
 		CapacitorCookies: {
 			enabled: true,

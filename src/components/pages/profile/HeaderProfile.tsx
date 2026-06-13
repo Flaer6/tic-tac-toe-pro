@@ -1,6 +1,6 @@
 import { LogOut, UserRoundPen, Users } from 'lucide-react'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useGetMeQuery } from '../../../graphql/generated/output'
 import { authService } from '../../../shared/services/authService'
 import { useOnlineGameStore } from '../../../store/onlineGame.store'
@@ -16,6 +16,12 @@ export const HeaderProfile = () => {
 	const isOnline = data?.getMe.id && onlineUsers.includes(String(data.getMe.id))
 	const createAtUser = userDate(data?.getMe.createdAt)
 
+	const navigate = useNavigate()
+
+	const handleLogout = async () => {
+		await authService.logout()
+		navigate('/', { replace: true })
+	}
 	return (
 		<phantom-ui loading={loading}>
 			<div className='relative overflow-hidden rounded-3xl border border-white/6 bg-white/2 backdrop-blur-xl'>
@@ -129,7 +135,7 @@ export const HeaderProfile = () => {
 				<ConfirmModal
 					isOpen={isOpen}
 					onClose={() => setIsOpen(false)}
-					onConfirm={authService.logout}
+					onConfirm={handleLogout}
 					title='Выход'
 					description='Вы уверены, что хотите выйти из аккаунта?'
 					confirmText='Выйти'

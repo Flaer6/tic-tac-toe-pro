@@ -1,42 +1,67 @@
+import cn from 'clsx'
 import { motion } from 'framer-motion'
 import { useEffect } from 'react'
-import { useGameSocket } from '../../../../../hooks/useGameSocket'
+import { socket } from '../../../../../shared/socket'
 import { useOnlineGameStore } from '../../../../../store/onlineGame.store'
 import { OnlineBoard } from './OnlineBoard'
 
 export const OnlineGame = () => {
 	const cells = Array.from({ length: 9 })
-	const { handleFind, handleCancel, status } = useGameSocket()
-	const { roomId, setStatus } = useOnlineGameStore()
+	const { roomId, status, setStatus, clearGameOverTimer } = useOnlineGameStore()
+
+	const handleFind = () => {
+		clearGameOverTimer()
+		socket.emit('find_game')
+		setStatus('searching')
+	}
+
+	const handleCancel = () => {
+		socket.emit('cancel_search')
+	}
 
 	useEffect(() => {
 		if (roomId) setStatus('found')
 	}, [])
 
 	return (
-		<div className='flex flex-col items-center justify-center h-full w-full gap-6 text-white'>
+		<div className='flex h-full w-full flex-col items-center justify-center gap-8 text-white'>
+			{/* Mini board — shown when not in game */}
 			{status !== 'found' && (
-				<div className='flex items-center justify-center min-h-[200px] w-full '>
-					<div className='grid grid-cols-3  bg-white/3 border border-white/10 rounded-2xl p-2 w-full max-w-[320px] sm:max-w-[420px] md:max-w-[500px]'>
+				<motion.div
+					initial={{ opacity: 0, scale: 0.95 }}
+					animate={{ opacity: 1, scale: 1 }}
+					transition={{ duration: 0.3 }}
+					className='relative w-full max-w-[280px] sm:max-w-[340px]'
+				>
+					{/* Ambient glow behind board */}
+					<div className='pointer-events-none absolute inset-0 rounded-3xl bg-indigo-500/10 blur-2xl' />
+
+					<div className='relative grid grid-cols-3 overflow-hidden rounded-3xl border border-white/[0.07] bg-white/[0.02] p-2 backdrop-blur-xl'>
 						{cells.map((_, i) => (
 							<div
 								key={i}
-								className='aspect-square w-full border border-white/10 flex items-center justify-center'
+								className='flex aspect-square items-center justify-center border border-white/[0.05]'
 							>
 								<motion.span
 									initial={{ opacity: 0, scale: 0 }}
-									className={`text-sm sm:text-base md:text-lg lg:text-xl ${
-										i % 2 === 0 ? 'text-green-400' : 'text-blue-400'
-									}`}
+									className={cn(
+										'text-lg font-bold sm:text-xl md:text-2xl',
+										i % 2 === 0 ? 'X' : 'O',
+									)}
 									animate={
 										status === 'searching'
-											? { opacity: [0, 1, 0], scale: [0, 1.6, 0] }
-											: {}
+											? { opacity: [0, 1, 0], scale: [0, 1.4, 0] }
+											: { opacity: 0.12, scale: 1 }
 									}
 									transition={
 										status === 'searching'
-											? { duration: 1.2, repeat: Infinity, delay: i * 0.08 }
-											: {}
+											? {
+													duration: 1.4,
+													repeat: Infinity,
+													delay: i * 0.09,
+													ease: 'easeInOut',
+												}
+											: { duration: 0.4 }
 									}
 								>
 									{i % 2 === 0 ? 'X' : 'O'}
@@ -44,51 +69,91 @@ export const OnlineGame = () => {
 							</div>
 						))}
 					</div>
-				</div>
+				</motion.div>
 			)}
+
+			{/* Idle state */}
 			{status === 'idle' && (
 				<motion.div
-					initial={{ opacity: 0, scale: 0.9 }}
-					animate={{ opacity: 1, scale: 1 }}
-					className='flex flex-col items-center gap-4'
+					initial={{ opacity: 0, y: 8 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.3 }}
+					className='flex flex-col items-center gap-5'
 				>
-					<h2 className='text-xl text-white/70'>Готов сыграть онлайн?</h2>
+					<div className='text-center'>
+						<p className='mb-1 text-xs font-semibold uppercase tracking-widest text-indigo-400/70'>
+							Онлайн
+						</p>
+						<h2 className='text-2xl font-bold text-white sm:text-3xl'>
+							Готов сыграть?
+						</h2>
+						<p className='mt-1.5 text-sm text-white/35'>
+							Найди соперника и сыграй партию в реальном времени
+						</p>
+					</div>
 
 					<button
 						onClick={handleFind}
-						className='px-6 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 transition text-white font-medium shadow-lg shadow-blue-600/20 hover:scale-105 active:scale-95'
+						className='rounded-2xl px-8 py-3 text-sm font-semibold text-white transition-all duration-200 hover:brightness-110 active:scale-95'
+						style={{
+							background: 'linear-gradient(135deg, #4f46e5 0%, #4338ca 100%)',
+							boxShadow: '0 4px 20px rgba(79,70,229,0.4)',
+						}}
 					>
 						Найти игру
 					</button>
 				</motion.div>
 			)}
 
+			{/* Searching state */}
 			{status === 'searching' && (
 				<motion.div
-					initial={{ opacity: 0 }}
-					animate={{ opacity: 1 }}
-					className='flex flex-col items-center gap-6'
+					initial={{ opacity: 0, y: 8 }}
+					animate={{ opacity: 1, y: 0 }}
+					className='flex flex-col items-center gap-5'
 				>
-					<div className='text-white/60 text-sm'>Поиск соперника...</div>
+					<div className='text-center'>
+						<p className='mb-1 text-xs font-semibold uppercase tracking-widest text-indigo-400/70'>
+							Поиск
+						</p>
+						<h2 className='text-xl font-bold text-white'>Ищем соперника…</h2>
+					</div>
+
+					{/* Animated dots */}
+					<div className='flex items-center gap-2'>
+						{[0, 1, 2].map(i => (
+							<motion.div
+								key={i}
+								className='h-2 w-2 rounded-full bg-indigo-400'
+								animate={{ y: [0, -6, 0], opacity: [0.4, 1, 0.4] }}
+								transition={{
+									duration: 0.8,
+									repeat: Infinity,
+									delay: i * 0.15,
+									ease: 'easeInOut',
+								}}
+							/>
+						))}
+					</div>
 
 					<button
 						onClick={handleCancel}
-						className='px-5 py-2 rounded-xl bg-red-500/20 border border-red-500/30 text-red-400 hover:bg-red-500/30 transition'
+						className='rounded-xl border border-red-500/20 bg-red-500/[0.07] px-5 py-2.5 text-xs font-semibold text-red-400/80 transition-all duration-200 hover:border-red-500/30 hover:bg-red-500/[0.12] hover:text-red-400'
 					>
 						Отменить поиск
 					</button>
 				</motion.div>
 			)}
 
+			{/* Found — show board */}
 			{status === 'found' && (
 				<motion.div
 					initial={{ opacity: 0, scale: 0.95 }}
 					animate={{ opacity: 1, scale: 1 }}
-					className='flex flex-col items-center gap-4 w-full'
+					transition={{ duration: 0.3 }}
+					className='flex w-full flex-col items-center'
 				>
-					<div className=''>
-						<OnlineBoard />
-					</div>
+					<OnlineBoard />
 				</motion.div>
 			)}
 		</div>

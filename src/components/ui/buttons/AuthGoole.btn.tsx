@@ -1,17 +1,12 @@
 import { Capacitor } from '@capacitor/core'
-import toast from 'react-hot-toast'
 
 export const AuthGoogleBtn = () => {
-	const handleLogin = async () => {
-		const isNative = Capacitor.isNativePlatform()
+	if (Capacitor.isNativePlatform()) return null
 
-		if (isNative) {
-			toast('Данная опция доступна только в веб версии игры :(')
-		} else {
-			// WEB FLOW
-			window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`
-		}
+	const handleLogin = () => {
+		window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`
 	}
+
 	return (
 		<button
 			onClick={handleLogin}
@@ -39,7 +34,6 @@ export const AuthGoogleBtn = () => {
 					d='M43.6 20.5H42V20H24v8h11.3c-1.1 3.1-3.3 5.5-6 7l6.2 5.2C39.2 36.7 44 31 44 24c0-1.3-.1-2.3-.4-3.5z'
 				/>
 			</svg>
-
 			<span className='text-sm sm:text-base'>Войти с помощью Google</span>
 		</button>
 	)

@@ -100,10 +100,6 @@ export default function GameVsAI() {
 						? 'Your turn (X)'
 						: 'AI thinking...'}
 			</div>
-
-			<button onClick={reset} className='mt-4 px-4 py-2 bg-red-500 rounded'>
-				Reset
-			</button>
 		</div>
 	)
 }

@@ -25,7 +25,7 @@ export default function Home() {
 			)}
 			<div className=''>
 				<h1 className='text-9xl max-md:text-8xl max-sm:text-7xl font-rubik text-primary'>
-					Tic Tac Toe
+					Tic Tac Toe2
 				</h1>
 			</div>
 			<div className='inline-flex flex-col gap-y-5 max-w-fit'>

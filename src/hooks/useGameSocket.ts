@@ -16,7 +16,8 @@ export const useGameSocket = () => {
 		removeOnlineUser,
 	} = useOnlineGameStore()
 
-	const { status, setStatus } = useOnlineGameStore()
+	const { status, setStatus, clearGameOverTimer, setGameOverTimer } =
+		useOnlineGameStore()
 
 	/* =========================
 		HELPERS
@@ -112,14 +113,15 @@ export const useGameSocket = () => {
 			updateBoard(data.board, data.turn, data.removingIndex, null)
 			setWinner(data.winner)
 
-			setTimeout(() => {
+			const id = setTimeout(() => {
 				reset()
 				setStatus('idle')
 			}, 5000)
+			setGameOverTimer(id)
 		}
 
 		const handleCancelEvent = () => {
-			if (status === 'searching') setStatus('idle')
+			setStatus('idle')
 		}
 
 		socket.on('searching_game', handleSearching)
@@ -148,7 +150,7 @@ export const useGameSocket = () => {
 	const handleFind = () => {
 		if (!socket.connected) return
 		if (status === 'searching') return
-		if (status !== 'found') reset()
+		clearGameOverTimer()
 		setStatus('searching')
 		socket.emit('find_game')
 	}
