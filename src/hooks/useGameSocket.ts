@@ -109,9 +109,20 @@ export const useGameSocket = () => {
 			setStatus('idle')
 		}
 
-		const handleGameOver = (data: IDataGameRequest) => {
+		const handleGameOver = (data: {
+			board: (string | null)[]
+			turn: string
+			removingIndex: number | null
+			winner: string | null
+			reason?: string
+		}) => {
 			updateBoard(data.board, data.turn, data.removingIndex, null)
-			setWinner(data.winner)
+
+			if (data.reason === 'draw' || data.winner === null) {
+				useOnlineGameStore.getState().setDraw()
+			} else {
+				setWinner(data.winner)
+			}
 
 			const id = setTimeout(() => {
 				reset()

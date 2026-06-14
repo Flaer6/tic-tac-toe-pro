@@ -7,11 +7,12 @@ import { OnlineBoard } from './OnlineBoard'
 
 export const OnlineGame = () => {
 	const cells = Array.from({ length: 9 })
-	const { roomId, status, setStatus, clearGameOverTimer } = useOnlineGameStore()
+	const { mode, setMode, roomId, status, setStatus, clearGameOverTimer } =
+		useOnlineGameStore()
 
 	const handleFind = () => {
 		clearGameOverTimer()
-		socket.emit('find_game')
+		socket.emit('find_game', { mode })
 		setStatus('searching')
 	}
 
@@ -25,7 +26,7 @@ export const OnlineGame = () => {
 
 	return (
 		<div className='flex h-full w-full flex-col items-center justify-center gap-8 text-white'>
-			{/* Mini board — shown when not in game */}
+			{/* Mini board */}
 			{status !== 'found' && (
 				<motion.div
 					initial={{ opacity: 0, scale: 0.95 }}
@@ -33,9 +34,7 @@ export const OnlineGame = () => {
 					transition={{ duration: 0.3 }}
 					className='relative w-full max-w-[280px] sm:max-w-[340px]'
 				>
-					{/* Ambient glow behind board */}
 					<div className='pointer-events-none absolute inset-0 rounded-3xl bg-indigo-500/10 blur-2xl' />
-
 					<div className='relative grid grid-cols-3 overflow-hidden rounded-3xl border border-white/[0.07] bg-white/[0.02] p-2 backdrop-blur-xl'>
 						{cells.map((_, i) => (
 							<div
@@ -80,6 +79,30 @@ export const OnlineGame = () => {
 					transition={{ duration: 0.3 }}
 					className='flex flex-col items-center gap-5'
 				>
+					{/* Mode selector */}
+					<div className='flex items-center gap-1 rounded-2xl border border-white/8 bg-white/3 p-1 backdrop-blur-sm'>
+						{(['limit', 'classic'] as const).map(m => (
+							<button
+								key={m}
+								onClick={() => setMode(m)}
+								className={cn(
+									'rounded-xl px-5 py-2 text-sm font-semibold transition-all duration-200',
+									mode === m
+										? 'bg-indigo-500/20 border border-indigo-500/30 text-white'
+										: 'text-white/30 hover:text-white/60',
+								)}
+							>
+								{m === 'limit' ? 'Лимит ходов' : 'Классика'}
+							</button>
+						))}
+					</div>
+
+					<p className='text-xs text-white/25 tracking-wide'>
+						{mode === 'limit'
+							? 'У каждого игрока максимум 3 фишки — старая исчезает'
+							: 'Классические крестики-нолики без ограничений'}
+					</p>
+
 					<div className='text-center'>
 						<p className='mb-1 text-xs font-semibold uppercase tracking-widest text-indigo-400/70'>
 							Онлайн
@@ -114,12 +137,11 @@ export const OnlineGame = () => {
 				>
 					<div className='text-center'>
 						<p className='mb-1 text-xs font-semibold uppercase tracking-widest text-indigo-400/70'>
-							Поиск
+							Поиск • {mode === 'limit' ? 'Лимит ходов' : 'Классика'}
 						</p>
 						<h2 className='text-xl font-bold text-white'>Ищем соперника…</h2>
 					</div>
 
-					{/* Animated dots */}
 					<div className='flex items-center gap-2'>
 						{[0, 1, 2].map(i => (
 							<motion.div
@@ -145,7 +167,7 @@ export const OnlineGame = () => {
 				</motion.div>
 			)}
 
-			{/* Found — show board */}
+			{/* Found */}
 			{status === 'found' && (
 				<motion.div
 					initial={{ opacity: 0, scale: 0.95 }}

@@ -8,8 +8,9 @@ import {
 import { socket } from '../../../../../shared/socket'
 import { useOnlineGameStore } from '../../../../../store/onlineGame.store'
 import { AdminLabel } from '../../../../ui/status/AdminLabel'
-import Square from '../../localGame/standard/Square'
-import styles from '../../localGame/standard/localGame.module.css'
+
+import styles from '../../localGame/limitMove/localGame.module.css'
+import Square from '../../localGame/limitMove/Square'
 import { WinnerModal } from './WinnerModal'
 
 const TURN_SECONDS = 20

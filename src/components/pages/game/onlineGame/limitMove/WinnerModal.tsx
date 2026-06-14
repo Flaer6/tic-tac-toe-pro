@@ -5,7 +5,6 @@ import {
 	useGetMeQuery,
 	useGetMyHistoryQuery,
 } from '../../../../../graphql/generated/output'
-import { socket } from '../../../../../shared/socket'
 import { useOnlineGameStore } from '../../../../../store/onlineGame.store'
 
 const ParticlesBurst = ({ isWin }: { isWin: boolean }) => {
@@ -20,7 +19,6 @@ const ParticlesBurst = ({ isWin }: { isWin: boolean }) => {
 				const x = Math.cos((angle * Math.PI) / 180) * distance
 				const y = Math.sin((angle * Math.PI) / 180) * distance
 				const size = 3 + Math.random() * 5
-
 				return (
 					<m.div
 						key={i}
@@ -54,38 +52,51 @@ const ParticlesBurst = ({ isWin }: { isWin: boolean }) => {
 export const WinnerModal = () => {
 	const {
 		winner,
+		isDraw,
 		opponentName,
 		reset,
 		reconnecting,
-		setStatus,
+
 		clearGameOverTimer,
 	} = useOnlineGameStore()
+
 	const { data } = useGetMeQuery()
-	const { refetch: refetchHistory } = useGetMyHistoryQuery({ skip: !winner })
+	const { refetch: refetchHistory } = useGetMyHistoryQuery({
+		skip: !winner && !isDraw,
+	})
 
 	useEffect(() => {
-		if (!winner) return
+		if (!winner && !isDraw) return
 		void refetchHistory()
-	}, [winner])
+	}, [winner, isDraw])
 
 	const isWin = winner === data?.getMe?.id
+	const showModal = !reconnecting && (!!winner || isDraw)
 
 	const displayName =
 		data?.getMe?.firstName || data?.getMe?.lastName
 			? `${data?.getMe?.firstName ?? ''} ${data?.getMe?.lastName ?? ''}`.trim()
 			: data?.getMe?.username
 
-	// НЕ используем useGameSocket — он регистрирует дублирующие листенеры
 	const handleNewGame = () => {
 		clearGameOverTimer()
-		setStatus('searching')
-		socket.emit('find_game')
+		reset()
 	}
 
 	const handleMenu = () => {
 		clearGameOverTimer()
 		reset()
 	}
+
+	const accentColor = isDraw ? '#60a5fa' : isWin ? '#4ade80' : '#f87171'
+	const glowColor = isDraw ? '#3b82f6' : isWin ? '#22c55e' : '#ef4444'
+	const emoji = isDraw ? '🤝' : isWin ? '🏆' : '💀'
+	const title = isDraw ? 'Ничья!' : isWin ? 'Победа!' : 'Поражение'
+	const subtitle = isDraw
+		? 'Равная борьба — сыграйте ещё раз'
+		: isWin
+			? 'Отличная игра, так держать!'
+			: `${opponentName ?? 'Соперник'} оказался сильнее`
 
 	return (
 		<AnimatePresence>
@@ -130,8 +141,8 @@ export const WinnerModal = () => {
 				</m.div>
 			)}
 
-			{/* Winner / Loser modal */}
-			{!reconnecting && winner && (
+			{/* Winner / Draw / Loser modal */}
+			{showModal && (
 				<m.div
 					key='result'
 					initial={{ opacity: 0 }}
@@ -154,19 +165,17 @@ export const WinnerModal = () => {
 						<div
 							className='absolute inset-x-0 top-0 h-[3px]'
 							style={{
-								background: isWin
-									? 'linear-gradient(90deg, transparent, #4ade80, transparent)'
-									: 'linear-gradient(90deg, transparent, #f87171, transparent)',
+								background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)`,
 							}}
 						/>
 
 						{/* Ambient glow */}
 						<div
 							className='pointer-events-none absolute -top-20 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full blur-3xl opacity-20'
-							style={{ background: isWin ? '#22c55e' : '#ef4444' }}
+							style={{ background: glowColor }}
 						/>
 
-						<ParticlesBurst isWin={isWin} />
+						{!isDraw && <ParticlesBurst isWin={isWin} />}
 
 						<div className='relative z-10 flex flex-col items-center gap-5 p-6 sm:p-8'>
 							{/* Emoji badge */}
@@ -181,15 +190,15 @@ export const WinnerModal = () => {
 								}}
 								className='flex h-16 w-16 items-center justify-center rounded-2xl text-4xl shadow-lg sm:h-20 sm:w-20 sm:text-5xl'
 								style={{
-									background: isWin
-										? 'linear-gradient(135deg, #166534 0%, #15803d 100%)'
-										: 'linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%)',
-									boxShadow: isWin
-										? '0 0 32px rgba(74,222,128,0.25)'
-										: '0 0 32px rgba(248,113,113,0.25)',
+									background: isDraw
+										? 'linear-gradient(135deg, #1e3a5f 0%, #1e40af 100%)'
+										: isWin
+											? 'linear-gradient(135deg, #166534 0%, #15803d 100%)'
+											: 'linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%)',
+									boxShadow: `0 0 32px ${glowColor}40`,
 								}}
 							>
-								{isWin ? '🏆' : '💀'}
+								{emoji}
 							</m.div>
 
 							{/* Title */}
@@ -201,10 +210,10 @@ export const WinnerModal = () => {
 									className='text-2xl font-extrabold tracking-tight sm:text-3xl'
 									style={{
 										fontFamily: "'DM Mono', monospace",
-										color: isWin ? '#4ade80' : '#f87171',
+										color: accentColor,
 									}}
 								>
-									{isWin ? 'Победа!' : 'Поражение'}
+									{title}
 								</m.h2>
 								<m.p
 									initial={{ opacity: 0 }}
@@ -212,14 +221,12 @@ export const WinnerModal = () => {
 									transition={{ delay: 0.3 }}
 									className='mt-1 text-sm tracking-wide text-white/40'
 								>
-									{isWin
-										? 'Отличная игра, так держать!'
-										: `${opponentName ?? 'Соперник'} оказался сильнее`}
+									{subtitle}
 								</m.p>
 							</div>
 
-							{/* Winner card */}
-							{isWin && data?.getMe && (
+							{/* Winner card — только при победе */}
+							{isWin && !isDraw && data?.getMe && (
 								<m.div
 									initial={{ opacity: 0, scale: 0.9 }}
 									animate={{ opacity: 1, scale: 1 }}
@@ -288,10 +295,10 @@ export const WinnerModal = () => {
 										<path
 											strokeLinecap='round'
 											strokeLinejoin='round'
-											d='M5.636 18.364A9 9 0 1 0 18.364 5.636M12 3v4m0 0 2-2m-2 2L10 5'
+											d='M6 18L18 6M6 6l12 12'
 										/>
 									</svg>
-									Играть снова
+									<Link to='/online'>Закрыть</Link>
 								</m.button>
 
 								<m.div

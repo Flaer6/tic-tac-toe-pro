@@ -30,7 +30,7 @@ export const getMenuData = (role?: string): IMenu[] => {
 		{
 			icon: Bot,
 			name: 'Играть С Ботом',
-			href: '/game-vs-ai',
+			href: '/ai',
 		},
 		{
 			icon: Users,

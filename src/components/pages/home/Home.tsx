@@ -6,34 +6,53 @@ import { Loader } from '../../ui/Loader'
 
 export default function Home() {
 	const { data, loading } = useGetMeQuery()
-
 	const isAuth = !!data?.getMe
+
 	if (loading) {
 		return (
-			<div className='fixed inset-0 z-50 flex items-center justify-center bg-[#1f1d2b]/80 backdrop-blur-sm'>
+			<div className='fixed inset-0 z-50 flex items-center justify-center bg-[#070B14]/90 backdrop-blur-md'>
 				<Loader />
 			</div>
 		)
 	}
-	console.log(data)
+
 	return (
-		<div className='text-center min-h-screen relative flex flex-col gap-32 items-center p-20'>
+		<div className='relative min-h-screen flex flex-col items-center justify-center px-8 overflow-hidden'>
+			{/* Mobile profile */}
 			{isAuth && (
-				<div className='absolute top-3 right-3 bg-gradient rounded-2xl min-[790px]:hidden'>
+				<div className='absolute top-4 right-4 min-[790px]:hidden z-10'>
 					<ProfileStatus />
 				</div>
 			)}
-			<div className=''>
-				<h1 className='text-9xl max-md:text-8xl max-sm:text-7xl font-rubik text-primary'>
-					Tic Tac Toe2
+
+			{/* Title */}
+			<div className='text-center mb-20'>
+				<h1 className='font-rubik font-bold tracking-tight text-white text-8xl max-md:text-7xl max-sm:text-6xl leading-none'>
+					Tic{' '}
+					<span className='bg-gradient-to-r from-indigo-400 via-violet-400 to-purple-400 bg-clip-text text-transparent'>
+						Tac
+					</span>{' '}
+					Toe
 				</h1>
+				<div className='mt-6 flex items-center justify-center gap-4'>
+					<div className='h-px w-16 bg-gradient-to-r from-transparent to-white/20' />
+					<p className='text-xs font-semibold uppercase tracking-[0.25em] text-white/25'>
+						Выбери режим игры
+					</p>
+					<div className='h-px w-16 bg-gradient-to-l from-transparent to-white/20' />
+				</div>
 			</div>
-			<div className='inline-flex flex-col gap-y-5 max-w-fit'>
+
+			{/* Buttons */}
+			<div className='flex flex-col gap-5 w-full max-w-sm'>
 				<Button to='/game'>
 					<FaUser /> VS <FaUser />
 				</Button>
-				<Button to='/online'>Online</Button>
-				<Button to='/game-vs-ai'>
+				<Button to='/online'>
+					<span className='h-2.5 w-2.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]' />
+					Online
+				</Button>
+				<Button to='/game/ai'>
 					<FaRobot /> VS <FaRobot />
 				</Button>
 			</div>

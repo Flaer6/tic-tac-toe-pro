@@ -1,19 +1,36 @@
 @reference '../../../index.css';
 
 .button {
-	@apply bg-gradient-to-t from-fuchsia-600 to-fuchsia-500 py-4 px-6 rounded-lg text-fuchsia-950 text-6xl hover:from-fuchsia-700 hover:to-fuchsia-600 flex justify-center items-center gap-2 relative max-sm:text-4xl;
-	box-shadow: 3px 2px 1px 2px rgb(74, 4, 78);
+	@apply relative flex items-center justify-center gap-3 rounded-2xl px-8 py-4 text-4xl font-bold transition-all duration-200 max-sm:text-2xl;
+	background: linear-gradient(135deg, #a855f7 0%, #7c3aed 50%, #6d28d9 100%);
+	color: #fff;
+	box-shadow:
+		0 4px 15px rgba(124, 58, 237, 0.4),
+		inset 0 1px 0 rgba(255, 255, 255, 0.15);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+
 	&:hover {
-		box-shadow: inset -3px -3px 7px 2px rgb(74, 4, 78);
+		transform: translateY(-2px);
+		box-shadow:
+			0 8px 25px rgba(124, 58, 237, 0.5),
+			inset 0 1px 0 rgba(255, 255, 255, 0.2);
+		background: linear-gradient(135deg, #b366f9 0%, #8b47f0 50%, #7c3aed 100%);
+	}
+
+	&:active {
+		transform: translateY(0);
+		box-shadow:
+			0 2px 8px rgba(124, 58, 237, 0.4),
+			inset 0 2px 4px rgba(0, 0, 0, 0.2);
 	}
 }
+
 .soon {
 	&::after {
-		@apply content-['Soon'] absolute top-0 bottom-0 right-0 left-0 text-5xl flex items-center justify-center text-neutral-950;
-		border-radius: inherit;
-		box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-		backdrop-filter: blur(3.9px);
-		-webkit-backdrop-filter: blur(3.9px);
-		border: 1px solid rgba(255, 255, 255, 0.12);
+		@apply content-['Soon'] absolute inset-0 flex items-center justify-center text-3xl font-bold text-white/90 rounded-2xl;
+		backdrop-filter: blur(4px);
+		-webkit-backdrop-filter: blur(4px);
+		background: rgba(0, 0, 0, 0.45);
+		border: 1px solid rgba(255, 255, 255, 0.1);
 	}
 }

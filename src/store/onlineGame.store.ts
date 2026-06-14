@@ -14,6 +14,7 @@ interface IGame {
 	moves: Record<string, number[]>
 	winner?: string | null
 	turnDeadline?: number | null
+	mode?: 'classic' | 'limit'
 }
 
 interface OnlineGameState {
@@ -30,6 +31,10 @@ interface OnlineGameState {
 	onlineUsers: string[]
 	turnDeadline: number | null
 	gameOverTimer: ReturnType<typeof setTimeout> | null
+	mode: 'classic' | 'limit'
+	isDraw: boolean
+	setDraw: () => void
+	setMode: (mode: 'classic' | 'limit') => void
 
 	setGameOverTimer: (id: ReturnType<typeof setTimeout> | null) => void
 	clearGameOverTimer: () => void
@@ -63,6 +68,10 @@ export const useOnlineGameStore = create<OnlineGameState>(set => ({
 	turnDeadline: null,
 	gameOverTimer: null,
 	status: 'idle',
+	mode: 'limit',
+	isDraw: false,
+	setDraw: () => set({ isDraw: true }),
+	setMode: mode => set({ mode }),
 	setStatus: status => {
 		console.trace('setStatus', status)
 		set({ status })
@@ -94,6 +103,7 @@ export const useOnlineGameStore = create<OnlineGameState>(set => ({
 		const opponent = data.players.find(p => p.userId !== userId)
 
 		set({
+			mode: data.mode ?? 'limit',
 			roomId: data.roomId,
 			board: data.board,
 			turn: data.turn,
@@ -129,6 +139,7 @@ export const useOnlineGameStore = create<OnlineGameState>(set => ({
 			opponentName: null,
 			turnDeadline: null,
 			status: 'idle',
+			isDraw: false,
 		})
 	},
 }))

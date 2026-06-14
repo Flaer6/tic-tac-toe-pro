@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import Board from '../localGame/standard/Board'
-import calculateWinner from '../localGame/standard/Winner'
-import { getBotMove } from './bot'
+import Board from '../../localGame/limitMove/Board'
+import calculateWinner from '../../localGame/limitMove/Winner'
+import { getBotMove } from '../bot'
 
 type Player = 'X' | 'O' | ''
 
@@ -83,23 +83,11 @@ export default function GameVsAI() {
 	}
 
 	return (
-		<div className='flex flex-col items-center justify-center min-h-screen text-white'>
-			<h1 className='text-2xl font-bold mb-4'>Play vs AI 🤖</h1>
-
-			<Board
-				squares={squares}
-				onCellClick={handlePlayerMove}
-				xIsNext={xIsNext}
-				resetGame={reset}
-			/>
-
-			<div className='mt-4 text-lg'>
-				{winner
-					? `🏆 Winner: ${winner}`
-					: xIsNext
-						? 'Your turn (X)'
-						: 'AI thinking...'}
-			</div>
-		</div>
+		<Board
+			squares={squares}
+			onCellClick={handlePlayerMove}
+			xIsNext={xIsNext}
+			resetGame={reset}
+		/>
 	)
 }

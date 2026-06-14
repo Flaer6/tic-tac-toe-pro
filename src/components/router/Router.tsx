@@ -6,8 +6,8 @@ import {
 } from '../../utils/guards/routeGuard'
 import { Login } from '../pages/auth/Login'
 import { Register } from '../pages/auth/Register'
-import Game from '../pages/game/localGame/standard/Game'
-import { OnlineGame } from '../pages/game/onlineGame/standard/OnlineGame'
+import Game from '../pages/game/localGame/limitMove/Game'
+import { OnlineGame } from '../pages/game/onlineGame/limitMove/OnlineGame'
 import Home from '../pages/home/Home'
 import { Layout } from '../pages/layout/Layout'
 import NotFound from '../pages/notFound/NotFound'
@@ -18,7 +18,11 @@ import { Friends } from '../pages/profile/tabs/friends/Friends'
 import { Admin } from '../pages/admin/Admin'
 import { ForgotPassword } from '../pages/auth/ForgotPassword'
 import { ResetPassword } from '../pages/auth/ResetPassword'
-import GameVsAI from '../pages/game/ai/GameVsAI'
+import GameVsAIClassic from '../pages/game/ai/classic/GameVsAIClassic'
+import { GameVsAILayout } from '../pages/game/ai/GameVsAILayout'
+import GameVsAI from '../pages/game/ai/limitMove/GameVsAI'
+import ClassicGame from '../pages/game/localGame/classic/ClassicGame'
+import { GameLayout } from '../pages/game/localGame/GameLayout'
 import { GameHistory } from '../pages/profile/tabs/history/History'
 import { Skins } from '../pages/profile/tabs/skins/Skins'
 import { Statistic } from '../pages/profile/tabs/statistic/Statistic'
@@ -38,8 +42,15 @@ export default function Router() {
 				<Route path='/reset-password' element={<ResetPassword />} />
 				<Route element={<Layout />}>
 					<Route index element={<Home />} />
-					<Route path='/game' element={<Game />} />
-					<Route path='/game-vs-ai' element={<GameVsAI />} />
+					<Route path='/game' element={<GameLayout />}>
+						<Route index element={<Game />} />
+						<Route path='classic' element={<ClassicGame />} />
+					</Route>
+
+					<Route path='/ai' element={<GameVsAILayout />}>
+						<Route index element={<GameVsAI />} />
+						<Route path='classic' element={<GameVsAIClassic />} />
+					</Route>
 					<Route element={<PrivateRoute />}>
 						<Route path='/profile' element={<Profile />}>
 							<Route index element={<Statistic />} />
