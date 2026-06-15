@@ -160,7 +160,7 @@ export const Admin = () => {
 					</div>
 
 					{/* Tablet */}
-					<div className='relative hidden overflow-hidden rounded-3xl border border-white/6 bg-white/2 sm:block md:hidden'>
+					<div className='relative hidden overflow-hidden rounded-3xl border border-white/6 bg-[#0b0b0f]/50 backdrop-blur-2xl sm:block md:hidden'>
 						<div className='absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-indigo-500/30 to-transparent' />
 						<div className='grid grid-cols-[1fr_auto] border-b border-white/5 px-5 py-3'>
 							{['Пользователь', 'Роль'].map(h => (
@@ -208,7 +208,7 @@ export const Admin = () => {
 							<Link
 								to={`/${user.id}`}
 								key={user.id}
-								className='flex items-center gap-3 rounded-2xl border border-white/6 bg-white/2 p-3 transition-colors hover:bg-white/4 active:scale-[0.99]'
+								className='flex items-center gap-3 rounded-2xl border border-white/6 bg-[#0b0b0f]/50 backdrop-blur-2xl p-3 transition-colors hover:bg-white/4 active:scale-[0.99]'
 							>
 								<Avatar user={user} />
 								<div className='min-w-0 flex-1'>
