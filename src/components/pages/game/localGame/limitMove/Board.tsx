@@ -25,6 +25,7 @@ export default function Board({
 	}
 
 	const winner = calculateWinner(squares)
+	const isDraw = !winner && squares.every(Boolean)
 	const status = xIsNext ? 'X' : 'O'
 
 	return (
@@ -75,6 +76,58 @@ export default function Board({
 							>
 								{winner}
 							</span>
+						</div>
+						<button
+							onClick={resetGame}
+							className='relative mt-1 rounded-xl px-6 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:brightness-110 active:scale-95'
+							style={{
+								background: 'linear-gradient(135deg, #4f46e5 0%, #4338ca 100%)',
+								boxShadow: '0 4px 16px rgba(79,70,229,0.35)',
+							}}
+						>
+							Новая игра
+						</button>
+					</div>
+				</div>
+			)}
+
+			{/* Draw overlay */}
+			{isDraw && (
+				<div className='absolute inset-0 z-30 flex items-center justify-center backdrop-blur-sm'>
+					<div
+						className='relative flex flex-col items-center gap-5 overflow-hidden rounded-3xl border border-white/[0.08] p-8 shadow-2xl'
+						style={{
+							background: 'linear-gradient(160deg, #1a1828 0%, #0f0d1a 100%)',
+						}}
+					>
+						{/* Top accent line */}
+						<div
+							className='absolute inset-x-0 top-0 h-[3px]'
+							style={{
+								background:
+									'linear-gradient(90deg, transparent, #a78bfa, transparent)',
+							}}
+						/>
+						{/* Glow */}
+						<div
+							className='pointer-events-none absolute -top-16 left-1/2 h-48 w-48 -translate-x-1/2 rounded-full blur-3xl opacity-20'
+							style={{ background: '#7c3aed' }}
+						/>
+						{/* Icon */}
+						<div
+							className='relative flex h-16 w-16 items-center justify-center rounded-2xl text-4xl shadow-lg'
+							style={{
+								background: 'linear-gradient(135deg, #2e1065 0%, #4c1d95 100%)',
+								boxShadow: '0 0 28px rgba(124,58,237,0.3)',
+							}}
+						>
+							🤝
+						</div>
+						<div className='relative text-center'>
+							<p className='mb-1 text-xs font-semibold uppercase tracking-widest text-white/30'>
+								Результат
+							</p>
+							<span className='text-3xl font-bold text-violet-300'>Ничья!</span>
 						</div>
 						<button
 							onClick={resetGame}
