@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { ShieldUser } from 'lucide-react'
+import { Pencil, ShieldUser } from 'lucide-react'
 import { Link, Navigate } from 'react-router-dom'
 import {
 	useGetAllUsersQuery,
@@ -42,6 +42,17 @@ const RoleBadge = ({ role }: { role: string }) => (
 	>
 		{role}
 	</span>
+)
+
+const EditButton = () => (
+	<Link
+		to='/test'
+		onClick={e => e.stopPropagation()}
+		className='flex items-center justify-center  p-2 text-white/30 transition hover:border-indigo-500/30 hover:bg-indigo-500/10 hover:text-indigo-400'
+		aria-label='Редактировать'
+	>
+		<Pencil size={14} />
+	</Link>
 )
 
 export const Admin = () => {
@@ -96,11 +107,10 @@ export const Admin = () => {
 					<div className='relative hidden overflow-hidden rounded-3xl border border-white/6 bg-[#0b0b0f]/50 backdrop-blur-2xl md:block'>
 						<div className='absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-indigo-500/30 to-transparent' />
 
-						{/* Table header */}
-						<div className='grid grid-cols-[2fr_2fr_1fr_1fr] border-b border-white/5 px-5 py-3'>
-							{['Пользователь', 'Email', 'Роль', 'Создан'].map(h => (
+						<div className='grid grid-cols-[2fr_2fr_1fr_1fr_auto] border-b border-white/5 px-5 py-3'>
+							{['Пользователь', 'Email', 'Роль', 'Создан', ''].map((h, i) => (
 								<div
-									key={h}
+									key={i}
 									className='text-xs font-semibold uppercase tracking-widest text-white/20'
 								>
 									{h}
@@ -108,7 +118,6 @@ export const Admin = () => {
 							))}
 						</div>
 
-						{/* Rows */}
 						<motion.div
 							initial='hidden'
 							animate='show'
@@ -127,7 +136,7 @@ export const Admin = () => {
 								>
 									<Link
 										to={`/user/${user.id}`}
-										className='group grid grid-cols-[2fr_2fr_1fr_1fr] items-center border-b border-white/4 px-5 py-3.5 last:border-b-0 transition-colors duration-150 hover:bg-white/3'
+										className='group grid grid-cols-[2fr_2fr_1fr_1fr_auto] items-center border-b border-white/4 px-5 py-3.5 last:border-b-0 transition-colors duration-150 hover:bg-white/3'
 									>
 										<div className='flex items-center gap-3'>
 											<Avatar user={user} />
@@ -153,6 +162,9 @@ export const Admin = () => {
 												year: 'numeric',
 											})}
 										</div>
+										<div className='pl-3'>
+											<EditButton />
+										</div>
 									</Link>
 								</motion.div>
 							))}
@@ -162,10 +174,10 @@ export const Admin = () => {
 					{/* Tablet */}
 					<div className='relative hidden overflow-hidden rounded-3xl border border-white/6 bg-[#0b0b0f]/50 backdrop-blur-2xl sm:block md:hidden'>
 						<div className='absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-indigo-500/30 to-transparent' />
-						<div className='grid grid-cols-[1fr_auto] border-b border-white/5 px-5 py-3'>
-							{['Пользователь', 'Роль'].map(h => (
+						<div className='grid grid-cols-[1fr_auto_auto] border-b border-white/5 px-5 py-3 gap-4'>
+							{['Пользователь', 'Роль', ''].map((h, i) => (
 								<div
-									key={h}
+									key={i}
 									className='text-xs font-semibold uppercase tracking-widest text-white/20'
 								>
 									{h}
@@ -176,9 +188,9 @@ export const Admin = () => {
 							<Link
 								to={`/${user.id}`}
 								key={user.id}
-								className='grid grid-cols-[1fr_auto] items-center gap-4 border-b border-white/4 px-5 py-3.5 last:border-b-0 transition-colors hover:bg-white/3'
+								className='grid grid-cols-[1fr_auto_auto] items-center gap-4 border-b border-white/4 px-5 py-3.5 last:border-b-0 transition-colors hover:bg-white/3'
 							>
-								<div className='flex items-center gap-3 min-w-0'>
+								<div className='flex min-w-0 items-center gap-3'>
 									<Avatar user={user} size='sm' />
 									<div className='min-w-0'>
 										<div className='truncate text-sm font-medium text-white/90'>
@@ -198,6 +210,7 @@ export const Admin = () => {
 										})}
 									</span>
 								</div>
+								<EditButton />
 							</Link>
 						))}
 					</div>
@@ -208,7 +221,7 @@ export const Admin = () => {
 							<Link
 								to={`/${user.id}`}
 								key={user.id}
-								className='flex items-center gap-3 rounded-2xl border border-white/6 bg-[#0b0b0f]/50 backdrop-blur-2xl p-3 transition-colors hover:bg-white/4 active:scale-[0.99]'
+								className='flex items-center gap-3 rounded-2xl border border-white/6 bg-[#0b0b0f]/50 p-3 backdrop-blur-2xl transition-colors hover:bg-white/4 active:scale-[0.99]'
 							>
 								<Avatar user={user} />
 								<div className='min-w-0 flex-1'>
@@ -223,11 +236,14 @@ export const Admin = () => {
 										{user.email}
 									</div>
 								</div>
-								<div className='shrink-0 text-xs text-white/25'>
-									{new Date(user.createdAt).toLocaleDateString('ru-RU', {
-										day: '2-digit',
-										month: 'short',
-									})}
+								<div className='flex shrink-0 flex-col items-end gap-2'>
+									<span className='text-xs text-white/25'>
+										{new Date(user.createdAt).toLocaleDateString('ru-RU', {
+											day: '2-digit',
+											month: 'short',
+										})}
+									</span>
+									<EditButton />
 								</div>
 							</Link>
 						))}

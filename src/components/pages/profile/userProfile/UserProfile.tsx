@@ -71,7 +71,7 @@ export function UserProfile() {
 								</div>
 							</div>
 
-							<div className='rounded-[32px] border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl md:p-6'>
+							<div className='rounded-[32px] border border-white/10 bg-white/3 p-5 backdrop-blur-xl md:p-6'>
 								<h2 className='mb-5 text-xl font-semibold text-white'>
 									Достижения
 								</h2>
