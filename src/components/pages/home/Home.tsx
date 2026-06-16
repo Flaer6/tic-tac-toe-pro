@@ -52,7 +52,7 @@ export default function Home() {
 					<span className='h-2.5 w-2.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]' />
 					Online
 				</Button>
-				<Button to='/game/ai'>
+				<Button to='/ai'>
 					<FaRobot /> VS <FaRobot />
 				</Button>
 			</div>
