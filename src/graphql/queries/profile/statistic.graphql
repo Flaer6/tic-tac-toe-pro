@@ -1,10 +1,11 @@
-query getMyStats {
-	getMyStats {
+query getMyStats($mode: StatsMode) {
+	getMyStats(mode: $mode) {
 		losses
 		totalGames
 		winRate
 		winStreak
 		wins
+		mode
 	}
 }
 
@@ -15,5 +16,6 @@ query GetUserStats($id: String!) {
 		winRate
 		winStreak
 		wins
+		mode
 	}
 }

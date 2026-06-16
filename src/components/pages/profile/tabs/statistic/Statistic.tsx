@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { useGetMyStatsQuery } from '../../../../../graphql/generated/output'
+import { ModeSelect } from './ModeSelect'
 import { StatItem } from './StatItem'
 import { getStatsItems } from './statistic.data'
 
@@ -10,17 +11,22 @@ export const Statistic = () => {
 	return (
 		<div className='w-full max-w-4xl p-3 sm:p-4 md:p-6'>
 			{/* Header */}
-			<div className='mb-7'>
-				<p className='mb-1 text-xs font-semibold uppercase tracking-widest text-indigo-400/70'>
-					Обзор
-				</p>
-				<h2 className='text-2xl font-bold text-white sm:text-3xl'>
-					Статистика
-				</h2>
+			<div className='mb-7 flex items-center justify-between'>
+				<div className=''>
+					<p className='mb-1 text-xs font-semibold uppercase tracking-widest text-indigo-400/70'>
+						Обзор
+					</p>
+					<h2 className='text-2xl font-bold text-white sm:text-3xl'>
+						Статистика
+					</h2>
+				</div>
+				<div className=''>
+					<ModeSelect />
+				</div>
 			</div>
 
 			{/* Grid */}
-			<div className='relative rounded-3xl border border-white/[0.06] bg-white/[0.02] p-4 sm:p-5 backdrop-blur-xl'>
+			<div className='relative rounded-3xl border border-white/6 bg-white/2 p-4 sm:p-5 backdrop-blur-xl'>
 				{/* Top gradient line */}
 				<div className='absolute inset-x-0 top-0 h-px rounded-t-3xl bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent' />
 
@@ -29,7 +35,7 @@ export const Statistic = () => {
 						{Array.from({ length: 4 }).map((_, i) => (
 							<div
 								key={i}
-								className='h-[84px] animate-pulse rounded-2xl border border-white/[0.05] bg-white/[0.03]'
+								className='h-[84px] animate-pulse rounded-2xl border border-white/5 bg-white/3'
 							/>
 						))}
 					</div>

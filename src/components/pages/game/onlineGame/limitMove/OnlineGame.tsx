@@ -2,7 +2,10 @@ import cn from 'clsx'
 import { motion } from 'framer-motion'
 import { useEffect } from 'react'
 import { socket } from '../../../../../shared/socket'
-import { useOnlineGameStore } from '../../../../../store/onlineGame.store'
+import {
+	GameMode,
+	useOnlineGameStore,
+} from '../../../../../store/onlineGame.store'
 import { OnlineBoard } from './OnlineBoard'
 
 export const OnlineGame = () => {
@@ -81,7 +84,7 @@ export const OnlineGame = () => {
 				>
 					{/* Mode selector */}
 					<div className='flex items-center gap-1 rounded-2xl border border-white/8 bg-white/3 p-1 backdrop-blur-sm'>
-						{(['limit', 'classic'] as const).map(m => (
+						{Object.values(GameMode).map(m => (
 							<button
 								key={m}
 								onClick={() => setMode(m)}
@@ -92,13 +95,13 @@ export const OnlineGame = () => {
 										: 'text-white/30 hover:text-white/60',
 								)}
 							>
-								{m === 'limit' ? 'Лимит ходов' : 'Классика'}
+								{m === 'LIMIT' ? 'Лимит ходов' : 'Классика'}
 							</button>
 						))}
 					</div>
 
 					<p className='text-xs text-white/25 tracking-wide'>
-						{mode === 'limit'
+						{mode === 'LIMIT'
 							? 'У каждого игрока максимум 3 фишки — старая исчезает'
 							: 'Классические крестики-нолики без ограничений'}
 					</p>
@@ -137,7 +140,7 @@ export const OnlineGame = () => {
 				>
 					<div className='text-center'>
 						<p className='mb-1 text-xs font-semibold uppercase tracking-widest text-indigo-400/70'>
-							Поиск • {mode === 'limit' ? 'Лимит ходов' : 'Классика'}
+							Поиск • {mode === 'LIMIT' ? 'Лимит ходов' : 'Классика'}
 						</p>
 						<h2 className='text-xl font-bold text-white'>Ищем соперника…</h2>
 					</div>
