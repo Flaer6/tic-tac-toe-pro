@@ -13,7 +13,7 @@ export const PrivateRoute = () => {
 			</div>
 		)
 	}
-	return isAuth ? <Outlet /> : <Navigate to='/' replace />
+	return isAuth ? <Outlet /> : <Navigate to='/login' replace />
 }
 
 export const PublicRoute = () => {

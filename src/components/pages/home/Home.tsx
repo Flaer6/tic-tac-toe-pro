@@ -1,6 +1,7 @@
 import { FaRobot, FaUser } from 'react-icons/fa'
 import { useGetMeQuery } from '../../../graphql/generated/output'
 import Button from '../../ui/buttons/Button'
+import { InstallPwaButton } from '../../ui/buttons/InstallPwaButton'
 import { ProfileStatus } from '../../ui/forms/ProfileStatus'
 import { Loader } from '../../ui/Loader'
 
@@ -55,6 +56,11 @@ export default function Home() {
 				<Button to='/ai'>
 					<FaRobot /> VS <FaRobot />
 				</Button>
+			</div>
+
+			{/* Install PWA */}
+			<div className='mt-8'>
+				<InstallPwaButton />
 			</div>
 		</div>
 	)
