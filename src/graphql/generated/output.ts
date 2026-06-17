@@ -27,6 +27,11 @@ export type SendFriendRequestDto = {
   toId: string;
 };
 
+export type StatsMode =
+  | 'ALL'
+  | 'CLASSIC'
+  | 'LIMIT';
+
 export type UserRole =
   | 'ADMIN'
   | 'REGULAR';
@@ -102,17 +107,19 @@ export type GetUserHistoryQueryVariables = Exact<{
 
 export type GetUserHistoryQuery = { getUserHistory: Array<{ id: string, roomId: string, finishedAt: string | null, winnerId: string | null, players: Array<{ id: string, winner: boolean, userId: string, user: { id: string, username: string } }> }> };
 
-export type GetMyStatsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetMyStatsQueryVariables = Exact<{
+  mode?: StatsMode | null | undefined;
+}>;
 
 
-export type GetMyStatsQuery = { getMyStats: { losses: number, totalGames: number, winRate: number, winStreak: number, wins: number } };
+export type GetMyStatsQuery = { getMyStats: { losses: number, totalGames: number, winRate: number, winStreak: number, wins: number, mode: StatsMode } };
 
 export type GetUserStatsQueryVariables = Exact<{
   id: string;
 }>;
 
 
-export type GetUserStatsQuery = { getUserStats: { losses: number, totalGames: number, winRate: number, winStreak: number, wins: number } };
+export type GetUserStatsQuery = { getUserStats: { losses: number, totalGames: number, winRate: number, winStreak: number, wins: number, mode: StatsMode } };
 
 
 export const DeleteUserDocument = gql`
@@ -610,13 +617,14 @@ export type GetUserHistoryLazyQueryHookResult = ReturnType<typeof useGetUserHist
 export type GetUserHistorySuspenseQueryHookResult = ReturnType<typeof useGetUserHistorySuspenseQuery>;
 export type GetUserHistoryQueryResult = Apollo.QueryResult<GetUserHistoryQuery, GetUserHistoryQueryVariables>;
 export const GetMyStatsDocument = gql`
-    query getMyStats {
-  getMyStats {
+    query getMyStats($mode: StatsMode) {
+  getMyStats(mode: $mode) {
     losses
     totalGames
     winRate
     winStreak
     wins
+    mode
   }
 }
     `;
@@ -633,6 +641,7 @@ export const GetMyStatsDocument = gql`
  * @example
  * const { data, loading, error } = useGetMyStatsQuery({
  *   variables: {
+ *      mode: // value for 'mode'
  *   },
  * });
  */
@@ -663,6 +672,7 @@ export const GetUserStatsDocument = gql`
     winRate
     winStreak
     wins
+    mode
   }
 }
     `;

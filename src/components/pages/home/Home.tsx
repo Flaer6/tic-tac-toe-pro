@@ -29,17 +29,17 @@ export default function Home() {
 			<div className='text-center mb-20'>
 				<h1 className='font-rubik font-bold tracking-tight text-white text-8xl max-md:text-7xl max-sm:text-6xl leading-none'>
 					Tic{' '}
-					<span className='bg-gradient-to-r from-indigo-400 via-violet-400 to-purple-400 bg-clip-text text-transparent'>
+					<span className='bg-linear-to-r from-indigo-400 via-violet-400 to-purple-400 bg-clip-text text-transparent'>
 						Tac
 					</span>{' '}
 					Toe
 				</h1>
 				<div className='mt-6 flex items-center justify-center gap-4'>
-					<div className='h-px w-16 bg-gradient-to-r from-transparent to-white/20' />
+					<div className='h-px w-16 bg-linear-to-r from-transparent to-white/20' />
 					<p className='text-xs font-semibold uppercase tracking-[0.25em] text-white/25'>
 						Выбери режим игры
 					</p>
-					<div className='h-px w-16 bg-gradient-to-l from-transparent to-white/20' />
+					<div className='h-px w-16 bg-linear-to-l from-transparent to-white/20' />
 				</div>
 			</div>
 

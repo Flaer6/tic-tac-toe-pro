@@ -1,11 +1,22 @@
 import { motion } from 'framer-motion'
+import { useState } from 'react'
+import toast from 'react-hot-toast'
 import { useGetMyStatsQuery } from '../../../../../graphql/generated/output'
 import { ModeSelect } from './ModeSelect'
 import { StatItem } from './StatItem'
+import { statModes, type IStatModes } from './mode.data'
 import { getStatsItems } from './statistic.data'
 
 export const Statistic = () => {
-	const { data, loading } = useGetMyStatsQuery()
+	const [mode, setMode] = useState<IStatModes>(statModes[0])
+
+	const { data, loading, error } = useGetMyStatsQuery({
+		variables: { mode: mode.value },
+		fetchPolicy: 'network-only',
+	})
+
+	if (error) toast('Произошла ошибка при загрузки статистики')
+
 	const items = getStatsItems(data?.getMyStats)
 
 	return (
@@ -21,13 +32,12 @@ export const Statistic = () => {
 					</h2>
 				</div>
 				<div className=''>
-					<ModeSelect />
+					<ModeSelect value={mode} onChange={setMode} />
 				</div>
 			</div>
 
 			{/* Grid */}
 			<div className='relative rounded-3xl border border-white/6 bg-white/2 p-4 sm:p-5 backdrop-blur-xl'>
-				{/* Top gradient line */}
 				<div className='absolute inset-x-0 top-0 h-px rounded-t-3xl bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent' />
 
 				{loading ? (
@@ -48,6 +58,7 @@ export const Statistic = () => {
 							hidden: {},
 							show: { transition: { staggerChildren: 0.07 } },
 						}}
+						key={mode.value}
 					>
 						{items.map((item, index) => (
 							<StatItem key={index} {...item} />
