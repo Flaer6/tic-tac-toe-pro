@@ -59,7 +59,7 @@ export default function Home() {
 			</div>
 
 			{/* Install PWA */}
-			<div className='mt-8'>
+			<div className='mt-8 empty:hidden'>
 				<InstallPwaButton />
 			</div>
 		</div>
