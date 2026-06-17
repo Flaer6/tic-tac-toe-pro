@@ -26,24 +26,24 @@ export default defineConfig({
 				orientation: 'portrait',
 				icons: [
 					{
-						src: '/assets/favicons/192x192.png',
+						src: '/assets/favicons/192x192v.png',
 						sizes: '192x192',
 						type: 'image/png',
 					},
 					{
-						src: '/assets/favicons/512x512.png',
+						src: '/assets/favicons/512x512v.png',
 						sizes: '512x512',
 						type: 'image/png',
 						purpose: 'any',
 					},
 					{
-						src: '/assets/favicons/192x192.jpg',
+						src: '/assets/favicons/192x192v.jpg',
 						sizes: '192x192',
 						type: 'image/jpeg',
 						purpose: 'maskable',
 					},
 					{
-						src: '/assets/favicons/512x512.jpg',
+						src: '/assets/favicons/512x512v.jpg',
 						sizes: '512x512',
 						type: 'image/jpeg',
 						purpose: 'maskable',
